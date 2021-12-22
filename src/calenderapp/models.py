@@ -17,7 +17,7 @@ class Calender(models.Model):
 
 class CalendarEvent(models.Model):
 
-    calender_info = models.ForeignKey(Calender, on_delete=models.CASCADE, )
+    calender_info = models.ForeignKey(Calender, on_delete=models.CASCADE, related_name='calender_event')
     event_name = models.CharField(max_length=263, )
     event_description = models.TextField()
     event_start_date = models.DateField()
@@ -43,8 +43,8 @@ class CalendarEvent(models.Model):
 
 
 class CalendarAttendee(models.Model):
-    event_info = models.ForeignKey(CalendarEvent, on_delete=models.CASCADE, )
-    calender_info = models.ForeignKey(Calender, on_delete=models.CASCADE, )
+    event_info = models.ForeignKey(CalendarEvent, on_delete=models.CASCADE, related_name='event_attendee')
+    calender_info = models.ForeignKey(Calender, on_delete=models.CASCADE, related_name='calender_attendee')
     event_attendee = models.TextField(null=True, blank=True, )
     event_email = models.EmailField(null=True, blank=True, )
     response_status = models.CharField(max_length=50, null=True, blank=True)
