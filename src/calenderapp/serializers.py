@@ -21,6 +21,10 @@ class CalendarAttendeeSerializer(serializers.ModelSerializer):
         model = CalendarAttendee
         fields = '__all__'
 
+   
+
+    
+
 
 class CalendarEventWithAttendeeSerializer(serializers.ModelSerializer):
     event_attendee = CalendarAttendeeSerializer(many=True)
@@ -33,19 +37,12 @@ class CalendarEventWithAttendeeSerializer(serializers.ModelSerializer):
 
 class CalenderWithEventWithAttendeeSerializer(serializers.ModelSerializer):
     calender_event = CalenderEevntSerializer(many=True, )
-    # calender_attendee = CalendarAttendeeSerializer(many=True, )
+    calender_attendee = CalendarAttendeeSerializer(many=True, )
     class Meta:
         model = Calender
-        fields = ('calender_event', 'id', )
+        fields = ('id', 'calender_name', 'user', 'select_fig', 'calender_event', 'calender_attendee', )
 
-    def create(self, validated_data):
-        event_info = validated_data.pop('calender_event')
-        # attendee_info = validated_data.pop('calender_attendee')
-        calender = Calender.objects.create(**validated_data)
-
-        event = CalendarEvent.objects.create(**event_info, calender_info=calender)
-        return calender
-
+    
 
 
 

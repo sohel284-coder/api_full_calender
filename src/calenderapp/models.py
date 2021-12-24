@@ -20,8 +20,8 @@ class CalendarEvent(models.Model):
     calender_info = models.ForeignKey(Calender, on_delete=models.CASCADE, related_name='calender_event')
     event_name = models.CharField(max_length=263, )
     event_description = models.TextField()
-    event_start_date = models.DateField()
-    event_end_date = models.DateField()
+    event_start_date = models.DateTimeField()
+    event_end_date = models.DateTimeField()
     event_location = models.TextField()
 
     inperson_flg = models.IntegerField(null=True, blank=True, default=0)
