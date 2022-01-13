@@ -24,7 +24,7 @@ from django.utils import timezone
 import time
 
 def index(request, ):
-    return render(request, 'full.html', )
+    return HttpResponse('test')
 
 
 
@@ -221,57 +221,29 @@ class CalenderAttendeeAPIView(APIView):
 
 
 class CalenderEventListView(APIView):
-    def weekly_response(self, data):
-        print(data)
-        weeks = []
-        for dt in data:
-            values = {
-                
-            }
-            values['start'] = dt['event_start_date']
-            values['end'] = dt['event_end_date']
-            values['id'] = 1
-            values['title'] = dt['event_name']
-            weeks.append(values)
-        print(weeks)
-            
-        return weeks
-    def get(self, request, query):
-        print(query)
-        # query = request.GET.get('q', "")
+    def get(self, request, format=None):
+        query = request.GET.get('q', "")
         today = date.today()
         weekday = today.weekday()
-        print(weekday)
-
         start_delta = timedelta(days=weekday)
-        print(start_delta, 'delta')
         start_date_week = today - start_delta
-        print(start_date_week, 'st_week')
-
         end_date_week = start_date_week + timedelta(days=6)
-        print(end_date_week, 'st_week')
 
-        # print(datetime.now().month, datetime.now().year)
+        print(datetime.now().month, datetime.now().year)
         current_month = datetime.now().month
         current_year = datetime.now().year
         event = CalendarEvent.objects.filter(event_start_date=today)
         
+        print(today)
         if query == 'daily':
             event = CalendarEvent.objects.filter(event_start_date=today)
         elif query == 'weekly':
             event = CalendarEvent.objects.filter(event_start_date__gte=start_date_week) and CalendarEvent.objects.filter(event_start_date__lte=end_date_week)
-            events = CalendarEventWithAttendeeSerializer(event, many=True).data
-            events = self.weekly_response(events)
-            
+
         elif query == 'monthly':
             event = CalendarEvent.objects.filter(event_start_date__year=current_year, event_start_date__month=current_month)
-
-        context = {
-            'events':events,
-            'start_date_week':start_date_week,
-            'end_date_week':end_date_week,
-        }
-        return Response(context, status=status.HTTP_200_OK)
+            print(event)
+        return Response(CalendarEventWithAttendeeSerializer(event, many=True).data, status=status.HTTP_200_OK)
 
 class EventSearch(APIView):
     def get(self, request, format=None):
@@ -389,5 +361,3 @@ class CalenderWithEventWithAttendeeAPIView(APIView):
 
             # return Response(calender_serializer.data, status=status.HTTP_201_CREATED)
         return Response(calender_serializer.errors, status=status.HTTP_400_BAD_REQUEST)        
-
-

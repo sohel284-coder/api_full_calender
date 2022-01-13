@@ -1,0 +1,455 @@
+{% load static %}
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+
+<head>
+	<!-- Meta Tags -->
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="keywords" content="Site keywords here">
+	<meta name="description" content="#">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Site Title -->
+	<title>Lysa Calender</title>
+	<!-- Fav Icon -->
+	<link rel="icon" href="img/favicon.png">
+
+	<!-- SoftifyBD Stylesheet -->
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+	<!-- <link rel="stylesheet" href="{% static 'css/reset.css' %}"> -->
+	<!-- <link rel="stylesheet" href="{% static 'style.css' %}"> -->
+	<!-- <link rel="stylesheet" href="{% static 'css/responsive.css' %"> -->
+	<link rel="stylesheet" href="{% static 'full_calendar/main.css' %}">
+
+	<style>
+		.calendar-wd__button {
+			display: flex;
+			gap: 15px;
+		}
+
+		.calendar-wd__button a {
+			background: #FFFFFF;
+			box-shadow: 0px 0px 15px #00000026;
+			padding: 5px 15px;
+			color: #333;
+			font-size: 14px;
+		}
+
+		#popup {
+			background: #FFCBC3;
+			z-index: 3333;
+			position: absolute;
+			text-align: left;
+			padding: 10px;
+			border-radius: 4px;
+			top: 2%;
+			left: 2%;
+			width: 75%;
+			height: 100%;
+			border-radius: 15px;
+			color: #F37764;
+			z-index: 999999;
+		}
+
+		.close-icon {
+			position: absolute;
+			top: -12px;
+			right: -12px;
+			cursor: pointer;
+			max-width: 28px;
+			z-index: 33333;
+			transition: all 0.3s ease;
+		}
+
+		.calendar-wd__form-three-list {
+			position: absolute;
+			display: flex;
+			gap: 30px;
+			top: 20px;
+			right: 40px;
+			flex-direction: inherit;
+		}
+
+		.calendar-wd__form-three-head {
+			position: relative;
+		}
+
+		.calendar-wd__form-three-list .list-group-item {
+			background: transparent;
+			border: none;
+			padding: 0;
+		}
+
+		.list-group-item active {
+			background: #fff;
+
+		}
+
+		.list-group-item {
+			background: transparent;
+			border: none;
+			color: #FF6F1A;
+			border-radius: 30px;
+			font-size: 14px;
+			padding: 5px 18px;
+		}
+
+		.calendar-wd__form-three-body {
+			background: #fff;
+			padding: 45px;
+		}
+
+		.calendar-wd__form-separate-column {
+			display: flex;
+			gap: 60px;
+		}
+
+		.calendar-wd__form-three-title {
+			font-size: 25px;
+			display: flex;
+			gap: 12px;
+			margin-bottom: 30px;
+		}
+
+		.calendar-wd__form-three-title span {
+			background: #EDD5EB;
+			border-radius: 30px;
+			font-size: 14px;
+			padding: 5px 10px;
+		}
+
+		.calendar-wd__form-heading a {
+			color: #C887C3;
+			text-decoration: underline;
+		}
+
+		.calendar-wd__form-three-list li img {
+			width: 22px;
+		}
+
+		.calendar-wd__form-single {
+			margin-bottom: 30px;
+		}
+
+		.calendar-wd__form-heading,
+		.calendar-wd__form-heading a {
+			display: flex;
+			gap: 5px;
+			color: #5D616E;
+			font-size: 17px;
+		}
+
+		.calendar-wd__form-list {
+			padding-left: 35px;
+			margin-top: 20px;
+		}
+
+		.calendar-wd__form-list li {
+			color: #8F8F8F;
+		}
+
+		.calendar-wd__form-list-img {
+			gap: 20px;
+		}
+
+		.calendar-wd__form-list-img img {
+			width: 40px;
+			height: 40px;
+			line-height: 40px;
+		}
+
+		.calendar-wd__form-list-img li {
+			display: flex;
+			gap: 12px;
+			align-items: center;
+		}
+	</style>
+</head>
+
+<body>
+
+
+	<div class="calendar-wd__section" id="app" style="background-image: url('{{ STATIC_URL }}img/bg-image.png' )">
+		<br>
+		<br>
+		<br>
+		<div id='calendar'></div>
+		<!-- Event Created Popup -->
+		<div class="calendar-wd__form calendar-wd__form-three" style="display: none;" id="popup">
+			<div class="close-icon close-three" @click.prevent="iconClose"><img src="{% static 'img/close.png' %}"
+					alt=""></div>
+			<div class="calendar-wd__form-three--one">
+				<div class="calendar-wd__form-three-head">
+					<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist">
+						<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><img
+									src="{% static 'img/pen.png' %}" alt="#"></a></li>
+						<li><a class="list-group-item active" data-bs-toggle="list" href="#f-tab3" role="tab"><img
+									src="{% static 'img/message.png' %}" alt="#"></a></li>
+						<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab5" role="tab"><i
+									class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a></li>
+					</ul>
+					<img src="{% static 'img/calander-banner.png' %}">
+				</div>
+				<div class="calendar-wd__form-three-body">
+					<div class="tab-content" id="nav-tabContent">
+						<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
+							<div class="calendar-wd__form-separate-column">
+								<div class="calendar-wd__form-three-one">
+									<h2 class="calendar-wd__form-three-title"><span>calendar_name</span>[[event_title]]
+									</h2>
+									<div class="calendar-wd__form-body">
+										<div class="calendar-wd__form-single">
+											<h4 class="calendar-wd__form-heading"><img
+													src="{% static 'img/calender.png' %}" alt="#">2021年12月3日(金曜日)　11:00
+												- 16:30</h4>
+										</div>
+										<div class="calendar-wd__form-single">
+											<h4 class="calendar-wd__form-heading"><a href="#"><img src="img/memo.png"
+														alt="#">Tokyo</a></h4>
+											<ul class="calendar-wd__form-list">
+												<li>Update sales presentation</li>
+												<li>Book large meeting room</li>
+												<li>Send material to Keiko Toyama</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</div>
+					</div>
+
+				</div>
+			</div>
+
+			{% comment %}
+			<div class="calendar-wd__form-three--one">
+				<div class="calendar-wd__form-three-head">
+					<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist">
+						<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><img
+									src="img/pen.png" alt="#"></a></li>
+						<li><a class="list-group-item active" data-bs-toggle="list" href="#f-tab3" role="tab"><img
+									src="img/message.png" alt="#"></a></li>
+						<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab5" role="tab"><i
+									class="icofont-bread"></i><img src="img/bell-2.png" alt="#"></a></li>
+					</ul>
+					<img src="img/calander-banner.png">
+				</div>
+				<div class="calendar-wd__form-three-body">
+					<div class="tab-content" id="nav-tabContent">
+						<!-- Property Tab One -->
+						<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
+							<div class="calendar-wd__form-separate-column">
+								<div class="calendar-wd__form-three-one">
+									<h2 class="calendar-wd__form-three-title">[[event_title]]</h2>
+									<div class="calendar-wd__form-body">
+										<div class="calendar-wd__form-single">
+											<h4 class="calendar-wd__form-heading"><img src="img/calender.png"
+													alt="#">2021年12月3日(金曜日)　11:00 - 16:30</h4>
+										</div>
+										<div class="calendar-wd__form-single">
+											<h4 class="calendar-wd__form-heading"><a href="#"><img src="img/memo.png"
+														alt="#">Tokyo</a></h4>
+											<ul class="calendar-wd__form-list">
+												<li>Update sales presentation</li>
+												<li>Book large meeting room</li>
+												<li>Send material to Keiko Toyama</li>
+											</ul>
+										</div>
+									</div>
+								</div>
+								<div class="calendar-wd__form-three-two">
+									<ul class="calendar-wd__form-list-img calendar-wd__form-list-two">
+										<li><img src="img/icon.png" alt="#">Keiko Toyama</li>
+										<li><img src="img/icon-2.png" alt="#">Daisuke Inoue</li>
+										<li><img src="img/icon-3.png" alt="#">Tomohisa Himeda</li>
+									</ul>
+									<div class="calander-wd__button calander-wd__button-guest">
+										<span class="plus-icon"><a href="#"><i class="fa fa-plus"></i></span>Add
+										guests</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="tab-pane fade" id="f-tab4" role="tabpanel">
+							<div class="calendar-wd__form-three--two">
+								<div class="calendar-wd__form-1">
+									<form class="form">
+										<div class="form-group">
+											<div class="input-group">
+												<input id="datepick" type="text" placeholder="[Zoom]Toshiとの">
+											</div>
+										</div>
+										<div class="form-group calendar-wd__date-pick">
+											<div class="form-control wide" tabindex="0"><i
+													class="fa fa-calendar"></i><span class="current"><input
+														id="datepick" type="text"
+														placeholder="Wednesday, 1 December"></span></div>
+										</div>
+										<div class="form-group">
+											<div class="list-inner-group">
+												<div class="list-single-group">
+													<select class="form-select" aria-label="Default select example">
+														<option selected="">15.30</option>
+														<option value="1">15.30</option>
+														<option value="2">15.30</option>
+														<option value="3">15.30</option>
+													</select>
+												</div>
+												<div class="list-single-group">
+													<select class="form-select" aria-label="Default select example">
+														<option selected="">16.30</option>
+														<option value="1">16.30</option>
+														<option value="2">16.30</option>
+														<option value="3">16.30</option>
+													</select>
+												</div>
+												<div class="list-single-group   project-dropdown">
+													<select class="form-select" aria-label="Default select example">
+														<option selected="">Don't repeat</option>
+														<option value="1">Don't repeat</option>
+														<option value="2">Don't repeat</option>
+														<option value="3">Don't repeat</option>
+													</select>
+												</div>
+											</div>
+										</div>
+										<div class="form-group">
+											<div class="input-group">
+												<span class="input-icon"><i class="fa fa-map-marker"></i></span>
+												<input id="datepick" type="text" placeholder="Add location">
+											</div>
+										</div>
+										<div class="form-group project-dropdown">
+											<select class="form-select" aria-label="Default select example">
+												<option selected="">Project B</option>
+												<option value="1">15.30</option>
+												<option value="2">15.30</option>
+												<option value="3">15.30</option>
+											</select>
+										</div>
+										<div class="form-group select-man">
+											<ul class="select-list-img">
+												<li><a href="#"><img src="img/icon.png" alt="#"></a></li>
+												<li><a href="#"><img src="img/icon-2.png" alt="#"></a></li>
+												<li><a href="#"><img src="img/icon-3.png" alt="#"></a></li>
+												<li><span class="plus-icon"><i class="fa fa-plus"></i></span></li>
+											</ul>
+										</div>
+										<div class="form-group">
+											<ul class="calendar-wd__clist">
+												<li><img src="img/calender.png">Email Participants</li>
+												<li><img src="img/memo.png">Add Notes</li>
+												<li><img src="img/bell.png">Set Reminder</li>
+											</ul>
+										</div>
+										<div class="form-group button">
+											<button type="submit" class="theme-btn theme-sec">More options</button>
+											<b class="theme-btn theme-primary calendar-wd__submit">Save</b>
+										</div>
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			{% endcomment %}
+		</div>
+
+
+	</div>
+
+
+
+
+	<!-- Jquery JS -->
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script src="{% static '/full_calendar/main.js'%}"></script>
+
+	{% if debug %}
+	<script src="{% static 'js/vue.js' %}"></script>
+	{% else %}
+	<script src="{% static 'js/vue.min.js' %}"></script>
+	{% endif %}
+
+	<script>
+		var app = new Vue({
+			el: '#app',
+			delimiters: ['[[', ']]'],
+			data: {
+				weekly_events: [],
+				popup: false,
+				event_title: '',
+
+			},
+			mounted: function () {
+				this.showEvents();
+			},
+			methods: {
+				iconClose: function () {
+					$("#popup").hide();
+					console.log('test');
+				},
+				showEvents: function () {
+					console.log('test');
+					var that = this;
+					$.ajax({
+						method: 'GET',
+						url: 'api/event-filter/' + 'weekly',
+					}).then(response => {
+						that.weekly_events = response.events;
+						that.weeklyCalendar();
+					})
+					return this.weekly_events
+				},
+				weeklyCalendar: function () {
+					var that = this;
+					console.log(this.weekly_events);
+					var calendarEl = document.getElementById('calendar');
+					var calendar = new FullCalendar.Calendar(calendarEl, {
+
+						headerToolbar: {
+							left: 'prev,next today',
+							center: 'title',
+							right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+						},
+						initialDate: '2022-01-13',
+						navLinks: true, // can click day/week names to navigate views
+						nowIndicator: true,
+
+						weekNumbers: true,
+						weekNumberCalculation: 'ISO',
+
+						editable: true,
+						selectable: true,
+						dayMaxEvents: true,
+						events: this.weekly_events,
+						eventClick: function (event) {
+							that.event_title = event.event._def.title;
+							$('.calendar-wd__form-three').show();
+
+
+						}
+					});
+					calendar.render();
+
+				}
+			},
+		})
+
+
+
+
+	</script>
+
+
+
+</body>
+
+</html>
