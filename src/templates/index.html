@@ -1,1269 +1,98 @@
 {% load static %}
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<html lang="en">
 
 <head>
-	<!-- Meta Tags -->
-	<meta charset="utf-8">
+	<meta charset="UTF-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="keywords" content="Site keywords here">
-	<meta name="description" content="#">
-	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lysa Calendar</title>
 
-	<!-- Site Title -->
-	<title>Lysa Calender</title>
-	<!-- Fav Icon -->
-	<link rel="icon" href="img/favicon.png">
-
-	<!-- SoftifyBD Stylesheet -->
 	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 	<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
-	<link rel="stylesheet" href="{% static 'css/reset.css' %}">
-	<!-- <link rel="stylesheet" href="{% static 'style.css' %}"> -->
-	<link rel="stylesheet" href="{% static 'css/responsive.css' %">
-	<link rel="stylesheet" href="{% static 'full_calendar/main.css' %}">
-	<!--[if lt IE 9]>
-			<script src="https://oss.maxcdn.com/libs/html5shiv/3.7.2/html5shiv.min.js"></script>
-			<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
-		<![endif]-->
-	<style>
-		.calendar-wd__button {
-			display: flex;
-			gap: 15px;
-		}
+	<link rel="stylesheet" href="{% static 'custom.css' %}">
 
-		.calendar-wd__button a {
-			background: #FFFFFF;
-			box-shadow: 0px 0px 15px #00000026;
-			padding: 5px 15px;
-			color: #333;
-			font-size: 14px;
-		}
-	</style>
+	<link rel="stylesheet" href="{% static 'full_calendar/main.css' %}">
+
+
+
 </head>
 
 <body>
-	<!--[if IE]>
-		<p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
-	<![endif]-->
-
-	<div class="calendar-wd__section" id="app" style="background-image: url('{{ STATIC_URL }}img/bg-image.png' )">
+	<div class="calendar-wd__section" id="app">
 		<div class="calendar-wd">
-			<!-- Topbar -->
-			<div class="calendar-wd__top-bar">
-				<div class="calendar-wd__top-left">
-					<h4 class="calender-wd__title">[[month]]<span>[[date]]</span></h4>
-					<div class="calendar-wd__button"><a href="#">＋ ADD EVENT</a><a href="#">＋ Find Slot</a></div>
-
-				</div>
-				<div class="calendar-wd__top-right">
-					<div class="calander-wd__setting"><a href="#"><img src="{% static 'img/setting.png' %}" alt="#"></a>
-					</div>
-					<ul class="list-group calander-wd__tab-list" id="list-tab" role="tablist">
-						<li><a class="list-group-item active" @click.prevent="showEvents('weekly')"
-								data-bs-toggle="list" href="#f-weekly" role="tab">WEEK</a></li>
-						<li><a class="list-group-item" data-bs-toggle="list" href="#f-monthly" role="tab">MONTH</a></li>
-						<li><a class="list-group-item" data-bs-toggle="list" href="#f-list" role="tab">LIST</a></li>
-					</ul>
-				</div>
-			</div>
-			End Topbar
-
-			<div class="tab-content" id="nav-tabContents">
-				<div class="tab-pane fade show active" id="f-weekly" role="tabpanel">
-					<div class="calendar-wd__primary">
-						<ul class="list-group weekly-tab" id="list-tab" role="tablist">
-							<li class="calendar-wd__arrow calendar-wd__left-arrow"><a data-bs-toggle="list"
-									href="#f-week-1" role="tab" class="list-group-item active"><img
-										src="{% static 'img/left-arrow.png' %}" alt="#"></a></li>
-							<li class="calendar-wd__arrow calendar-wd__right-arrow"><a data-bs-toggle="list"
-									href="#f-week-2" role="tab" class="list-group-item"><img
-										src="{% static 'img/right-arrow.png' %}" alt="#"></a></li>
+			<div id='calendar'></div>
+			<br>
+			<br>
+			<div class="calendar-wd__form calendar-wd__form-three" style="display: none;" id="popup">
+				<div class="close-icon close-three" @click.prevent="iconClose"><img src="{% static 'img/close.png' %}"
+						alt=""></div>
+				<div class="calendar-wd__form-three--one">
+					<div class="calendar-wd__form-three-head">
+						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist">
+							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><img
+										src="{% static 'img/pen.png' %}" alt="#"></a></li>
+							<li><a class="list-group-item active" data-bs-toggle="list" href="#f-tab3" role="tab"><img
+										src="{% static 'img/message.png' %}" alt="#"></a></li>
+							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab5" role="tab"><i
+										class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
+							</li>
 						</ul>
+						<img style="" src="{% static 'img/calander-banner.png' %}">
+
+					</div>
+					<div class="calendar-wd__form-three-body">
 						<div class="tab-content" id="nav-tabContent">
-							<!-- Weekly View 1 -->
-							<div class="tab-pane fade show active" id="f-week-1" role="tabpanel">
-								<!-- End Event Created Popup -->
-								<table class="calendar-wd__main">
-									<thead class="calendar-wd__head">
-										<tr class="calendar-wd__main">
-											<th class="calendar-wd__off-day">
-												<div class="calendar-wd__title"></div>
-											</th>
-											<th class="calendar-wd__day-one calendar-wd__off-day">
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname calendar-wd__off-day">Sunday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">[[d1]]</span>
-												</div>
-											</th>
-											<th class="calendar-wd__day-two calendar-wd__off-day">
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Monday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">[[d2]]</span>
-												</div>
-											</th>
-											<th class="calendar-wd__day-three">
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Tuesday</span><span
-														class="calendar-wd__count calendar-wd__count-one">[[d3]]</span>
-												</div>
-												
-											</th>
-											<th class="calendar-wd__day-four calander-wd__today calendar-wd__focus">
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Wednesday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">[[d4]]</span>
-												</div>
-											</th>
-											<th class="calendar-wd__day-five">
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Thursday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">[[d5]]</span>
-												</div>
-											</th>
-											<th class="calendar-wd__day-six">
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Friday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">[[d6]]</span>
-												</div>
-											</th>
-											<th class="calendar-wd__day-seven">
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Saturday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">[[d7]]</span>
-												</div>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">GMT+06</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td
-												class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col calander-wd__line">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__full-height calendar-wd__third-color">
-													<h4 class="calendar-wd__popbar-time">12:00 - 12:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">1 AM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row"></td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__first-row">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__six-hour calendar-wd__primary-color">
-													<h4 class="calendar-wd__popbar-time">01:00 - 07:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__four-hour calendar-wd__second-color">
-													<h4 class="calendar-wd__popbar-time">01:00 - 05:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row"></td>
-											<td class="calendar-wd__day-seven calendar-wd__row">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__fifth-color">
-													<span class="calendar-wd__badge">New</span>
-													<h4 class="calendar-wd__popbar-time">01:00 - 02:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">2 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__day-one"></td>
-											<td class="calendar-wd__row calendar-wd__day-two calendar-wd__off-day">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__half-hour">
-													<h4 class="calendar-wd__popbar-time">01:50 - 02:30</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td
-												class="calendar-wd__day-three calendar-wd__row calendar-wd__day-active-popup">
-												<div class="calendar-wd__popbar calendar-wd__event">
-													<h4 class="calendar-wd__popbar-time">02:00 - 03:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
+							<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
+								<div class="calendar-wd__form-separate-column">
+									<div class="calendar-wd__form-three-one">
+										<h2 class="calendar-wd__form-three-title">
+											<span>[[calendar_name]]</span>[[event_title]]
+										</h2>
+										<div class="calendar-wd__form-body">
+											<div class="calendar-wd__form-single">
+												<h4 class="calendar-wd__form-heading"><img
+														src="{% static 'img/calender.png' %}"
+														alt="#"><span>[[start_time]]</span> <span
+														class="ml-2">[[end_time]]</span> </h4>
+											</div>
+											<div class="calendar-wd__form-single">
+												<h4 class="calendar-wd__form-heading"><a href="#"><img
+															src="{% static 'img/memo.png' %}" alt="#">[[location]]</a>
+												</h4>
+												<ul class="calendar-wd__form-list">
+													<li>Update sales presentation</li>
+													<li>Book large meeting room</li>
+													<li>Send material to Keiko Toyama</li>
+												</ul>
+											</div>
+										</div>
+									</div>
+									<div class="calendar-wd__form-three-two">
+										<ul v-for="attendee in attendees"
+											class="calendar-wd__form-list-img calendar-wd__form-list-two">
+											<li><img src="" alt="#">[[attendee.event_attendee]]</li>
 
+										</ul>
+										<div class="calander-wd__button calander-wd__button-guest">
+											<span class="plus-icon"><a href="#"><i class="fa fa-plus"></i></span>Add
+											guests</a>
+										</div>
+									</div>
 
-
-												<!-- Event Created Popup -->
-												<div class="calendar-wd__form calendar-wd__form-three">
-													<div class="close-icon close-three"><img
-															src="{% static 'img/close.png' %}" alt=""></div>
-													<div class="calendar-wd__form-three--one">
-														<div class="calendar-wd__form-three-head">
-															<ul class="list-group calendar-wd__form-three-list"
-																id="list-tab" role="tablist">
-																<li><a class="list-group-item" data-bs-toggle="list"
-																		href="#f-tab4" role="tab"><img
-																			src="{% static 'img/pen.png' %}"
-																			alt="#"></a></li>
-																<li><a class="list-group-item active"
-																		data-bs-toggle="list" href="#f-tab3"
-																		role="tab"><img
-																			src="{% static 'img/message.png' %}"
-																			alt="#"></a></li>
-																<li><a class="list-group-item" data-bs-toggle="list"
-																		href="#f-tab5" role="tab"><i
-																			class="icofont-bread"></i><img
-																			src="{% static 'img/bell-2.png' %}"
-																			alt="#"></a></li>
-															</ul>
-															<img src="{% static 'img/calander-banner.png' %}">
-														</div>
-														<div class="calendar-wd__form-three-body">
-															<div class="tab-content" id="nav-tabContent">
-																<!-- Property Tab One -->
-																<div class="tab-pane fade show active" id="f-tab3"
-																	role="tabpanel">
-																	<div class="calendar-wd__form-separate-column">
-																		<div class="calendar-wd__form-three-one">
-																			<h2 class="calendar-wd__form-three-title">
-																				<span>プロジェクト</span>社内プレゼンテーション
-																			</h2>
-																			<div class="calendar-wd__form-body">
-																				<div class="calendar-wd__form-single">
-																					<h4
-																						class="calendar-wd__form-heading">
-																						<img src="{% static 'img/calender.png' %}"
-																							alt="#">2021年12月3日(金曜日)　11:00
-																						- 16:30
-																					</h4>
-																				</div>
-																				<div class="calendar-wd__form-single">
-																					<h4
-																						class="calendar-wd__form-heading">
-																						<a href="#"><img
-																								src="{% static 'img/memo.png' %}"
-																								alt="#">Tokyo</a>
-																					</h4>
-																					<ul class="calendar-wd__form-list">
-																						<li>Update sales presentation
-																						</li>
-																						<li>Book large meeting room</li>
-																						<li>Send material to Keiko
-																							Toyama</li>
-																					</ul>
-																				</div>
-																			</div>
-																		</div>
-																		<div class="calendar-wd__form-three-two">
-																			<ul
-																				class="calendar-wd__form-list-img calendar-wd__form-list-two">
-																				<li><img src="{% static 'img/icon.png' %}"
-																						alt="#">Keiko Toyama</li>
-																				<li><img src="{% static 'img/icon-2.png' %}"
-																						alt="#">Daisuke Inoue</li>
-																				<li><img src="{% static 'img/icon-3.png' %}"
-																						alt="#">Tomohisa Himeda</li>
-																			</ul>
-																			<div
-																				class="calander-wd__button calander-wd__button-guest">
-																				<span class="plus-icon"><a href="#"><i
-																							class="fa fa-plus"></i></span>Add
-																				guests</a>
-																			</div>
-																		</div>
-																	</div>
-																</div>
-																<div class="tab-pane fade" id="f-tab4" role="tabpanel">
-																	<div class="calendar-wd__form-three--two">
-																		<div class="calendar-wd__form-1">
-																			<form class="form">
-																				<div class="form-group">
-																					<div class="input-group">
-																						<input id="datepick" type="text"
-																							placeholder="[Zoom]Toshiとの">
-																					</div>
-																				</div>
-																				<div
-																					class="form-group calendar-wd__date-pick">
-																					<div class="form-control wide"
-																						tabindex="0"><i
-																							class="fa fa-calendar"></i><span
-																							class="current"><input
-																								id="datepick"
-																								type="text"
-																								placeholder="Wednesday, 1 December"></span>
-																					</div>
-																				</div>
-																				<div class="form-group">
-																					<div class="list-inner-group">
-																						<div class="list-single-group">
-																							<select class="form-select"
-																								aria-label="Default select example">
-																								<option selected="">
-																									15.30</option>
-																								<option value="1">15.30
-																								</option>
-																								<option value="2">15.30
-																								</option>
-																								<option value="3">15.30
-																								</option>
-																							</select>
-																						</div>
-																						<div class="list-single-group">
-																							<select class="form-select"
-																								aria-label="Default select example">
-																								<option selected="">
-																									16.30</option>
-																								<option value="1">16.30
-																								</option>
-																								<option value="2">16.30
-																								</option>
-																								<option value="3">16.30
-																								</option>
-																							</select>
-																						</div>
-																						<div
-																							class="list-single-group   project-dropdown">
-																							<select class="form-select"
-																								aria-label="Default select example">
-																								<option selected="">
-																									Don't repeat
-																								</option>
-																								<option value="1">Don't
-																									repeat</option>
-																								<option value="2">Don't
-																									repeat</option>
-																								<option value="3">Don't
-																									repeat</option>
-																							</select>
-																						</div>
-																					</div>
-																				</div>
-																				<div class="form-group">
-																					<div class="input-group">
-																						<span class="input-icon"><i
-																								class="fa fa-map-marker"></i></span>
-																						<input id="datepick" type="text"
-																							placeholder="Add location">
-																					</div>
-																				</div>
-																				<div
-																					class="form-group project-dropdown">
-																					<select class="form-select"
-																						aria-label="Default select example">
-																						<option selected="">Project B
-																						</option>
-																						<option value="1">15.30</option>
-																						<option value="2">15.30</option>
-																						<option value="3">15.30</option>
-																					</select>
-																				</div>
-																				<div class="form-group select-man">
-																					<ul class="select-list-img">
-																						<li><a href="#"><img
-																									src="{% static 'img/icon.png' %}"
-																									alt="#"></a></li>
-																						<li><a href="#"><img
-																									src="{% static 'img/icon-2.png' %}"
-																									alt="#"></a></li>
-																						<li><a href="#"><img
-																									src="{% static 'img/icon-3.png' %}"
-																									alt="#"></a></li>
-																						<li><span class="plus-icon"><i
-																									class="fa fa-plus"></i></span>
-																						</li>
-																					</ul>
-																				</div>
-																				<div class="form-group">
-																					<ul class="calendar-wd__clist">
-																						<li><img
-																								src="{% static 'img/calender.png' %}">Email
-																							Participants</li>
-																						<li><img
-																								src="{% static 'img/memo.png' %}">Add
-																							Notes</li>
-																						<li><img
-																								src="{% static 'img/bell.png' %}">Set
-																							Reminder</li>
-																					</ul>
-																				</div>
-																				<div class="form-group button">
-																					<button type="submit"
-																						class="theme-btn theme-sec">More
-																						options</button>
-																					<b
-																						class="theme-btn theme-primary calendar-wd__submit">Save</b>
-																				</div>
-																			</form>
-																		</div>
-																	</div>
-																</div>
-															</div>
-														</div>
-													</div>
-												</div>
-
-
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__six-hour calendar-wd__third-color">
-													<h4 class="calendar-wd__popbar-time">02:00 - 08:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">3 AM</h4>
-											</td>
-											<td
-												class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col calendar-wd__off-day">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__one-three-hour  calendar-wd__second-color">
-													<h4 class="calendar-wd__popbar-time">03:00 - 05:30</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td
-												class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col calendar-wd__off-day">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__one-half-hour">
-													<h4 class="calendar-wd__popbar-time">02:30 - 03:30</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__two-hour">
-													<h4 class="calendar-wd__popbar-time">03:00 - 05:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col ">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col ">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col ">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">4 AM</h4>
-											</td>
-											<td
-												class="calendar-wd__day-one calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td
-												class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col calendar-wd__off-day">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__one-two-hour">
-													<h4 class="calendar-wd__popbar-time">03:30 - 05:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td
-												class="calendar-wd__day-three calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td
-												class="calendar-wd__day-four calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td
-												class="calendar-wd__day-five calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td
-												class="calendar-wd__day-six calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td
-												class="calendar-wd__day-sevent calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">5 AM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__one-three-hour calendar-wd__off-day">
-													<h4 class="calendar-wd__popbar-time">05:00 - 10:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__three-hour">
-													<h4 class="calendar-wd__popbar-time">05:00 - 08:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td
-												class="calendar-wd__day-four calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-												<div
-													class="calendar-wd__popbar calendar-wd__event calendar-wd__five-hour calendar-wd__third-color">
-													<h4 class="calendar-wd__popbar-time">05:00 - 10:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">6 AM</h4>
-											</td>
-											<td
-												class="calendar-wd__day-one calendar-wd__row calendar-wd__event calendar-wd__blank-col calendar-wd__off-day">
-												<div class="calendar-wd__popbar calendar-wd__one-three-hour">
-													<h4 class="calendar-wd__popbar-time">06:30 - 8:30</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">7 AM</h4>
-											</td>
-											<td class="calendar-wd__day-one  calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td
-												class="alendar-wd__day-two calendar-wd__row calendar-wd__event calendar-wd__blank-col calendar-wd__off-day">
-												<div class="calendar-wd__popbar calendar-wd__four-half-hour">
-													<h4 class="calendar-wd__popbar-time">06:30 - 10:00</h4>
-													<p class="calendar-wd__inner-text">大阪出張</p>
-												</div>
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row  calendar-wd__first-row">
-												<h4 class="calendar-wd__time">8 AM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">9 AM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">10 AM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">11 AM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">12 AM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">1 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">2 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">3 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">4 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">5 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">6 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">7 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">8 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">9 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">10 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">11 PM</h4>
-											</td>
-											<td class="calendar-wd__day-one calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-two calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-three calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-four calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-five calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-six calendar-wd__row calendar-wd__blank-col">
-											</td>
-											<td class="calendar-wd__day-seven calendar-wd__row calendar-wd__blank-col">
-											</td>
-										</tr>
-									</tbody>
-								</table>
+								</div>
 							</div>
-							<!-- End Weekly View 1 -->
-
-							<!-- Weekly View 2 -->
-							{% comment %}
-							<div class="tab-pane fade" id="f-week-2" role="tabpanel">
-								<table class="calendar-wd__main">
-									<thead class="calendar-wd__head">
-										<tr class="calendar-wd__main">
-											<th class="calendar-wd__off-day">
-												<div class="calendar-wd__title"></div>
-											</th>
-											<th class="calendar-wd__off-day">
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname calendar-wd__off-day">Sunday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">6</span>
-												</div>
-											</th>
-											<th class="calendar-wd__off-day">
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Monday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">7</span>
-												</div>
-											</th>
-											<th>
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Tuesday</span><span
-														class="calendar-wd__count">8</span></div>
-											</th>
-											<th class="calander-wd__today">
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Wednesday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">9</span>
-												</div>
-											</th>
-											<th>
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Thursday</span><span
-														class="calendar-wd__count calendar-wd__count-one calendar-wd__active-focus">10</span>
-												</div>
-											</th>
-											<th>
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Friday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">11</span>
-												</div>
-											</th>
-											<th>
-												<div class="calendar-wd__title"><span
-														class="calendar-wd__dname">Saturday</span><span
-														class="calendar-wd__count calendar-wd__active-focus">12</span>
-												</div>
-											</th>
-										</tr>
-									</thead>
-									<tbody>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">1 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">2 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">3 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">4 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">5 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">6 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">7 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">8 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">9 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">10 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">11 AM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">12 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">1 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">2 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">3 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">4 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">5 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">6 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">7 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">8 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">9 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">10 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-										<tr>
-											<td class="calendar-wd__row calendar-wd__first-row">
-												<h4 class="calendar-wd__time">11 PM</h4>
-											</td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-											<td class="calendar-wd__row calendar-wd__blank-col"></td>
-										</tr>
-									</tbody>
-								</table>
-							</div>
-							{% endcomment %}
-							<!-- End Weekly View 2 -->
 						</div>
+
 					</div>
 				</div>
-				<div class="tab-pane fade" id="f-monthly" role="tabpanel">Monthly View</div>
-				<div class="tab-pane fade" id="f-list" role="tabpanel">List View</div>
+
+
 			</div>
-
-
-			<div class="container" style="background: #dbd3d3;">
-				<DayPilotCalendar id="dp" :config="config" />
-			</div>
-
 
 		</div>
 	</div>
 
-
-
-
-	<!-- Jquery JS -->
 	<script src="{% static 'js/jquery.min.js' %}"></script>
 	<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
 
@@ -1276,119 +105,125 @@
 	<script src="{% static 'js/vue.min.js' %}"></script>
 	{% endif %}
 
-
 	<script>
-		import { DayPilotCalendar } from '@daypilot/daypilot-lite-vue'
+		var app = new Vue({
+			el: '#app',
+			delimiters: ['[[', ']]'],
+			data: {
+				weekly_events: [],
+				popup: false,
+				event_title: '',
+				calendar_name: '',
+				attendees: [],
+				start_time: '',
+				end_time: '',
+				location: '',
+				colors: {},
+				event_color: '',
 
-		export default {
-			name: 'Calendar',
-			data: function () {
-				return {
-					config: {
-						viewType: "Week",
-					},
+
+
+			},
+			mounted: function () {
+				this.showEvents();
+			},
+			methods: {
+				iconClose: function () {
+					$("#popup").hide();
+					console.log('test');
+				},
+
+				showEvents: function () {
+					console.log('test');
+					var that = this;
+					$.ajax({
+						method: 'GET',
+						url: 'api/event-filter/' + 'weekly',
+					}).then(response => {
+						that.weekly_events = response.events;
+						that.colors = response.colors;
+						that.weeklyCalendar();
+						var color_keys = Object.keys(that.colors)
+						// for (let i = 0; i < that.weekly_events.length; i++) {
+						// 	console.log(that.weekly_events[i].calendar_id)
+						// 	console.log(color_keys[i]);
+						// 	for (let j = 0; j < color_keys.length; j++) {
+						// 		if (that.weekly_events[i].calendar_id == color_keys[j]) {
+						// 			that.event_color = that.colors[color_keys[i]]
+						// 			console.log(that.event_color);
+						// 			
+
+						// 		}
+						// 	}
+
+						// }
+					})
+				},
+
+				weeklyCalendar: function () {
+					var that = this;
+					
+
+					var calendarEl = document.getElementById('calendar');
+					var calendar = new FullCalendar.Calendar(calendarEl, {
+
+						headerToolbar: {
+							left: 'prev,next today',
+							center: 'title',
+							right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
+						},
+						initialDate: '2022-01-13',
+						navLinks: true, // can click day/week names to navigate views
+						nowIndicator: true,
+
+						weekNumbers: true,
+						weekNumberCalculation: 'ISO',
+
+						editable: true,
+						selectable: true,
+						dayMaxEvents: true,
+						events: that.weekly_events,
+						// eventColor: that.event_color,
+						eventClick: function (event) {
+							console.log('test');
+							$('.calendar-wd__form-three').show();
+
+
+							that.event_title = event.event._def.title;
+							that.location = event.event._def.extendedProps.event_location;
+							that.start_time = new Date(event.event.start).toLocaleTimeString();
+							that.end_time = new Date(event.event.end).toLocaleTimeString();
+
+
+							// var minute = new Date(event.event.start).getMinutes().toLocaleString();
+							// var hour = new Date(event.event.start).getHours().toLocaleString();
+							// that.start_time = hour+"."+minute;
+							// var end_min = new Date(event.event.end).getMinutes().toLocaleString();
+							// var end_hour = new Date(event.event.end).getUTCHours().toLocaleString();
+							// that.end_time = end_hour+"."+end_min;
+
+							that.calendar_name = event.event._def.extendedProps.calendar_name
+							that.attendees = event.event._def.extendedProps.calendar_attendee
+
+
+							calender_id = event.event._def.extendedProps.calender_id;
+
+
+
+						}
+					});
+					calendar.render();
+
 				}
 			},
-			components: {
-				DayPilotCalendar
-			},
-		}
-	</script>
-	<script>
+		})
 
 
-		$('.calendar-wd__day-one').on("click", function () {
-			$('.calendar-wd__day-two,.calendar-wd__day-three,.calendar-wd__day-four,.calendar-wd__day-five,.calendar-wd__day-six,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
-		});
-
-		$('.calendar-wd__day-one').on("click", function () {
-			$('.calendar-wd__day-one').addClass('calendar-wd__focus');
-		});
-
-
-		$('.calendar-wd__day-two').on("click", function () {
-			$('.calendar-wd__day-one,.calendar-wd__day-three,.calendar-wd__day-four,.calendar-wd__day-five,.calendar-wd__day-six,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
-		});
-
-		$('.calendar-wd__day-two').on("click", function () {
-			$('.calendar-wd__day-two').addClass('calendar-wd__focus');
-		});
-
-
-		$('.calendar-wd__day-three').on("click", function () {
-			$('.calendar-wd__day-one,.calendar-wd__day-two,.calendar-wd__day-four,.calendar-wd__day-five,.calendar-wd__day-six,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
-		});
-
-		$('.calendar-wd__day-three').on("click", function () {
-			$('.calendar-wd__day-three').addClass('calendar-wd__focus');
-		});
-
-
-		$('.calendar-wd__day-four').on("click", function () {
-			$('.calendar-wd__day-one,.calendar-wd__day-two,.calendar-wd__day-three,.calendar-wd__day-five,.calendar-wd__day-six,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
-		});
-
-		$('.calendar-wd__day-four').on("click", function () {
-			$('.calendar-wd__day-four').addClass('calendar-wd__focus');
-		});
-
-
-
-		$('.calendar-wd__day-five').on("click", function () {
-			$('.calendar-wd__day-one,.calendar-wd__day-two,.calendar-wd__day-three,.calendar-wd__day-four,.calendar-wd__day-six,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
-		});
-		$('.calendar-wd__day-five').on("click", function () {
-			$('.calendar-wd__day-five').addClass('calendar-wd__focus');
-		});
-
-
-
-		$('.calendar-wd__day-six').on("click", function () {
-			$('.calendar-wd__day-one,.calendar-wd__day-two,.calendar-wd__day-three,.calendar-wd__day-four,.calendar-wd__day-five,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
-		});
-		$('.calendar-wd__day-six').on("click", function () {
-			$('.calendar-wd__day-six').addClass('calendar-wd__focus');
-		});
-
-
-
-		$('.calendar-wd__day-seven').on("click", function () {
-			$('.calendar-wd__day-one,.calendar-wd__day-two,.calendar-wd__day-three,.calendar-wd__day-four,.calendar-wd__day-five,.calendar-wd__day-six').removeClass('calendar-wd__focus');
-		});
-
-		$('.calendar-wd__day-seven').on("click", function () {
-			$('.calendar-wd__day-seven').addClass('calendar-wd__focus');
-		});
-
-
-
-		$('.calendar-wd__blank_box,.close-one').on("click", function () {
-			$('.calendar-wd__form').toggleClass('active');
-		});
-		$('.calendar-wd__submit,.close-one').on("click", function () {
-			$('.calendar-wd__form-two,.calendar-wd__form-one').toggleClass('active');
-		});
-
-
-		$('.calendar-wd__popbar,.close-three').on("click", function () {
-			$('.calendar-wd__form-three').toggleClass('active-event');
-
-		});
-
-		$('.calendar-wd__form-three').hover(function () {
-			$('.calendar-wd__form-three').addClass('plus-bonus');
-		});
-
-		$(".calendar-wd__form-three").hover(
-			function () {
-				$(this).removeClass("hover-active");
-			}, function () {
-				$(this).addClass("hover-active");
-			}
-		);
 
 
 	</script>
+
+
 </body>
 
 </html>
