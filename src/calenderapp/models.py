@@ -2,27 +2,35 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Calender(models.Model):
-
-    user = models.ForeignKey(User, on_delete=models.CASCADE, )
-    calender_name = models.CharField(max_length=250, )
-    select_fig = models.BooleanField(default=False, )
+class CalendarList(models.Model):
+    calendar_id = models.CharField(max_length=250, null=True, blank=True, )
+    username = models.ForeignKey(User, on_delete=models.CASCADE, )
+    calendar_name = models.CharField(max_length=250, )
+    access_role = models.CharField(max_length=50, null=True, blank=True, )
+    select_flg = models.IntegerField(null=True, blank=True, default=0, )
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, )
 
     def __str__(self):
-        return self.calender_name
+        return self.calendar_name
 
 
-class CalendarEvent(models.Model):
+class CalendarEvents(models.Model):
+    user_event_key = models.CharField(max_length=250, null=True, blank=True, unique=True, )
+    event_id = models.CharField(max_length=250, null=True, blank=True, )
 
-    calender_info = models.ForeignKey(Calender, on_delete=models.CASCADE, related_name='calender_event')
+    calendar_info_id = models.ForeignKey(CalendarList, on_delete=models.CASCADE, related_name='calender_event')
     event_name = models.CharField(max_length=263, )
+    event_name_prev = models.CharField(max_length=250, null=True, blank=True, )
     event_description = models.TextField()
-    event_start_date = models.DateTimeField()
-    event_end_date = models.DateTimeField()
+    event_start_dt = models.DateTimeField()
+    event_end_dt = models.DateTimeField()
     event_location = models.TextField()
+    
+    delete_flg = models.IntegerField(null=True, blank=True, default=0)
+    new_flg = models.IntegerField(null=True, blank=True, default=0)
+    location_missing_flg = models.IntegerField(null=True, blank=True, default=0)
 
     inperson_flg = models.IntegerField(null=True, blank=True, default=0)
     travel_flg = models.IntegerField(null=True, blank=True, default=0)
@@ -33,6 +41,11 @@ class CalendarEvent(models.Model):
     dinner_flg = models.IntegerField(null=True, blank=True, default=0)
     oneonone_flg = models.IntegerField(null=True, blank=True, default=0)
     all_day_flg = models.IntegerField(null=True, blank=True, default=0)
+    event_link = models.URLField(null=True, blank=True, )
+    event_call_link = models.URLField(null=True, blank=True, )
+    num_attendees = models.IntegerField(null=True, blank=True, )
+    organizer_flg = models.IntegerField(null=True, blank=True, default=0)
+    creator_flg = models.IntegerField(null=True, blank=True, default=0)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True, )  # Not auto-add since we want to captur
@@ -41,17 +54,20 @@ class CalendarEvent(models.Model):
     def __str__(self):
         return self.event_name
 
+class CalendarAttendees(models.Model):
+    event_info_id = models.ForeignKey(CalendarEvents, on_delete=models.CASCADE, related_name='event_attendee', to_field="user_event_key", null=True, blank=True, )
+    calendar_info_id = models.ForeignKey(CalendarList, on_delete=models.CASCADE, related_name='calender_attendee')
+    event_attendee = models.CharField(max_length=200, null=True, blank=True, )
+    event_attendee_email = models.EmailField(null=True, blank=True, )
 
-class CalendarAttendee(models.Model):
-    event_info = models.ForeignKey(CalendarEvent, on_delete=models.CASCADE, related_name='event_attendee')
-    calender_info = models.ForeignKey(Calender, on_delete=models.CASCADE, related_name='calender_attendee')
-    event_attendee = models.TextField(null=True, blank=True, )
-    event_email = models.EmailField(null=True, blank=True, )
     response_status = models.CharField(max_length=50, null=True, blank=True)
     self_flg = models.IntegerField(null=True, blank=True, )
 
+    created_at = models.DateTimeField(auto_now_add=True, null=True, )
+    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+
     def __str__(self):
-        return self.event_info.event_name
+        return self.event_info_id.event_name
 
 
 

@@ -133,25 +133,25 @@
 	background: #fff;
 	padding: 20px;
 	border-radius: 10px;
-	box-shadow: 0px 0px 5px #00000057;
-	z-index: 444;
-	width: 315px;
-	opacity: 0v;
+	/* box-shadow: 0px 0px 5px #00000057; */
+	/* z-index: 444; */
+	/* width: 315px; */
+	/* opacity: 0v;
 	opacity: 1;
 	visibility: visible;
 	z-index: 333333;
 	top: -4px;
 	opacity: 0;
-	visibility: hidden;
-	transform: translateY(-20px);
-	transition: all 0.3s ease;
+	/* visibility: hidden; */
+	/* transform: translateY(-20px);
+	transition: all 0.3s ease; */ 
 }
-.calendar-wd__form.active {
+/* .calendar-wd__form.active {
 	opacity: 1;
 	visibility: visible;
 	transform: translateY(0px);
 	z-index: 9999999;
-}
+} */
 .input-icon {
 	color: #8F8F8F;
 	font-size: 18px;
@@ -286,7 +286,7 @@
 	padding: 0 10px !important;
 }
 
-.calendar-wd__popbar {
+#popup{
 	background: #FFCBC3;
 	z-index: 3333;
 	position: absolute;

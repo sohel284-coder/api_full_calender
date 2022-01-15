@@ -118,8 +118,6 @@
 				start_time: '',
 				end_time: '',
 				location: '',
-				colors: {},
-				event_color: '',
 
 
 
@@ -130,20 +128,16 @@
 			methods: {
 				iconClose: function () {
 					$("#popup").hide();
-					console.log('test');
 				},
 
 				showEvents: function () {
-					console.log('test');
 					var that = this;
 					$.ajax({
 						method: 'GET',
 						url: 'api/event-filter/' + 'weekly',
 					}).then(response => {
 						that.weekly_events = response.events;
-						that.colors = response.colors;
 						that.weeklyCalendar();
-						var color_keys = Object.keys(that.colors)
 						// for (let i = 0; i < that.weekly_events.length; i++) {
 						// 	console.log(that.weekly_events[i].calendar_id)
 						// 	console.log(color_keys[i]);
@@ -185,22 +179,21 @@
 						events: that.weekly_events,
 						// eventColor: that.event_color,
 						eventClick: function (event) {
-							console.log('test');
 							$('.calendar-wd__form-three').show();
 
 
 							that.event_title = event.event._def.title;
 							that.location = event.event._def.extendedProps.event_location;
-							that.start_time = new Date(event.event.start).toLocaleTimeString();
-							that.end_time = new Date(event.event.end).toLocaleTimeString();
+							// that.start_time = new Date(event.event.start).toLocaleTimeString();
+							// that.end_time = new Date(event.event.end).toLocaleTimeString();
 
 
-							// var minute = new Date(event.event.start).getMinutes().toLocaleString();
-							// var hour = new Date(event.event.start).getHours().toLocaleString();
-							// that.start_time = hour+"."+minute;
-							// var end_min = new Date(event.event.end).getMinutes().toLocaleString();
-							// var end_hour = new Date(event.event.end).getUTCHours().toLocaleString();
-							// that.end_time = end_hour+"."+end_min;
+							var minute = new Date(event.event.start).getMinutes().toLocaleString();
+							var hour = new Date(event.event.start).getHours().toLocaleString();
+							that.start_time = hour+"."+minute;
+							var end_min = new Date(event.event.end).getMinutes().toLocaleString();
+							var end_hour = new Date(event.event.end).getUTCHours().toLocaleString();
+							that.end_time = end_hour+"."+end_min;
 
 							that.calendar_name = event.event._def.extendedProps.calendar_name
 							that.attendees = event.event._def.extendedProps.calendar_attendee

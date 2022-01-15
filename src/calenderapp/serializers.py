@@ -4,21 +4,21 @@ from rest_framework import serializers
 from calenderapp.models import *
 
 
-class CalenderSerializer(serializers.ModelSerializer):
+class CalendarListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Calender
+        model = CalendarList
         fields = '__all__'
 
 
-class CalenderEevntSerializer(serializers.ModelSerializer):
+class CalendarEventsSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CalendarEvent
+        model = CalendarEvents
         fields = '__all__'
 
-class CalendarAttendeeSerializer(serializers.ModelSerializer):
+class CalendarAttendeesSerializer(serializers.ModelSerializer):
 
     class Meta:
-        model = CalendarAttendee
+        model = CalendarAttendees
         fields = '__all__'
 
    
@@ -27,19 +27,18 @@ class CalendarAttendeeSerializer(serializers.ModelSerializer):
 
 
 class CalendarEventWithAttendeeSerializer(serializers.ModelSerializer):
-    event_attendee = CalendarAttendeeSerializer(many=True)
+    event_attendee = CalendarAttendeesSerializer(many=True)
 
     class Meta:
-        model = CalendarEvent
-        # fields = ('id', 'event_name', 'event_attendee', )
-        exclude = ('id', )
+        model = CalendarEvents
+        fields = '__all__'
 
 
 class CalenderWithEventWithAttendeeSerializer(serializers.ModelSerializer):
-    calender_event = CalenderEevntSerializer(many=True, )
-    calender_attendee = CalendarAttendeeSerializer(many=True, )
+    calender_event = CalendarEventsSerializer(many=True, )
+    calender_attendee = CalendarAttendeesSerializer(many=True, )
     class Meta:
-        model = Calender
+        model = CalendarList
         fields = ('id', 'calender_name', 'user', 'select_fig', 'calender_event', 'calender_attendee', )
 
     

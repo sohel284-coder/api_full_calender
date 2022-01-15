@@ -30,208 +30,16 @@ def index(request, ):
 
 
 
-class CalenderAPIView(APIView):
-    
-    def get(self, request, format=None):
-        # user_id = request.user.id
-        attendee = CalendarAttendee.objects.filter(event_email=request.user.email).values('calender_info')
-        calenders = Calender.objects.filter(id__in=attendee)
-        if calenders:
-            return Response(CalenderWithEventWithAttendeeSerializer(calenders, many=True).data, status=status.HTTP_200_OK)
-        return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-
-    def post(self, request, format=None):
-        request.data['user'] = request.user.id
-        print(request.data)
-        serializer = CalenderSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-class SingleCalenderAPIView(APIView):
-    def get(self, request, pk):
-        try:
-            calender = Calender.objects.get(id=pk)
-            return Response(CalenderWithEventWithAttendeeSerializer(calender).data, status=status.HTTP_200_OK)
-        except:
-            return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-
-    def put(self, request, pk):
-        try:
-            calender = Calender.objects.get(id=pk)
-            if calender.user.id == request.user.id:
-                serializer = CalenderSerializer(calender, data=request.data, partial=True)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-
-
-    def delete(self, request, pk):
-        try:
-            calender = Calender.objects.get(id=pk)
-            if calender.user.id == request.user.id:
-                calender.delete()
-                return Response('calender deleted', status=status.HTTP_200_OK)
-            return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-
-
-
-class SingleCalenderEventAPIView(APIView):
-    def get(self, request, pk):
-        try:
-            calender_event = CalendarEvent.objects.get(id=pk)
-            return Response(CalenderEevntSerializer(calender_event).data, status=status.HTTP_200_OK)
-        except:
-            return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-                
-
-    def put(self, request, pk):
-        try:
-            calender_event = CalendarEvent.objects.get(id=pk)
-            calender= Calender.objects.get(id=calender_event.calender_info.id)
-            print(calender.user.id)
-            print(request.user.id)
-            if calender.user.id == request.user.id:
-                serializer = CalenderEevntSerializer(calender_event, data=request.data, partial=True)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
-
-        except:
-            return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-
-    def delete(self, request, pk):
-        try:
-            calender_event = CalendarEvent.objects.get(id=pk)
-            print(calender_event)
-            print(calender_event.calender_info)
-            calender = Calender.objects.get(id=calender_event.calender_info.id)
-
-            if calender.user.id == request.user.id:
-                calender_event.delete()
-                return Response('Event deleted', status=status.HTTP_200_OK)
-            return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-
-
-class SingleCalenderAttendeeAPIView(APIView):
-    def get(self, request, pk):
-        try:
-            calender_attendee = CalendarAttendee.objects.get(id=pk)
-            return Response(CalendarAttendeeSerializer(calender_attendee).data, status=status.HTTP_200_OK)
-        except:
-            return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-            
-    def put(self, request, pk):
-        try:
-            calender_attendee = CalendarAttendee.objects.get(id=pk)
-            calender_attendee_email = calender_attendee.event_email
-            print(calender_attendee_email)
-            if calender_attendee_email == request.user.email:
-                serializer = CalendarAttendeeSerializer(calender_attendee, data=request.data, partial=True)
-                if serializer.is_valid():
-                    serializer.save()
-                    return Response(serializer.data, status=status.HTTP_200_OK)
-                return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-
-    def delete(self, request, pk):
-        try:
-            calender_attendee = CalendarAttendee.objects.get(id=pk)
-            print(calender_attendee)
-            calender = Calender.objects.get(id=calender_attendee.calender_info.id)
-
-            if calender.user.id == request.user.id:
-                calender_attendee.delete()
-                return Response('Calender Attendee deleted', status=status.HTTP_200_OK)
-            return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
-        except:
-            return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-
-
-        
-        
-
-
-class CalenderEventAPIView(APIView):
-    def get(self, request, format=None):
-        calender_attendee = CalendarAttendee.objects.filter(event_email=request.user.email).values('event_info')
-
-        calender_events = CalendarEvent.objects.filter(id__in=calender_attendee)
-        if calender_events:
-            return Response(CalenderEevntSerializer(calender_events, many=True).data, status=status.HTTP_200_OK)
-        return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
-
-    def post(self, request, format=None):
-        serializer = CalenderEevntSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-
-
-class CalenderAttendeeAPIView(APIView):
-    def get(self, request, format=None):
-
-        attendees = CalendarAttendee.objects.filter(event_email=request.user.email)
-        if attendees:
-            return Response(CalendarAttendeeSerializer(attendees, many=True).data, status=status.HTTP_200_OK)
-        return Response('Data not found', status=status.HTTP_404_NOT_FOUND)    
-
-    def post(self, request, format=None):
-        event_id = request.data['event_info']
-        event = CalendarEvent.objects.get(id=event_id)  
-        request.data['calender_info'] = event.calender_info.id      
-        serializer = CalendarAttendeeSerializer(data=request.data)
-
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-        
-
-# class CalenderWithEventWithAttendeeAPIView(APIView):
-#     def get(self, request, format=None):
-#         calenders = Calender.objects.all()
-#         return Response(CalenderWithEventWithAttendeeSerializer(calenders, many=True).data)
-
-#     def post(self, request, format=None):
-#         serializer = CalenderWithEventWithAttendeeSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         print(serializer.errors)    
-#         return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-
-
-class CalenderEventListView(APIView):
+class CalendarEventListView(APIView):
 
     def calendar_color(self):
         count = 0
         colors = ['red', 'green', 'yellow', 'blue', '#00FFFF', '#800080', '#FF00FF', '#FFC0CB', '#800000', '#808000']
-        calenders = Calender.objects.filter().values('id')[0:9]
+        calenders = CalendarList.objects.filter().values('calendar_id')[0:9]
         calendar_color = {}
 
         for calendar in calenders:
-            calendar_id = calendar['id']
+            calendar_id = calendar['calendar_id']
             print(calendar_id)
             if not calendar_id in calendar_color.keys():
                 # val = str(calendar)
@@ -248,20 +56,20 @@ class CalenderEventListView(APIView):
         cal_colors = self.calendar_color()
         
         for dt in data:
+            print(dt)
             
-            calendar_name = Calender.objects.get(id=dt['calender_info'])
-            calendar_attendee = CalendarAttendee.objects.filter(event_info=dt['id']).values('event_attendee')
+            calendar_name = CalendarList.objects.get(id=dt['calendar_info_id'])
+            calendar_attendee = CalendarAttendees.objects.filter(event_info_id=dt['user_event_key']).values('event_attendee')
             values = {
                 
             }
-            if calendar_name.id in cal_colors:
-                values['color'] = cal_colors[calendar_name.id]
+            if calendar_name.calendar_id in cal_colors:
+                values['color'] = cal_colors[calendar_name.calendar_id]
                 
-            values['start'] = dt['event_start_date']
-            values['end'] = dt['event_end_date']
-            values['id'] = dt['id']
-            values['calendar_name'] = calendar_name.calender_name
-            values['calendar_id'] = calendar_name.id
+            values['start'] = dt['event_start_dt']
+            values['end'] = dt['event_end_dt']
+            values['calendar_name'] = calendar_name.calendar_name
+            values['calendar_id'] = calendar_name.calendar_id
             values['calendar_attendee'] = calendar_attendee
             values['event_location'] = dt['event_location']
             
@@ -283,18 +91,18 @@ class CalenderEventListView(APIView):
         # print(datetime.now().month, datetime.now().year)
         current_month = datetime.now().month
         current_year = datetime.now().year
-        event = CalendarEvent.objects.filter(event_start_date=today)
+        event = CalendarEvents.objects.filter(event_start_dt=today)
         
         if query == 'daily':
-            event = CalendarEvent.objects.filter(event_start_date=today)
+            event = CalendarEvents.objects.filter(event_start_dt=today)
         elif query == 'weekly':
-            event = CalendarEvent.objects.filter(event_start_date__gte=start_date_week) and CalendarEvent.objects.filter(event_start_date__lte=end_date_week)
+            event = CalendarEvents.objects.filter(event_start_dt__gte=start_date_week) and CalendarEvents.objects.filter(event_start_dt__lte=end_date_week)
             events = CalendarEventWithAttendeeSerializer(event, many=True).data
 
             events = self.weekly_response(events)
             
         elif query == 'monthly':
-            event = CalendarEvent.objects.filter(event_start_date__year=current_year, event_start_date__month=current_month)
+            event = CalendarEvents.objects.filter(event_start_dt__year=current_year, event_start_dt__month=current_month)
         context = {
             'events':events,
             'start_date_week':start_date_week,
@@ -302,121 +110,316 @@ class CalenderEventListView(APIView):
         }
         return Response(context, status=status.HTTP_200_OK)
 
-class EventSearch(APIView):
-    def get(self, request, format=None):
 
-        query = request.GET.get('q', "")
-        if not query:
-            return Response('No data was given', status=status.HTTP_400_BAD_REQUEST)
-        attendee = CalendarAttendee.objects.filter(event_email=request.user.email)
-        print(attendee)
-        print(request.user.email)
-        if attendee:
-            events = CalendarEvent.objects.filter(event_name__icontains=query, id__in=attendee) or CalendarEvent.objects.filter(event_description__icontains=query ,id__in=attendee)
-            if events:
-                return Response(CalenderEevntSerializer(events, many=True).data, status=status.HTTP_200_OK)
-        return Response('Data is not found', status=status.HTTP_404_NOT_FOUND)
+
+
+# class CalenderAPIView(APIView):
+    
+#     def get(self, request, format=None):
+#         # user_id = request.user.id
+#         attendee = CalendarAttendees.objects.filter(event_email=request.user.email).values('calender_info')
+#         calenders = CalendarList.objects.filter(id__in=attendee)
+#         if calenders:
+#             return Response(CalenderWithEventWithAttendeeSerializer(calenders, many=True).data, status=status.HTTP_200_OK)
+#         return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+
+#     def post(self, request, format=None):
+#         request.data['user'] = request.user.id
+#         print(request.data)
+#         serializer = CalendarListSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+# class SingleCalenderAPIView(APIView):
+#     def get(self, request, pk):
+#         try:
+#             calender = CalendarList.objects.get(id=pk)
+#             return Response(CalenderWithEventWithAttendeeSerializer(calender).data, status=status.HTTP_200_OK)
+#         except:
+#             return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+
+#     def put(self, request, pk):
+#         try:
+#             calender = CalendarList.objects.get(id=pk)
+#             if calender.user.id == request.user.id:
+#                 serializer = CalendarListSerializer(calender, data=request.data, partial=True)
+#                 if serializer.is_valid():
+#                     serializer.save()
+#                     return Response(serializer.data, status=status.HTTP_200_OK)
+#                 return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#             return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
+#         except:
+#             return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+
+
+#     def delete(self, request, pk):
+#         try:
+#             calender = CalendarList.objects.get(id=pk)
+#             if calender.user.id == request.user.id:
+#                 calender.delete()
+#                 return Response('calender deleted', status=status.HTTP_200_OK)
+#             return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
+#         except:
+#             return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+
+
+
+# class SingleCalenderEventAPIView(APIView):
+#     def get(self, request, pk):
+#         try:
+#             calender_event = CalendarEvents.objects.get(id=pk)
+#             return Response(CalendarEventsSerializer(calender_event).data, status=status.HTTP_200_OK)
+#         except:
+#             return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+                
+
+#     def put(self, request, pk):
+#         try:
+#             calender_event = CalendarEvents.objects.get(id=pk)
+#             calender= CalendarList.objects.get(id=calender_event.calender_info.id)
+#             print(calender.user.id)
+#             print(request.user.id)
+#             if calender.user.id == request.user.id:
+#                 serializer = CalendarEventsSerializer(calender_event, data=request.data, partial=True)
+#                 if serializer.is_valid():
+#                     serializer.save()
+#                     return Response(serializer.data, status=status.HTTP_200_OK)
+#                 return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#             return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
+
+#         except:
+#             return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+
+#     def delete(self, request, pk):
+#         try:
+#             calender_event = CalendarEvents.objects.get(id=pk)
+#             print(calender_event)
+#             print(calender_event.calender_info)
+#             calender = CalendarList.objects.get(id=calender_event.calender_info.id)
+
+#             if calender.user.id == request.user.id:
+#                 calender_event.delete()
+#                 return Response('Event deleted', status=status.HTTP_200_OK)
+#             return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
+#         except:
+#             return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+
+
+# class SingleCalenderAttendeeAPIView(APIView):
+#     def get(self, request, pk):
+#         try:
+#             calender_attendee = CalendarAttendees.objects.get(id=pk)
+#             return Response(CalendarAttendeesSerializer(calender_attendee).data, status=status.HTTP_200_OK)
+#         except:
+#             return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+            
+#     def put(self, request, pk):
+#         try:
+#             calender_attendee = CalendarAttendees.objects.get(id=pk)
+#             calender_attendee_email = calender_attendee.event_email
+#             print(calender_attendee_email)
+#             if calender_attendee_email == request.user.email:
+#                 serializer = CalendarAttendeesSerializer(calender_attendee, data=request.data, partial=True)
+#                 if serializer.is_valid():
+#                     serializer.save()
+#                     return Response(serializer.data, status=status.HTTP_200_OK)
+#                 return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+#             return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
+#         except:
+#             return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+
+#     def delete(self, request, pk):
+#         try:
+#             calender_attendee = CalendarAttendees.objects.get(id=pk)
+#             print(calender_attendee)
+#             calender = CalendarList.objects.get(id=calender_attendee.calender_info.id)
+
+#             if calender.user.id == request.user.id:
+#                 calender_attendee.delete()
+#                 return Response('Calender Attendee deleted', status=status.HTTP_200_OK)
+#             return Response('User not allow', status=status.HTTP_401_UNAUTHORIZED)
+#         except:
+#             return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+
 
         
-class TodayEvent(APIView):
-    def get(self, request, format=None):
-        start_time = str(date.today())
-        start_time += " " + "00:00:00.000000"
-        print(start_time)
-        end_time = str(date.today()) + " " + "23:59:59.000000"
-        print(end_time)
+        
 
-        attendee = CalendarAttendee.objects.filter(event_email=request.user.email).values('event_info')
-        
-        events = CalendarEvent.objects.filter(event_start_date__gte=start_time, id__in=attendee)
-        print(events)
-        events = events.filter(event_end_date__lte=end_time)
-        print(events)
-        new_time = timedelta(hours=0)
-        data = CalenderEevntSerializer(events, many=True).data
-        dict = {
-            'free_time':''
-        }
-        for event in events:
-            total_time = event.event_end_date - event.event_start_date
-            new_time = total_time + new_time
-        print(new_time)
-        dict['free_time'] = timedelta(hours=24) - new_time
-        
-        data.append(dict)
 
-        if not events:
-            dict['message'] = 'Data is not found'
-            return Response(dict, status=status.HTTP_404_NOT_FOUND)
+# class CalenderEventAPIView(APIView):
+#     def get(self, request, format=None):
+#         calender_attendee = CalendarAttendees.objects.filter(event_email=request.user.email).values('event_info')
+
+#         calender_events = CalendarEvents.objects.filter(id__in=calender_attendee)
+#         if calender_events:
+#             return Response(CalendarEventsSerializer(calender_events, many=True).data, status=status.HTTP_200_OK)
+#         return Response('data not found', status=status.HTTP_404_NOT_FOUND) 
+
+#     def post(self, request, format=None):
+#         serializer = CalendarEventsSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+
+
+# class CalenderAttendeeAPIView(APIView):
+#     def get(self, request, format=None):
+
+#         attendees = CalendarAttendees.objects.filter(event_email=request.user.email)
+#         if attendees:
+#             return Response(CalendarAttendeesSerializer(attendees, many=True).data, status=status.HTTP_200_OK)
+#         return Response('Data not found', status=status.HTTP_404_NOT_FOUND)    
+
+#     def post(self, request, format=None):
+#         event_id = request.data['event_info']
+#         event = CalendarEvents.objects.get(id=event_id)  
+#         request.data['calender_info'] = event.calender_info.id      
+#         serializer = CalendarAttendeesSerializer(data=request.data)
+
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
         
-        return Response(data, status=status.HTTP_200_OK)
+
+# class CalenderWithEventWithAttendeeAPIView(APIView):
+#     def get(self, request, format=None):
+#         calenders = Calender.objects.all()
+#         return Response(CalenderWithEventWithAttendeeSerializer(calenders, many=True).data)
+
+#     def post(self, request, format=None):
+#         serializer = CalenderWithEventWithAttendeeSerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         print(serializer.errors)    
+#         return Response(serializer.errors, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+# class EventSearch(APIView):
+#     def get(self, request, format=None):
+
+#         query = request.GET.get('q', "")
+#         if not query:
+#             return Response('No data was given', status=status.HTTP_400_BAD_REQUEST)
+#         attendee = CalendarAttendees.objects.filter(event_email=request.user.email)
+#         print(attendee)
+#         print(request.user.email)
+#         if attendee:
+#             events = CalendarEvents.objects.filter(event_name__icontains=query, id__in=attendee) or CalendarEvents.objects.filter(event_description__icontains=query ,id__in=attendee)
+#             if events:
+#                 return Response(CalendarEventsSerializer(events, many=True).data, status=status.HTTP_200_OK)
+#         return Response('Data is not found', status=status.HTTP_404_NOT_FOUND)
+
+        
+# class TodayEvent(APIView):
+#     def get(self, request, format=None):
+#         start_time = str(date.today())
+#         start_time += " " + "00:00:00.000000"
+#         print(start_time)
+#         end_time = str(date.today()) + " " + "23:59:59.000000"
+#         print(end_time)
+
+#         attendee = CalendarAttendees.objects.filter(event_email=request.user.email).values('event_info')
+        
+#         events = CalendarEvents.objects.filter(event_start_date__gte=start_time, id__in=attendee)
+#         print(events)
+#         events = events.filter(event_end_date__lte=end_time)
+#         print(events)
+#         new_time = timedelta(hours=0)
+#         data = CalendarEventsSerializer(events, many=True).data
+#         dict = {
+#             'free_time':''
+#         }
+#         for event in events:
+#             total_time = event.event_end_date - event.event_start_date
+#             new_time = total_time + new_time
+#         print(new_time)
+#         dict['free_time'] = timedelta(hours=24) - new_time
+        
+#         data.append(dict)
+
+#         if not events:
+#             dict['message'] = 'Data is not found'
+#             return Response(dict, status=status.HTTP_404_NOT_FOUND)
+        
+#         return Response(data, status=status.HTTP_200_OK)
        
 
               
 
 
 
-class CalenderWithEventWithAttendeeAPIView(APIView):
-    def get(self, request, format=None):
-        attendee = CalendarAttendee.objects.filter(event_email=request.user.email).values('calender_info')
+# class CalenderWithEventWithAttendeeAPIView(APIView):
+#     def get(self, request, format=None):
+#         attendee = CalendarAttendees.objects.filter(event_email=request.user.email).values('calender_info')
 
-        calenders = Calender.objects.filter(id__in=attendee)
-        return Response(CalenderWithEventWithAttendeeSerializer(calenders, many=True).data)
+#         calenders = CalendarList.objects.filter(id__in=attendee)
+#         return Response(CalenderWithEventWithAttendeeSerializer(calenders, many=True).data)
 
 
-    def post(self, request, format=None):
-        calender_serializer = CalenderSerializer(data=request.data)
-        if calender_serializer.is_valid():
-            calender = calender_serializer.save()
-            print(calender.id)
-            event = request.data['calender_event']
-            event['calender_info'] = calender.id
-            print(event)
-            event_serializer = CalenderEevntSerializer(data=event)
-            if event_serializer.is_valid():
-                calender_event = event_serializer.save()
-                attendee = request.data['calender_attendee']
+#     def post(self, request, format=None):
+#         calender_serializer = CalendarListSerializer(data=request.data)
+#         if calender_serializer.is_valid():
+#             calender = calender_serializer.save()
+#             print(calender.id)
+#             event = request.data['calender_event']
+#             event['calender_info'] = calender.id
+#             print(event)
+#             event_serializer = CalendarEventsSerializer(data=event)
+#             if event_serializer.is_valid():
+#                 calender_event = event_serializer.save()
+#                 attendee = request.data['calender_attendee']
 
-                ###inserting owner when no attendee
-                if(len(attendee) == 0):
-                    attendee.append({})
+#                 ###inserting owner when no attendee
+#                 if(len(attendee) == 0):
+#                     attendee.append({})
 
-                    attendee[0]['calender_info'] = calender.id
-                    attendee[0]['event_info'] = calender_event.id
-                    attendee[0]['event_email'] = request.user.email ### todo
-                    attendee[0]['self_flg'] = 1
+#                     attendee[0]['calender_info'] = calender.id
+#                     attendee[0]['event_info'] = calender_event.id
+#                     attendee[0]['event_email'] = request.user.email ### todo
+#                     attendee[0]['self_flg'] = 1
 
-                else:
-                    for single_attendee in attendee:
-                        single_attendee['calender_info'] = calender.id
-                        single_attendee['event_info'] = calender_event.id
-                        # if single_attendee['event_email'] == request.user.email:
-                        # single_attendee.self_flg = 1
+#                 else:
+#                     for single_attendee in attendee:
+#                         single_attendee['calender_info'] = calender.id
+#                         single_attendee['event_info'] = calender_event.id
+#                         # if single_attendee['event_email'] == request.user.email:
+#                         # single_attendee.self_flg = 1
                         
-                    ###inserting owner at the end of the attendee 
-                    get_len = len(attendee)
-                    attendee.append({})
-                    attendee[get_len]['calender_info'] = calender.id
-                    attendee[get_len]['event_info'] = calender_event.id
-                    attendee[get_len]['event_email'] = request.user.email #### todo
-                    attendee[get_len]['self_flg'] = 1
+#                     ###inserting owner at the end of the attendee 
+#                     get_len = len(attendee)
+#                     attendee.append({})
+#                     attendee[get_len]['calender_info'] = calender.id
+#                     attendee[get_len]['event_info'] = calender_event.id
+#                     attendee[get_len]['event_email'] = request.user.email #### todo
+#                     attendee[get_len]['self_flg'] = 1
 
-                attendee_serializer = CalendarAttendeeSerializer(data=attendee, many=True)
-                if attendee_serializer.is_valid():
-                    calender_attendee = attendee_serializer.save()
+#                 attendee_serializer = CalendarAttendeesSerializer(data=attendee, many=True)
+#                 if attendee_serializer.is_valid():
+#                     calender_attendee = attendee_serializer.save()
 
-                    get_all_data = CalenderWithEventWithAttendeeSerializer(Calender.objects.get(id=calender.id))
-                    # return Response(attendee_serializer.data, status=status.HTTP_201_CREATED)
-                    return Response(get_all_data.data, status=status.HTTP_201_CREATED)
+#                     get_all_data = CalenderWithEventWithAttendeeSerializer(CalendarList.objects.get(id=calender.id))
+#                     # return Response(attendee_serializer.data, status=status.HTTP_201_CREATED)
+#                     return Response(get_all_data.data, status=status.HTTP_201_CREATED)
 
-                return Response(attendee_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+#                 return Response(attendee_serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
-                # return Response(event_serializer.data, status=status.HTTP_201_CREATED)
-            return Response(event_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#                 # return Response(event_serializer.data, status=status.HTTP_201_CREATED)
+#             return Response(event_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
             
-            # return Response(calender_serializer.data, status=status.HTTP_201_CREATED)
+#             # return Response(calender_serializer.data, status=status.HTTP_201_CREATED)
 
-            # return Response(calender_serializer.data, status=status.HTTP_201_CREATED)
-        return Response(calender_serializer.errors, status=status.HTTP_400_BAD_REQUEST)        
+#             # return Response(calender_serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(calender_serializer.errors, status=status.HTTP_400_BAD_REQUEST)        
 
 
