@@ -13,7 +13,11 @@
 	<link rel="stylesheet" href="{% static 'custom.css' %}">
 
 	<link rel="stylesheet" href="{% static 'full_calendar/main.css' %}">
-
+    <style>
+		.past{
+			background-color: black;
+		}
+	</style>
 
 
 </head>
@@ -156,7 +160,7 @@
 
 				weeklyCalendar: function () {
 					var that = this;
-					
+
 
 					var calendarEl = document.getElementById('calendar');
 					var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -190,10 +194,10 @@
 
 							var minute = new Date(event.event.start).getMinutes().toLocaleString();
 							var hour = new Date(event.event.start).getHours().toLocaleString();
-							that.start_time = hour+"."+minute;
+							that.start_time = hour + "." + minute;
 							var end_min = new Date(event.event.end).getMinutes().toLocaleString();
 							var end_hour = new Date(event.event.end).getUTCHours().toLocaleString();
-							that.end_time = end_hour+"."+end_min;
+							that.end_time = end_hour + "." + end_min;
 
 							that.calendar_name = event.event._def.extendedProps.calendar_name
 							that.attendees = event.event._def.extendedProps.calendar_attendee
@@ -203,7 +207,15 @@
 
 
 
+						},
+						eventRender: function (calev, elt, view) {
+							var ntoday = new Date();
+							if (calev.start.getTime() < ntoday.getTime()) {
+								elt.addClass("past");
+								elt.children().addClass("past");
+							}
 						}
+
 					});
 					calendar.render();
 

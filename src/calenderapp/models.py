@@ -4,13 +4,11 @@ from django.contrib.auth.models import User
 
 class CalendarList(models.Model):
     calendar_id = models.CharField(max_length=250, null=True, blank=True, )
-    username = models.ForeignKey(User, on_delete=models.CASCADE, )
+    username = models.CharField(max_length=50, null=True, blank=True, )
     calendar_name = models.CharField(max_length=250, )
     access_role = models.CharField(max_length=50, null=True, blank=True, )
     select_flg = models.IntegerField(null=True, blank=True, default=0, )
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True, )
 
     def __str__(self):
         return self.calendar_name
@@ -47,8 +45,7 @@ class CalendarEvents(models.Model):
     organizer_flg = models.IntegerField(null=True, blank=True, default=0)
     creator_flg = models.IntegerField(null=True, blank=True, default=0)
 
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True, )  # Not auto-add since we want to captur
+     # Not auto-add since we want to captur
 
 
     def __str__(self):
@@ -63,8 +60,7 @@ class CalendarAttendees(models.Model):
     response_status = models.CharField(max_length=50, null=True, blank=True)
     self_flg = models.IntegerField(null=True, blank=True, )
 
-    created_at = models.DateTimeField(auto_now_add=True, null=True, )
-    updated_at = models.DateTimeField(auto_now=True, null=True, blank=True)
+   
 
     def __str__(self):
         return self.event_info_id.event_name

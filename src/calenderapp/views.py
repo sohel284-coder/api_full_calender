@@ -34,13 +34,12 @@ class CalendarEventListView(APIView):
 
     def calendar_color(self):
         count = 0
-        colors = ['red', 'green', 'yellow', 'blue', '#00FFFF', '#800080', '#FF00FF', '#FFC0CB', '#800000', '#808000']
-        calenders = CalendarList.objects.filter().values('calendar_id')[0:9]
+        colors = ['red', 'green', '#00FF00', 'blue', '#00FFFF', '#800080', '#FF00FF', '#FFC0CB', '#800000', '#808000']
+        calenders = CalendarList.objects.filter().values('id')[0:9]
         calendar_color = {}
 
         for calendar in calenders:
-            calendar_id = calendar['calendar_id']
-            print(calendar_id)
+            calendar_id = calendar['id']
             if not calendar_id in calendar_color.keys():
                 # val = str(calendar)
                 calendar_color[calendar_id] = colors[count]
@@ -63,13 +62,13 @@ class CalendarEventListView(APIView):
             values = {
                 
             }
-            if calendar_name.calendar_id in cal_colors:
-                values['color'] = cal_colors[calendar_name.calendar_id]
+            if calendar_name.id in cal_colors:
+                values['color'] = cal_colors[calendar_name.id]
                 
             values['start'] = dt['event_start_dt']
             values['end'] = dt['event_end_dt']
             values['calendar_name'] = calendar_name.calendar_name
-            values['calendar_id'] = calendar_name.calendar_id
+            values['calendar_id'] = calendar_name.id
             values['calendar_attendee'] = calendar_attendee
             values['event_location'] = dt['event_location']
             
