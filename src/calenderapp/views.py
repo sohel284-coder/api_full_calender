@@ -96,6 +96,7 @@ class CalendarEventListView(APIView):
             event = CalendarEvents.objects.filter(event_start_dt=today)
         elif query == 'weekly':
             event = CalendarEvents.objects.filter(event_start_dt__gte=start_date_week) and CalendarEvents.objects.filter(event_start_dt__lte=end_date_week)
+            event = CalendarEvents.objects.all()
             events = CalendarEventWithAttendeeSerializer(event, many=True).data
 
             events = self.weekly_response(events)

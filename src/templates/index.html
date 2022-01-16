@@ -13,9 +13,14 @@
 	<link rel="stylesheet" href="{% static 'custom.css' %}">
 
 	<link rel="stylesheet" href="{% static 'full_calendar/main.css' %}">
-    <style>
-		.past{
-			background-color: black;
+	<style>
+		.fc .fc-details-button {
+			background-color: blue;
+		}
+
+		.fc .fc-timegrid-slot {
+			height: 60px;
+			border-bottom: 0 !important;
 		}
 	</style>
 
@@ -102,6 +107,9 @@
 
 	<script src="{% static 'js/bootstrap.min.js' %}"></script>
 	<script src="{% static '/full_calendar/main.js'%}"></script>
+	<script src='https://cdn.jsdelivr.net/npm/moment@2.27.0/min/moment.min.js'></script>
+	<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/moment@5.5.0/main.global.min.js'></script>
+
 
 	{% if debug %}
 	<script src="{% static 'js/vue.js' %}"></script>
@@ -122,7 +130,6 @@
 				start_time: '',
 				end_time: '',
 				location: '',
-
 
 
 			},
@@ -166,22 +173,45 @@
 					var calendar = new FullCalendar.Calendar(calendarEl, {
 
 						headerToolbar: {
-							left: 'prev,next today',
+							left: 'prev,next today, details',
 							center: 'title',
 							right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek'
 						},
+						
+						// dayHeaderContent: (args) => {
+						// 	return moment(args.date).format('ddd')
+						// },
+						customButtons: {
+							details: {
+								text: 'add button',
+								class: "sohel",
+
+							}
+						},
+						slotDuration: '01:00',
+						default:0,
+
 						initialDate: '2022-01-13',
 						navLinks: true, // can click day/week names to navigate views
 						nowIndicator: true,
 
 						weekNumbers: true,
-						weekNumberCalculation: 'ISO',
+						// weekNumberCalculation: 'ISO',
 
 						editable: true,
+						defaultView: 'week',
 						selectable: true,
 						dayMaxEvents: true,
 						events: that.weekly_events,
-						// eventColor: that.event_color,
+						eventDidMount: function (info) {
+							console.log(info);
+							now = new Date()
+							if (info.event.end < now) {
+								console.log(info.event.backgroundColor);
+								info.el.style.opacity = "0.5";
+							}
+							// {description: "Lecture", department: "BioChemistry"}
+						},
 						eventClick: function (event) {
 							$('.calendar-wd__form-three').show();
 
@@ -192,11 +222,11 @@
 							// that.end_time = new Date(event.event.end).toLocaleTimeString();
 
 
-							var minute = new Date(event.event.start).getMinutes().toLocaleString();
-							var hour = new Date(event.event.start).getHours().toLocaleString();
+							var minute = new Date(event.event.start).getMinutes()
+							var hour = new Date(event.event.start).getHours()
 							that.start_time = hour + "." + minute;
-							var end_min = new Date(event.event.end).getMinutes().toLocaleString();
-							var end_hour = new Date(event.event.end).getUTCHours().toLocaleString();
+							var end_min = new Date(event.event.end).getMinutes()
+							var end_hour = new Date(event.event.end).getHours()
 							that.end_time = end_hour + "." + end_min;
 
 							that.calendar_name = event.event._def.extendedProps.calendar_name
@@ -208,13 +238,7 @@
 
 
 						},
-						eventRender: function (calev, elt, view) {
-							var ntoday = new Date();
-							if (calev.start.getTime() < ntoday.getTime()) {
-								elt.addClass("past");
-								elt.children().addClass("past");
-							}
-						}
+
 
 					});
 					calendar.render();
