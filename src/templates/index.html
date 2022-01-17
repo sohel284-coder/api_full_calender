@@ -275,11 +275,10 @@
 					var calendar = new FullCalendar.Calendar(calendarEl, {
 
 						headerToolbar: {
-							left: 'prev, add_event, slot',
-							center: 'title',
-							right: 'setting, dayGridMonth,timeGridWeek,timeGridDay,listWeek, next'
+							left: 'prev,add_event,slot',
+							center:'title',
+							right:'setting,dayGridMonth,timeGridWeek,timeGridDay,listWeek,next'
 						},
-						themeSystem: 'bootstrap',
 						customButtons: {
 							add_event: {
 								text: '+ Add Event',
@@ -288,8 +287,7 @@
 								text: 'Find Slot',
 							},
 							setting:{
-								text:'setting',
-								// bootstrapFontAwesome:'fas fa-cog',
+								bootstrapFontAwesome:'fas fa-cog',
 							},
 
 						},
