@@ -287,7 +287,8 @@
 								text: 'Find Slot',
 							},
 							setting:{
-								bootstrapFontAwesome:'fas fa-cog',
+								text:'setting',
+								// bootstrapFontAwesome:'fas fa-cog',
 							},
 
 						},
@@ -303,7 +304,7 @@
 						// weekNumberCalculation: 'ISO',
 
 						editable: true,
-						// defaultView: 'week',
+						defaultView: 'week',
 						selectable: true,
 						dayMaxEvents: true,
 						events: that.weekly_events,
@@ -319,7 +320,6 @@
 						eventClick: function (event) {
 							// $('.calendar-wd__form-three').show();
 							$('.calendar-wd__form-three').toggleClass('active-event');
-							that.flag = 1;
 							// $('.calendar-wd__form-three').show();
 
 
