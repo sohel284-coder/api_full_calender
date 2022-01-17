@@ -71,6 +71,7 @@ class CalendarEventListView(APIView):
             values['calendar_id'] = calendar_name.id
             values['calendar_attendee'] = calendar_attendee
             values['event_location'] = dt['event_location']
+            values['event_description'] = dt['event_description']
             
             values['title'] = dt['event_name']
             weeks.append(values)

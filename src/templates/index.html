@@ -10,7 +10,7 @@
 
 	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/all.min.css' %}">
 	<!-- <link rel="stylesheet" href="{% static 'custom.css' %}"> -->
 	<link rel="stylesheet" href="{% static 'style.css' %}">
 
@@ -20,6 +20,37 @@
 	<style>
 		.fc .fc-details-button {
 			background-color: blue;
+		}
+		
+		#app
+		{
+		background-color: #FFCBC3;
+		}
+		.fc .fc-view-harness .fc-view-harness-active{
+			background-color: ;
+
+		}
+
+
+		.fc .fc-details-button {
+			background-color: blue;
+		}
+		
+
+		.fc .fc-timegrid-slot {
+			height: 60px;
+			border-bottom: 0 !important;
+		}
+		.fc .fc-view-harness fc-view-harness-active{
+			background-color: antiquewhite;
+		}
+		.fc .fc-view-harness {
+			background-color: #FBFBFB;
+			width: 1200px;
+			position: absolute;
+			left: 150px;
+			top: 150px;
+
 		}
 
 		.fc .fc-timegrid-slot {
@@ -63,27 +94,23 @@
 											<span>[[calendar_name]]</span>[[event_title]]</h2>
 										<div class="calendar-wd__form-body">
 											<div class="calendar-wd__form-single">
-												<h4 class="calendar-wd__form-heading"><img
-														src="{% static 'img/calender.png' %}" alt="#">
+												<h4 class="calendar-wd__form-heading"><i class="far fa-calendar-alt"></i>
 													[[start_date]]　[[start_time]] - [[end_time]]</h4>
 											</div>
 											<div class="calendar-wd__form-single">
 												<h4 class="calendar-wd__form-heading"><a href="#"><img
 															src="{% static 'img/memo.png' %}"
 															alt="#">[[event_location]]</a></h4>
-												<ul class="calendar-wd__form-list">
-													<li>Update sales presentation</li>
-													<li>Book large meeting room</li>
-													<li>Send material to Keiko Toyama</li>
-												</ul>
+												<div class="calendar-wd__form-list">
+													[[description]]
+												</div>
 											</div>
 										</div>
 									</div>
 									<div class="calendar-wd__form-three-two">
 										<ul class="calendar-wd__form-list-img calendar-wd__form-list-two"
 											v-for="attendee in attendees">
-											<li><img src="{% static 'img/icon.png' %}"
-													alt="#">[[attendee.event_attendee]]</li>
+											<li><img src="{% static 'img/icon.png' %}" alt="#">[[attendee.event_attendee]]</li>
 
 										</ul>
 										<div class="calander-wd__button calander-wd__button-guest">
@@ -187,6 +214,7 @@
 
 	<script src="{% static 'js/jquery.min.js' %}"></script>
 	<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+	<script src="{% static 'js/all.min.js' %}"></script>
 
 	<script src="{% static 'js/bootstrap.min.js' %}"></script>
 	<script src="{% static '/full_calendar/main.js'%}"></script>
@@ -214,6 +242,7 @@
 				end_time: '',
 				event_location: '',
 				start_date: '',
+				description:'',
 
 			},
 			mounted: function () {
@@ -222,7 +251,7 @@
 			methods: {
 				onClose: function () {
 					console.log('test');
-					$(".calendar-wd__form-three").css('visibility', 'hidden');
+					$(".calendar-wd__form-three").toggleClass('active-event');
 				},
 
 				showEvents: function () {
@@ -246,9 +275,9 @@
 						headerToolbar: {
 							left: 'prev, add_event, slot',
 							center: 'title',
-							right: 'dayGridMonth,timeGridWeek,timeGridDay,listWeek, next'
+							right: 'setting, dayGridMonth,timeGridWeek,timeGridDay,listWeek, next'
 						},
-						
+						themeSystem: 'bootstrap',
 						customButtons: {
 							add_event: {
 								text: '+ Add Event',
@@ -256,23 +285,25 @@
 							slot: {
 								text: 'Find Slot',
 							},
-
-							
+							setting:{
+								text:'setting',
+								// bootstrapFontAwesome:'fas fa-cog',
+							},
 
 						},
 
-						slotDuration: '01:00',
+						slotDuration: '00:30',
 						default: 0,
-
 						navLinks: true, // can click day/week names to navigate views
 						nowIndicator: true,
 
 						weekNumbers: true,
+
 						
 						// weekNumberCalculation: 'ISO',
 
 						editable: true,
-						defaultView: 'week',
+						// defaultView: 'week',
 						selectable: true,
 						dayMaxEvents: true,
 						events: that.weekly_events,
@@ -309,11 +340,19 @@
 							that.event_title = event.event._def.title;
 
 							that.event_location = event.event._def.extendedProps.event_location;
+							that.description = event.event._def.extendedProps.event_description;
 
 							console.log(that.event_location);
 							// that.start_time = new Date(event.event.start).toLocaleTimeString();
 							// that.end_time = new Date(event.event.end).toLocaleTimeString();
-							that.start_date = new Date(event.event.start).toDateString();
+							var st_date = new Date(event.event.start);
+							date = st_date.getDate();
+							year = st_date.getFullYear();
+							month = st_date.toLocaleString('default', { month: 'short' });
+							day = st_date.toLocaleString('en-us', {weekday:'short'});
+							
+							that.start_date = month + ' ' + date +',' + ' ' + year + ' ' + '('+ day + ')' ;
+							console.log(that.start_date);
 							var minute = new Date(event.event.start).getMinutes()
 							var hour = new Date(event.event.start).getHours()
 							that.start_time = hour + "." + minute;
@@ -328,6 +367,7 @@
 							calender_id = event.event._def.extendedProps.calender_id;
 
 						},
+						
 
 
 					});
