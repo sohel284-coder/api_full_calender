@@ -21,36 +21,63 @@
 		.fc .fc-details-button {
 			background-color: blue;
 		}
-		
-		#app
-		{
-		background-color: #FFCBC3;
-		}
-		.fc .fc-view-harness .fc-view-harness-active{
-			background-color: ;
-
+		#app{
+			background-color: rgb(251, 199, 251);
 		}
 
+		@media screen and (max-width:767px) {
+			.fc .fc-toolbar.fc-header-toolbar {
+				font-size: 60%
+			}
+
+			.fc .fc-timegrid-slot {
+				font-size: 60%;
+
+			}
+
+		}
 
 		.fc .fc-details-button {
 			background-color: blue;
 		}
-		
 
-		.fc .fc-timegrid-slot {
-			height: 60px;
-			border-bottom: 0 !important;
-		}
-		.fc .fc-view-harness fc-view-harness-active{
-			background-color: antiquewhite;
-		}
+
 		.fc .fc-view-harness {
 			background-color: #FBFBFB;
-			width: 1200px;
-			position: absolute;
-			left: 150px;
-			top: 150px;
 
+			height: 100%;
+			width: 75%;
+			margin: auto;
+
+		}
+
+		.fc .fc-timegrid-slot {
+			height: 40px;
+			border-bottom: 0 !important;
+			background-color: floralwhite;
+
+
+		}
+
+		.fc .fc-view-harness fc-view-harness-active {
+			background-color: antiquewhite;
+		}
+
+
+		.calendar-wd__popbar {
+			background: #FFCBC3;
+			z-index: 3333;
+			position: absolute;
+			text-align: left;
+			padding: 10px;
+			border-radius: 4px;
+			top: 2%;
+			left: 2%;
+			width: 96%;
+			height: 100%;
+			border-radius: 15px;
+			color: #F37764;
+			z-index: 999999;
 		}
 
 		.fc .fc-timegrid-slot {
@@ -64,7 +91,7 @@
 
 <body>
 	<div class="calendar-wd__section" id="app">
-		<div class="calendar-wd">
+		<div class="calendar-wd"  @click.prevent="oncloseEvent" >
 			<div id='calendar'></div>
 			<br>
 			<br>
@@ -76,6 +103,7 @@
 						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist">
 							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><img
 										src="{% static 'img/pen.png' %}" alt="#"></a></li>
+						    <li><a class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><i class="far fa-trash-alt" style="font-size:20px; color: black;" ></i></a></li>				
 							<li><a class="list-group-item active" data-bs-toggle="list" href="#f-tab3" role="tab"><img
 										src="{% static 'img/message.png' %}" alt="#"></a></li>
 							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab5" role="tab"><i
@@ -87,14 +115,16 @@
 					<div class="calendar-wd__form-three-body">
 						<div class="tab-content" id="nav-tabContent">
 							<!-- Property Tab One -->
-							<div class="tab-pane fade show active"  id="f-tab3" role="tabpanel">
+							<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
 								<div class="calendar-wd__form-separate-column">
 									<div class="calendar-wd__form-three-one">
 										<h2 class="calendar-wd__form-three-title">
-											<span>[[calendar_name]]</span>[[event_title]]</h2>
+											<span>[[calendar_name]]</span>[[event_title]]
+										</h2>
 										<div class="calendar-wd__form-body">
 											<div class="calendar-wd__form-single">
-												<h4 class="calendar-wd__form-heading"><i class="far fa-calendar-alt"></i>
+												<h4 class="calendar-wd__form-heading"><i
+														class="far fa-calendar-alt"></i>
 													[[start_date]]　[[start_time]] - [[end_time]]</h4>
 											</div>
 											<div class="calendar-wd__form-single">
@@ -110,7 +140,8 @@
 									<div class="calendar-wd__form-three-two">
 										<ul class="calendar-wd__form-list-img calendar-wd__form-list-two"
 											v-for="attendee in attendees">
-											<li><img src="{% static 'img/icon.png' %}" alt="#">[[attendee.event_attendee]]</li>
+											<li><img src="{% static 'img/icon.png' %}"
+													alt="#">[[attendee.event_attendee]]</li>
 
 										</ul>
 										<div class="calander-wd__button calander-wd__button-guest">
@@ -126,32 +157,23 @@
 										<form class="form">
 											<div class="form-group">
 												<div class="input-group">
-													<input id="datepick" type="text" placeholder="[Zoom]Toshiとの">
+													<input id="datepick" v-model="event_title" type="text" placeholder="">
 												</div>
 											</div>
 											<div class="form-group calendar-wd__date-pick">
 												<div class="form-control wide" tabindex="0"><i
 														class="fa fa-calendar"></i><span class="current"><input
-															id="datepick" type="text"
-															placeholder="Wednesday, 1 December"></span></div>
+															id="datepick" v-model="edit_st_date" type="text"
+															placeholder=""></span></div>
 											</div>
 											<div class="form-group">
 												<div class="list-inner-group">
 													<div class="list-single-group">
-														<select class="form-select" aria-label="Default select example">
-															<option selected="">15.30</option>
-															<option value="1">15.30</option>
-															<option value="2">15.30</option>
-															<option value="3">15.30</option>
-														</select>
+														<input type="text" v-model="start_time" >
 													</div>
 													<div class="list-single-group">
-														<select class="form-select" aria-label="Default select example">
-															<option selected="">16.30</option>
-															<option value="1">16.30</option>
-															<option value="2">16.30</option>
-															<option value="3">16.30</option>
-														</select>
+														<input type="text" v-model="end_time" >
+													
 													</div>
 													<div class="list-single-group   project-dropdown">
 														<select class="form-select" aria-label="Default select example">
@@ -166,25 +188,19 @@
 											<div class="form-group">
 												<div class="input-group">
 													<span class="input-icon"><i class="fa fa-map-marker"></i></span>
-													<input id="datepick" type="text" placeholder="Add location">
+													<input id="datepick" v-model="event_location" type="text" placeholder="Add location">
 												</div>
 											</div>
 											<div class="form-group project-dropdown">
 												<select class="form-select" aria-label="Default select example">
-													<option selected="">Project B</option>
-													<option value="1">15.30</option>
-													<option value="2">15.30</option>
-													<option value="3">15.30</option>
+													
 												</select>
 											</div>
 											<div class="form-group select-man">
-												<ul class="select-list-img">
-													<li><a href="#"><img src="{% static 'img/icon.png' %}" alt="#"></a>
+												<ul class="select-list-img" v-for="attendee in attendees">
+													<li><a href="#"><img src="{% static 'img/icon.png' %}" alt="#">[[attendee.event_attendee]]</a>
 													</li>
-													<li><a href="#"><img src="{% static 'img/icon-2.png' %}"
-																alt="#"></a></li>
-													<li><a href="#"><img src="{% static 'img/icon-3.png' %}"
-																alt="#"></a></li>
+													
 													<li><span class="plus-icon"><i class="fa fa-plus"></i></span></li>
 												</ul>
 											</div>
@@ -199,6 +215,8 @@
 											<div class="form-group button">
 												<button type="submit" class="theme-btn theme-sec">More options</button>
 												<b class="theme-btn theme-primary calendar-wd__submit">Save</b>
+												<b class="btn btn-danger btn-sm"  @click.prevent="onClose">cancel</b>
+												
 											</div>
 										</form>
 									</div>
@@ -229,6 +247,8 @@
 	{% endif %}
 
 	<script>
+
+
 		var app = new Vue({
 			el: '#app',
 			delimiters: ['[[', ']]'],
@@ -242,9 +262,10 @@
 				end_time: '',
 				event_location: '',
 				start_date: '',
-				description:'',
-				popup:false,
-				flag:0,
+				edit_st_date:'',
+				description: '',
+				popup: false,
+				flag: null,
 
 			},
 			mounted: function () {
@@ -254,8 +275,19 @@
 				onClose: function () {
 					console.log('test');
 					$(".calendar-wd__form-three").toggleClass('active-event');
+									
 				},
+				oncloseEvent:function(){
+					console.log('event');
+					$(".calendar-wd__form-three active-event").removeClass('active-event');
+
+					
+					// $(".calendar-wd__form-three active-event").css('opacity', 0);
+
+				},
+
 				
+
 				showEvents: function () {
 					var that = this;
 					$.ajax({
@@ -276,8 +308,8 @@
 
 						headerToolbar: {
 							left: 'prev,add_event,slot',
-							center:'title',
-							right:'setting,dayGridMonth,timeGridWeek,timeGridDay,listWeek,next'
+							center: 'title',
+							right: 'setting,dayGridMonth,timeGridWeek,timeGridDay,listWeek,next'
 						},
 						customButtons: {
 							add_event: {
@@ -286,80 +318,61 @@
 							slot: {
 								text: 'Find Slot',
 							},
-							setting:{
-								text:'setting',
+							setting: {
+								text: 'setting',
 								// bootstrapFontAwesome:'fas fa-cog',
 							},
 
 						},
 
 						slotDuration: '00:30',
-						default: 0,
+						// default: 0,
 						navLinks: true, // can click day/week names to navigate views
 						nowIndicator: true,
 
 						weekNumbers: true,
 
-						
+
 						// weekNumberCalculation: 'ISO',
 
 						editable: true,
-						defaultView: 'week',
+						// defaultView: 'week',
 						selectable: true,
 						dayMaxEvents: true,
 						events: that.weekly_events,
 						eventDidMount: function (info) {
-							console.log(info);
 							now = new Date()
 							if (info.event.end < now) {
-								console.log(info.event.backgroundColor);
 								info.el.style.opacity = "0.5";
 							}
 							// {description: "Lecture", department: "BioChemistry"}
 						},
 						eventClick: function (event) {
-							// $('.calendar-wd__form-three').show();
-							$('.calendar-wd__form-three').toggleClass('active-event');
-							// $('.calendar-wd__form-three').show();
-
-
-							$('.calendar-wd__form-three').hover(function () {
-								$('.calendar-wd__form-three').addClass('plus-bonus');
-							});
-
-							$(".calendar-wd__form-three").hover(
-								function () {
-									$(this).removeClass("hover-active");
-								}, function () {
-									$(this).addClass("hover-active");
-								}
-							);
-
+							$('.calendar-wd__form-three').addClass('active-event');
 
 							that.event_title = event.event._def.title;
 
 							that.event_location = event.event._def.extendedProps.event_location;
 							that.description = event.event._def.extendedProps.event_description;
 
-							console.log(that.event_location);
 							// that.start_time = new Date(event.event.start).toLocaleTimeString();
 							// that.end_time = new Date(event.event.end).toLocaleTimeString();
 							var st_date = new Date(event.event.start);
 							date = st_date.getDate();
 							year = st_date.getFullYear();
-							month = st_date.toLocaleString('default', { month: 'short' });
-							day = st_date.toLocaleString('en-us', {weekday:'short'});
-							
-							that.start_date = month + ' ' + date +',' + ' ' + year + ' ' + '('+ day + ')' ;
-							console.log(that.start_date);
-							var minute = ('0'+new Date(event.event.start).getMinutes()).slice(-2);
+							month = st_date.toLocaleString('en-us', { month: 'long' });
+							day = st_date.toLocaleString('en-us', { weekday: 'short' });
+							that.edit_st_date = day + ',' + date + ' ' + month ;
+
+							that.start_date = month + ' ' + date + ',' + ' ' + year + ' ' + '(' + day + ')';
+							var minute = ('0' + new Date(event.event.start).getMinutes()).slice(-2);
 							var hour = new Date(event.event.start).getHours()
-							
-							var end_min = ('0'+new Date(event.event.end).getMinutes()).slice(-2);
+
+							var end_min = ('0' + new Date(event.event.end).getMinutes()).slice(-2);
 							var end_hour = new Date(event.event.end).getHours()
-							
-							that.start_time = hour + "." + minute;
-							that.end_time = end_hour + "." + end_min;
+
+							that.start_time = hour + ":" + minute;
+							that.end_time = end_hour + ":" + end_min;
 
 							that.calendar_name = event.event._def.extendedProps.calendar_name
 							that.attendees = event.event._def.extendedProps.calendar_attendee
@@ -368,7 +381,7 @@
 							calender_id = event.event._def.extendedProps.calender_id;
 
 						},
-						
+
 
 
 					});
@@ -377,8 +390,8 @@
 				}
 			},
 		})
-		
-		
+
+
 	</script>
 
 

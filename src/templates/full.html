@@ -17,15 +17,11 @@
 
 	<link rel="stylesheet" href="{% static 'full_calendar/main.css' %}">
 	<style>
+		#app {
+			background-color: antiquewhite;
+		}
 
-		#calendar
-		{
-		}
-		#app
-		{
-		background-color: antiquewhite;
-		}
-		.fc .fc-view-harness .fc-view-harness-active{
+		.fc .fc-view-harness .fc-view-harness-active {
 			background-color: antiquewhite;
 
 		}
@@ -39,9 +35,11 @@
 			height: 60px;
 			border-bottom: 0 !important;
 		}
-		.fc .fc-view-harness fc-view-harness-active{
+
+		.fc .fc-view-harness fc-view-harness-active {
 			background-color: antiquewhite;
 		}
+
 		.fc .fc-view-harness {
 			background-color: yellowgreen;
 			width: 1200px;
@@ -61,42 +59,35 @@
 			<div id='calendar'></div>
 			<br>
 			<br>
-			<div class="calendar-wd__form calendar-wd__form-three" style="display: none;" id="popup">
-				<div class="close-icon close-three" @click.prevent="iconClose"><img src="{% static 'img/close.png' %}"
-						alt=""></div>
+			<div class="calendar-wd__form calendar-wd__form-three">
+				<div class="close-icon close-three"><img src="img/close.png" alt=""></div>
 				<div class="calendar-wd__form-three--one">
 					<div class="calendar-wd__form-three-head">
 						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist">
 							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><img
-										src="{% static 'img/pen.png' %}" alt="#"></a></li>
+										src="img/pen.png" alt="#"></a></li>
 							<li><a class="list-group-item active" data-bs-toggle="list" href="#f-tab3" role="tab"><img
-										src="{% static 'img/message.png' %}" alt="#"></a></li>
+										src="img/message.png" alt="#"></a></li>
 							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab5" role="tab"><i
-										class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
-							</li>
+										class="icofont-bread"></i><img src="img/bell-2.png" alt="#"></a></li>
 						</ul>
-						<img style="" src="{% static 'img/calander-banner.png' %}">
-
+						<img src="img/calander-banner.png">
 					</div>
 					<div class="calendar-wd__form-three-body">
 						<div class="tab-content" id="nav-tabContent">
+							<!-- Property Tab One -->
 							<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
 								<div class="calendar-wd__form-separate-column">
 									<div class="calendar-wd__form-three-one">
-										<h2 class="calendar-wd__form-three-title">
-											<span>[[calendar_name]]</span>[[event_title]]
-										</h2>
+										<h2 class="calendar-wd__form-three-title"><span>プロジェクト</span>社内プレゼンテーション</h2>
 										<div class="calendar-wd__form-body">
 											<div class="calendar-wd__form-single">
-												<h4 class="calendar-wd__form-heading"><img
-														src="{% static 'img/calender.png' %}"
-														alt="#"><span>[[start_time]]</span> <span
-														class="ml-2">[[end_time]]</span> </h4>
+												<h4 class="calendar-wd__form-heading"><img src="img/calender.png"
+														alt="#">2021年12月3日(金曜日)　11:00 - 16:30</h4>
 											</div>
 											<div class="calendar-wd__form-single">
 												<h4 class="calendar-wd__form-heading"><a href="#"><img
-															src="{% static 'img/memo.png' %}" alt="#">[[location]]</a>
-												</h4>
+															src="img/memo.png" alt="#">Tokyo</a></h4>
 												<ul class="calendar-wd__form-list">
 													<li>Update sales presentation</li>
 													<li>Book large meeting room</li>
@@ -106,26 +97,103 @@
 										</div>
 									</div>
 									<div class="calendar-wd__form-three-two">
-										<ul v-for="attendee in attendees"
-											class="calendar-wd__form-list-img calendar-wd__form-list-two">
-											<li><img src="" alt="#">[[attendee.event_attendee]]</li>
-
+										<ul class="calendar-wd__form-list-img calendar-wd__form-list-two">
+											<li><img src="img/icon.png" alt="#">Keiko Toyama</li>
+											<li><img src="img/icon-2.png" alt="#">Daisuke Inoue</li>
+											<li><img src="img/icon-3.png" alt="#">Tomohisa Himeda</li>
 										</ul>
 										<div class="calander-wd__button calander-wd__button-guest">
 											<span class="plus-icon"><a href="#"><i class="fa fa-plus"></i></span>Add
 											guests</a>
 										</div>
 									</div>
-
+								</div>
+							</div>
+							<div class="tab-pane fade" id="f-tab4" role="tabpanel">
+								<div class="calendar-wd__form-three--two">
+									<div class="calendar-wd__form-1">
+										<form class="form">
+											<div class="form-group">
+												<div class="input-group">
+													<input id="datepick" type="text" placeholder="[Zoom]Toshiとの">
+												</div>
+											</div>
+											<div class="form-group calendar-wd__date-pick">
+												<div class="form-control wide" tabindex="0"><i
+														class="fa fa-calendar"></i><span class="current"><input
+															id="datepick" type="text"
+															placeholder="Wednesday, 1 December"></span></div>
+											</div>
+											<div class="form-group">
+												<div class="list-inner-group">
+													<div class="list-single-group">
+														<select class="form-select" aria-label="Default select example">
+															<option selected="">15.30</option>
+															<option value="1">15.30</option>
+															<option value="2">15.30</option>
+															<option value="3">15.30</option>
+														</select>
+													</div>
+													<div class="list-single-group">
+														<select class="form-select" aria-label="Default select example">
+															<option selected="">16.30</option>
+															<option value="1">16.30</option>
+															<option value="2">16.30</option>
+															<option value="3">16.30</option>
+														</select>
+													</div>
+													<div class="list-single-group   project-dropdown">
+														<select class="form-select" aria-label="Default select example">
+															<option selected="">Don't repeat</option>
+															<option value="1">Don't repeat</option>
+															<option value="2">Don't repeat</option>
+															<option value="3">Don't repeat</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="input-group">
+													<span class="input-icon"><i class="fa fa-map-marker"></i></span>
+													<input id="datepick" type="text" placeholder="Add location">
+												</div>
+											</div>
+											<div class="form-group project-dropdown">
+												<select class="form-select" aria-label="Default select example">
+													<option selected="">Project B</option>
+													<option value="1">15.30</option>
+													<option value="2">15.30</option>
+													<option value="3">15.30</option>
+												</select>
+											</div>
+											<div class="form-group select-man">
+												<ul class="select-list-img">
+													<li><a href="#"><img src="img/icon.png" alt="#"></a></li>
+													<li><a href="#"><img src="img/icon-2.png" alt="#"></a></li>
+													<li><a href="#"><img src="img/icon-3.png" alt="#"></a></li>
+													<li><span class="plus-icon"><i class="fa fa-plus"></i></span></li>
+												</ul>
+											</div>
+											<div class="form-group">
+												<ul class="calendar-wd__clist">
+													<li><img src="img/calender.png">Email Participants</li>
+													<li><img src="img/memo.png">Add Notes</li>
+													<li><img src="img/bell.png">Set Reminder</li>
+												</ul>
+											</div>
+											<div class="form-group button">
+												<button type="submit" class="theme-btn theme-sec">More options</button>
+												<b class="theme-btn theme-primary calendar-wd__submit">Save</b>
+											</div>
+										</form>
+									</div>
 								</div>
 							</div>
 						</div>
-
 					</div>
 				</div>
-
-
 			</div>
+
 
 		</div>
 	</div>
@@ -154,20 +222,9 @@
 
 
 
-		addButtons();
 
 
 
-		function addButtons() {
-			//create buttons
-			var sample = $("<button/>")
-				.addClass("fc-button fc-button-month fc-state-default fc-corner-left fc-state-active")
-				.attr({
-					unselectable: "on",
-					type: "button"
-				})
-				.text("sample");
-		};
 
 		var app = new Vue({
 			el: '#app',
@@ -200,19 +257,7 @@
 					}).then(response => {
 						that.weekly_events = response.events;
 						that.weeklyCalendar();
-						// for (let i = 0; i < that.weekly_events.length; i++) {
-						// 	console.log(that.weekly_events[i].calendar_id)
-						// 	console.log(color_keys[i]);
-						// 	for (let j = 0; j < color_keys.length; j++) {
-						// 		if (that.weekly_events[i].calendar_id == color_keys[j]) {
-						// 			that.event_color = that.colors[color_keys[i]]
-						// 			console.log(that.event_color);
-						// 			
 
-						// 		}
-						// 	}
-
-						// }
 					})
 				},
 
@@ -239,7 +284,7 @@
 						customButtons: {
 							ForwardButton: {
 								bootstrapFontAwesome: 'fas fa-abacus',
-				
+
 								click: function () {
 
 								}
@@ -250,7 +295,7 @@
 
 								}
 							},
-							
+
 						},
 
 						//default: bootstrap,
@@ -286,8 +331,7 @@
 						// },
 
 						eventClick: function (event) {
-							$('.calendar-wd__form-three').show();
-
+							$('.calendar-wd__form-three').toggleClass('active-event');
 
 							that.event_title = event.event._def.title;
 							that.location = event.event._def.extendedProps.event_location;
@@ -330,7 +374,97 @@
 		})
 
 
+		$(document).ready(function () {
+			$('.calendar-wd__day-one').on("click", function () {
+				$('.calendar-wd__day-two,.calendar-wd__day-three,.calendar-wd__day-four,.calendar-wd__day-five,.calendar-wd__day-six,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
+			});
 
+			$('.calendar-wd__day-one').on("click", function () {
+				$('.calendar-wd__day-one').addClass('calendar-wd__focus');
+			});
+
+
+			$('.calendar-wd__day-two').on("click", function () {
+				$('.calendar-wd__day-one,.calendar-wd__day-three,.calendar-wd__day-four,.calendar-wd__day-five,.calendar-wd__day-six,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
+			});
+
+			$('.calendar-wd__day-two').on("click", function () {
+				$('.calendar-wd__day-two').addClass('calendar-wd__focus');
+			});
+
+
+			$('.calendar-wd__day-three').on("click", function () {
+				$('.calendar-wd__day-one,.calendar-wd__day-two,.calendar-wd__day-four,.calendar-wd__day-five,.calendar-wd__day-six,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
+			});
+
+			$('.calendar-wd__day-three').on("click", function () {
+				$('.calendar-wd__day-three').addClass('calendar-wd__focus');
+			});
+
+
+			$('.calendar-wd__day-four').on("click", function () {
+				$('.calendar-wd__day-one,.calendar-wd__day-two,.calendar-wd__day-three,.calendar-wd__day-five,.calendar-wd__day-six,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
+			});
+
+			$('.calendar-wd__day-four').on("click", function () {
+				$('.calendar-wd__day-four').addClass('calendar-wd__focus');
+			});
+
+
+
+			$('.calendar-wd__day-five').on("click", function () {
+				$('.calendar-wd__day-one,.calendar-wd__day-two,.calendar-wd__day-three,.calendar-wd__day-four,.calendar-wd__day-six,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
+			});
+			$('.calendar-wd__day-five').on("click", function () {
+				$('.calendar-wd__day-five').addClass('calendar-wd__focus');
+			});
+
+
+
+			$('.calendar-wd__day-six').on("click", function () {
+				$('.calendar-wd__day-one,.calendar-wd__day-two,.calendar-wd__day-three,.calendar-wd__day-four,.calendar-wd__day-five,.calendar-wd__day-seven').removeClass('calendar-wd__focus');
+			});
+			$('.calendar-wd__day-six').on("click", function () {
+				$('.calendar-wd__day-six').addClass('calendar-wd__focus');
+			});
+
+
+
+			$('.calendar-wd__day-seven').on("click", function () {
+				$('.calendar-wd__day-one,.calendar-wd__day-two,.calendar-wd__day-three,.calendar-wd__day-four,.calendar-wd__day-five,.calendar-wd__day-six').removeClass('calendar-wd__focus');
+			});
+
+			$('.calendar-wd__day-seven').on("click", function () {
+				$('.calendar-wd__day-seven').addClass('calendar-wd__focus');
+			});
+
+
+
+			$('.calendar-wd__blank_box,.close-one').on("click", function () {
+				$('.calendar-wd__form').toggleClass('active');
+			});
+			$('.calendar-wd__submit,.close-one').on("click", function () {
+				$('.calendar-wd__form-two,.calendar-wd__form-one').toggleClass('active');
+			});
+
+
+			$('.calendar-wd__popbar,.close-three').on("click", function () {
+				$('.calendar-wd__form-three').toggleClass('active-event');
+
+			});
+
+			$('.calendar-wd__form-three').hover(function () {
+				$('.calendar-wd__form-three').addClass('plus-bonus');
+			});
+
+			$(".calendar-wd__form-three").hover(
+				function () {
+					$(this).removeClass("hover-active");
+				}, function () {
+					$(this).addClass("hover-active");
+				}
+			);
+		})
 
 	</script>
 
