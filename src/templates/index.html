@@ -101,10 +101,10 @@
 				<div class="calendar-wd__form-three--one">
 					<div class="calendar-wd__form-three-head">
 						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist">
-							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><img
+							<li><a @click.prevent="onEdit" class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><img
 										src="{% static 'img/pen.png' %}" alt="#"></a></li>
 						    <li><a class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><i class="far fa-trash-alt" style="font-size:20px; color: black;" ></i></a></li>				
-							<li><a class="list-group-item active" data-bs-toggle="list" href="#f-tab3" role="tab"><img
+							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab3" role="tab"><img
 										src="{% static 'img/message.png' %}" alt="#"></a></li>
 							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab5" role="tab"><i
 										class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
@@ -125,7 +125,7 @@
 											<div class="calendar-wd__form-single">
 												<h4 class="calendar-wd__form-heading"><i
 														class="far fa-calendar-alt"></i>
-													[[start_date]]　[[start_time]] - [[end_time]]</h4>
+													[[interval]]</h4>
 											</div>
 											<div class="calendar-wd__form-single">
 												<h4 class="calendar-wd__form-heading"><a href="#"><img
@@ -151,7 +151,7 @@
 									</div>
 								</div>
 							</div>
-							<div class="tab-pane fade" id="f-tab4" role="tabpanel">
+							<div class="tab-pane fade" id="f-tab4" role="tabpanel" style="display: none;">
 								<div class="calendar-wd__form-three--two">
 									<div class="calendar-wd__form-1">
 										<form class="form">
@@ -163,7 +163,7 @@
 											<div class="form-group calendar-wd__date-pick">
 												<div class="form-control wide" tabindex="0"><i
 														class="fa fa-calendar"></i><span class="current"><input
-															id="datepick" v-model="edit_st_date" type="text"
+															id="datepick" v-model="interval" type="text"
 															placeholder=""></span></div>
 											</div>
 											<div class="form-group">
@@ -192,9 +192,7 @@
 												</div>
 											</div>
 											<div class="form-group project-dropdown">
-												<select class="form-select" aria-label="Default select example">
-													
-												</select>
+												<input type="text" v-model="calendar_name" >
 											</div>
 											<div class="form-group select-man">
 												<ul class="select-list-img" v-for="attendee in attendees">
@@ -247,7 +245,33 @@
 	{% endif %}
 
 	<script>
+		$(document).ready(function(){
 
+			$('.calendar-wd__blank_box,.close-one').on("click", function () {
+				$('.calendar-wd__form').toggleClass('active');
+			});
+			$('.calendar-wd__submit,.close-one').on("click", function () {
+				$('.calendar-wd__form-two,.calendar-wd__form-one').toggleClass('active');
+			});
+
+
+			$('.calendar-wd__popbar').on("click", function () {
+				$('.calendar-wd__form-three').toggleClass('active-event');
+
+			});
+
+			$('.calendar-wd__form-three').hover(function () {
+				$('.calendar-wd__form-three').addClass('plus-bonus');
+			});
+
+			$(".calendar-wd__form-three").hover(
+				function () {
+					$(this).removeClass("hover-active");
+				}, function () {
+					$(this).addClass("hover-active");
+				}
+			);
+		})
 
 		var app = new Vue({
 			el: '#app',
@@ -266,6 +290,7 @@
 				description: '',
 				popup: false,
 				flag: null,
+				interval:'',
 
 			},
 			mounted: function () {
@@ -284,6 +309,9 @@
 					
 					// $(".calendar-wd__form-three active-event").css('opacity', 0);
 
+				},
+				onEdit:function(){
+					$('.tab-pane').show();
 				},
 
 				
@@ -324,16 +352,17 @@
 							},
 
 						},
-
-						slotDuration: '00:30',
-						// default: 0,
+						droppable:true,
+						eventResizableFromStart:true,
+						eventStartEditable:true,
+						initialView:'timeGridWeek',
+						alldaySlot:true,
+						duration:{hours:8},
+						slotDuration: '00:15',
 						navLinks: true, // can click day/week names to navigate views
 						nowIndicator: true,
 
 						weekNumbers: true,
-
-
-						// weekNumberCalculation: 'ISO',
 
 						editable: true,
 						// defaultView: 'week',
@@ -348,6 +377,7 @@
 							// {description: "Lecture", department: "BioChemistry"}
 						},
 						eventClick: function (event) {
+
 							$('.calendar-wd__form-three').addClass('active-event');
 
 							that.event_title = event.event._def.title;
@@ -358,13 +388,22 @@
 							// that.start_time = new Date(event.event.start).toLocaleTimeString();
 							// that.end_time = new Date(event.event.end).toLocaleTimeString();
 							var st_date = new Date(event.event.start);
+							var ed_date = new Date(event.event.end)
 							date = st_date.getDate();
 							year = st_date.getFullYear();
 							month = st_date.toLocaleString('en-us', { month: 'long' });
 							day = st_date.toLocaleString('en-us', { weekday: 'short' });
 							that.edit_st_date = day + ',' + date + ' ' + month ;
 
+							end_date = st_date.getDate();
+							end_year = st_date.getFullYear();
+							end_month = st_date.toLocaleString('en-us', { month: 'long' });
+							end_day = st_date.toLocaleString('en-us', { weekday: 'short' });
+
 							that.start_date = month + ' ' + date + ',' + ' ' + year + ' ' + '(' + day + ')';
+
+							that.end_date = end_month + ' ' + end_date + ',' + ' ' + end_year + ' ' + '(' + end_day + ')';
+
 							var minute = ('0' + new Date(event.event.start).getMinutes()).slice(-2);
 							var hour = new Date(event.event.start).getHours()
 
@@ -374,11 +413,14 @@
 							that.start_time = hour + ":" + minute;
 							that.end_time = end_hour + ":" + end_min;
 
+							that.interval = that.start_date + ' ' + that.start_time +  ' - ' + that.end_date + ' ' + that.end_time 
+
 							that.calendar_name = event.event._def.extendedProps.calendar_name
 							that.attendees = event.event._def.extendedProps.calendar_attendee
 
 
 							calender_id = event.event._def.extendedProps.calender_id;
+
 
 						},
 
