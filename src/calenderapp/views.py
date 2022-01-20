@@ -86,6 +86,9 @@ class CalendarEventListView(APIView):
                 values['allDay'] = True
             else:
                 values['allDay'] = False
+            values['allday_start_time'] = dt['event_start_dt']
+            values['allday_end_time'] = dt['event_end_dt']
+               
 
             # print(datetime.strptime(dt['event_start_dt'], '%Y-%m-%d'))
            

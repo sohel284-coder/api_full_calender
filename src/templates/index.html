@@ -450,7 +450,14 @@
 							}
 						
 							else {
-								that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_date + ' ' + that.end_time
+								var c = ('0' + new Date(event.event._def.extendedProps.allday_start_time).getMinutes()).slice(-2);
+								var d = new Date(event.event._def.extendedProps.allday_start_time).getHours()
+								console.log(c)
+								console.log(d)
+								var em = ('0' + new Date(event.event._def.extendedProps.allday_end_time).getMinutes()).slice(-2);
+								var eh = new Date(event.event._def.extendedProps.allday_end_time).getHours()
+								that.interval = that.start_date + ' ' + d + ':' + c + ' - ' + that.end_date + ' ' + eh + ':' + em
+								// that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_date + ' ' + that.end_time
 							}
 							
 
