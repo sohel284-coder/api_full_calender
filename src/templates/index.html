@@ -21,7 +21,8 @@
 		.fc .fc-details-button {
 			background-color: blue;
 		}
-		#app{
+
+		#app {
 			background-color: rgb(251, 199, 251);
 		}
 
@@ -52,9 +53,9 @@
 		}
 
 		.fc .fc-timegrid-slot {
-			height: 40px;
+			height: 1px;
 			border-bottom: 0 !important;
-			background-color: floralwhite;
+			/* background-color: floralwhite; */
 
 
 		}
@@ -79,11 +80,6 @@
 			color: #F37764;
 			z-index: 999999;
 		}
-
-		.fc .fc-timegrid-slot {
-			height: 60px;
-			border-bottom: 0 !important;
-		}
 	</style>
 
 
@@ -91,7 +87,7 @@
 
 <body>
 	<div class="calendar-wd__section" id="app">
-		<div class="calendar-wd"  @click.prevent="oncloseEvent" >
+		<div class="calendar-wd" @click.prevent="oncloseEvent">
 			<div id='calendar'></div>
 			<br>
 			<br>
@@ -101,10 +97,11 @@
 				<div class="calendar-wd__form-three--one">
 					<div class="calendar-wd__form-three-head">
 						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist">
-							<li><a @click.prevent="onEdit" class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><img
-										src="{% static 'img/pen.png' %}" alt="#"></a></li>
-						    <li><a class="list-group-item" data-bs-toggle="list" href="#f-tab4" role="tab"><i class="far fa-trash-alt" style="font-size:20px; color: black;" ></i></a></li>				
-							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab3" role="tab"><img
+							<li><a @click.prevent="onEdit" class="list-group-item" data-bs-toggle="list" href="#f-tab4"
+									role="tab"><img src="{% static 'img/pen.png' %}" alt="#"></a></li>
+							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><i
+										class="far fa-trash-alt" style="font-size:20px; color: black;"></i></a></li>
+							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><img
 										src="{% static 'img/message.png' %}" alt="#"></a></li>
 							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab5" role="tab"><i
 										class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
@@ -131,7 +128,7 @@
 												<h4 class="calendar-wd__form-heading"><a href="#"><img
 															src="{% static 'img/memo.png' %}"
 															alt="#">[[event_location]]</a></h4>
-												<div class="calendar-wd__form-list">
+												<div class="calendar-wd__form-list" >
 													[[description]]
 												</div>
 											</div>
@@ -157,7 +154,8 @@
 										<form class="form">
 											<div class="form-group">
 												<div class="input-group">
-													<input id="datepick" v-model="event_title" type="text" placeholder="">
+													<input id="datepick" v-model="event_title" type="text"
+														placeholder="">
 												</div>
 											</div>
 											<div class="form-group calendar-wd__date-pick">
@@ -169,11 +167,11 @@
 											<div class="form-group">
 												<div class="list-inner-group">
 													<div class="list-single-group">
-														<input type="text" v-model="start_time" >
+														<input type="text" v-model="start_time">
 													</div>
 													<div class="list-single-group">
-														<input type="text" v-model="end_time" >
-													
+														<input type="text" v-model="end_time">
+
 													</div>
 													<div class="list-single-group   project-dropdown">
 														<select class="form-select" aria-label="Default select example">
@@ -188,18 +186,31 @@
 											<div class="form-group">
 												<div class="input-group">
 													<span class="input-icon"><i class="fa fa-map-marker"></i></span>
-													<input id="datepick" v-model="event_location" type="text" placeholder="Add location">
+													<input id="datepick" v-model="event_location" type="text"
+														placeholder="Add location">
+												    		
 												</div>
 											</div>
-											<div class="form-group project-dropdown">
-												<input type="text" v-model="calendar_name" >
+											<div class="form-group">
+												<div class="input-group">
+													<input type="text" v-model="calendar_name">
+
+												</div>
+
 											</div>
-											<div class="form-group select-man">
+											<div class="form-group">
+												<div class="input-group">
+													<textarea class="p-3" name="" id="" cols="70" rows="5" v-model="description"></textarea>
+												</div>
+											</div>
+											<div class="form-group select-man mt-3">
 												<ul class="select-list-img" v-for="attendee in attendees">
-													<li><a href="#"><img src="{% static 'img/icon.png' %}" alt="#">[[attendee.event_attendee]]</a>
+													<li><a href="#"><img src="{% static 'img/icon.png' %}"
+																alt="#">[[attendee.event_attendee]]</a>
 													</li>
-													
-													<li><span class="plus-icon"><i class="fa fa-plus"></i></span></li>
+												</ul>
+												<ul>
+													<li> <span><i class="fa fa-plus"></i></span> <span>Add People</span></li>
 												</ul>
 											</div>
 											<div class="form-group">
@@ -213,8 +224,8 @@
 											<div class="form-group button">
 												<button type="submit" class="theme-btn theme-sec">More options</button>
 												<b class="theme-btn theme-primary calendar-wd__submit">Save</b>
-												<b class="btn btn-danger btn-sm"  @click.prevent="onClose">cancel</b>
-												
+												<b class="btn btn-danger btn-sm" @click.prevent="backTopopup" >cancel</b>
+
 											</div>
 										</form>
 									</div>
@@ -245,7 +256,7 @@
 	{% endif %}
 
 	<script>
-		$(document).ready(function(){
+		$(document).ready(function () {
 
 			$('.calendar-wd__blank_box,.close-one').on("click", function () {
 				$('.calendar-wd__form').toggleClass('active');
@@ -286,11 +297,11 @@
 				end_time: '',
 				event_location: '',
 				start_date: '',
-				edit_st_date:'',
+				edit_st_date: '',
 				description: '',
 				popup: false,
 				flag: null,
-				interval:'',
+				interval: '',
 
 			},
 			mounted: function () {
@@ -300,21 +311,29 @@
 				onClose: function () {
 					console.log('test');
 					$(".calendar-wd__form-three").toggleClass('active-event');
-									
+
 				},
-				oncloseEvent:function(){
+				oncloseEvent: function () {
 					console.log('event');
 					$(".calendar-wd__form-three active-event").removeClass('active-event');
 
-					
+
 					// $(".calendar-wd__form-three active-event").css('opacity', 0);
 
 				},
-				onEdit:function(){
+				onEdit: function () {
 					$('.tab-pane').show();
 				},
+				backTopopup:function(){
+					// // $(".calendar-wd__form-three").toggleClass('active-event');
+					// $('tab-pane').hide();
+					// $('.calendar-wd__form-three-body').show();
 
-				
+					// $(".calendar-wd__form-three active-event").removeClass('active-event');
+
+				},
+
+
 
 				showEvents: function () {
 					var that = this;
@@ -352,13 +371,13 @@
 							},
 
 						},
-						droppable:true,
-						eventResizableFromStart:true,
-						eventStartEditable:true,
-						initialView:'timeGridWeek',
-						alldaySlot:true,
-						duration:{hours:8},
-						slotDuration: '00:15',
+						droppable: true,
+						eventResizableFromStart: true,
+						eventStartEditable: true,
+						initialView: 'timeGridWeek',
+						alldaySlot: true,
+						duration: { hours: 8 },
+						slotDuration: '00:30',
 						navLinks: true, // can click day/week names to navigate views
 						nowIndicator: true,
 
@@ -376,29 +395,41 @@
 							}
 							// {description: "Lecture", department: "BioChemistry"}
 						},
+						eventDataTransform: function (event) {
+							if (event.allDay) {
+								// moment(end_date, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD HH:mm:SS')                                                                                                                                            
+								event.end = moment(event.end, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD HH:mm:SS')
+							}
+							return event;
+						},
 						eventClick: function (event) {
+							console.log(event);
 
 							$('.calendar-wd__form-three').addClass('active-event');
 
 							that.event_title = event.event._def.title;
 
 							that.event_location = event.event._def.extendedProps.event_location;
-							that.description = event.event._def.extendedProps.event_description;
+							that.description = event.event._def.extendedProps.event_description.slice(0, 400);
 
 							// that.start_time = new Date(event.event.start).toLocaleTimeString();
 							// that.end_time = new Date(event.event.end).toLocaleTimeString();
 							var st_date = new Date(event.event.start);
-							var ed_date = new Date(event.event.end)
+							var ed_date = new Date(event.event.end);
 							date = st_date.getDate();
 							year = st_date.getFullYear();
 							month = st_date.toLocaleString('en-us', { month: 'long' });
 							day = st_date.toLocaleString('en-us', { weekday: 'short' });
-							that.edit_st_date = day + ',' + date + ' ' + month ;
-
-							end_date = st_date.getDate();
-							end_year = st_date.getFullYear();
-							end_month = st_date.toLocaleString('en-us', { month: 'long' });
-							end_day = st_date.toLocaleString('en-us', { weekday: 'short' });
+							that.edit_st_date = day + ',' + date + ' ' + month;
+                            if(event.event.allDay == true){
+								end_date = ed_date.getDate() - 1;
+							}
+							else{
+								end_date = ed_date.getDate();
+							}
+							end_year = ed_date.getFullYear();
+							end_month = ed_date.toLocaleString('en-us', { month: 'long' });
+							end_day = ed_date.toLocaleString('en-us', { weekday: 'short' });
 
 							that.start_date = month + ' ' + date + ',' + ' ' + year + ' ' + '(' + day + ')';
 
@@ -411,9 +442,17 @@
 							var end_hour = new Date(event.event.end).getHours()
 
 							that.start_time = hour + ":" + minute;
+							
 							that.end_time = end_hour + ":" + end_min;
-
-							that.interval = that.start_date + ' ' + that.start_time +  ' - ' + that.end_date + ' ' + that.end_time 
+							if (date == end_date) {
+								
+								that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_time
+							}
+						
+							else {
+								that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_date + ' ' + that.end_time
+							}
+							
 
 							that.calendar_name = event.event._def.extendedProps.calendar_name
 							that.attendees = event.event._def.extendedProps.calendar_attendee

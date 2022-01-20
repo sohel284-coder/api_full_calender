@@ -13,7 +13,6 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView
 from rest_framework import serializers, status
 from rest_framework.pagination import PageNumberPagination
-
 from rest_framework  import filters
 # from django_filters import rest_framework as filters
 from django_filters.rest_framework import  DjangoFilterBackend
@@ -55,7 +54,7 @@ class CalendarEventListView(APIView):
         cal_colors = self.calendar_color()
         
         for dt in data:
-            print(dt)
+            # print(dt)
             
             calendar_name = CalendarList.objects.get(id=dt['calendar_info_id'])
             calendar_attendee = CalendarAttendees.objects.filter(event_info_id=dt['user_event_key']).values('event_attendee')
@@ -66,6 +65,7 @@ class CalendarEventListView(APIView):
                 values['color'] = cal_colors[calendar_name.id]
                 
             values['start'] = dt['event_start_dt']
+
             values['end'] = dt['event_end_dt']
             values['calendar_name'] = calendar_name.calendar_name
             values['calendar_id'] = calendar_name.id
@@ -74,12 +74,27 @@ class CalendarEventListView(APIView):
             values['event_description'] = dt['event_description']
             
             values['title'] = dt['event_name']
+            s = dt['event_start_dt']
+            e = dt['event_end_dt']
+            # print(val)
+            # d =  datetime.datetime(val)   
+            d = s.split('T')
+            d = d[0]
+            d1= e.split('T')
+            d1= d1[0]
+            if d1 != d:
+                values['allDay'] = True
+            else:
+                values['allDay'] = False
+
+            # print(datetime.strptime(dt['event_start_dt'], '%Y-%m-%d'))
+           
             weeks.append(values)
         return weeks
     def get(self, request, query):
-        print(query)
         # query = request.GET.get('q', "")
         today = date.today()
+        # print(today)
         weekday = today.weekday()
 
         start_delta = timedelta(days=weekday)
