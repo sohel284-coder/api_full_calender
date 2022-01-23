@@ -80,6 +80,34 @@
 			color: #F37764;
 			z-index: 999999;
 		}
+
+		.calendar-wd__form-three_drag {
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+			transform: translateY(-20px);
+		}
+
+		.calendar-wd__form-three_drag.active-event {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0px);
+		}
+
+		.calendar-wd__form-three_drag {
+			background: #fff;
+			width: 800px;
+			margin: 0 auto;
+			right: 0;
+			position: absolute;
+			z-index: 999999;
+			box-shadow: 0px 0px 5px #00000054;
+			top: 25px;
+			padding: 0;
+			border: none;
+			z-index: 333333333333;
+			left: -100px;
+		}
 	</style>
 
 
@@ -96,16 +124,19 @@
 						alt=""></div>
 				<div class="calendar-wd__form-three--one">
 					<div class="calendar-wd__form-three-head">
-						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist">
+						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist" style="list-style-type:none">
 							<li><a @click.prevent="onEdit" class="list-group-item" data-bs-toggle="list" href="#"
 									role="tab"><img src="{% static 'img/pen.png' %}" alt="#"></a></li>
 							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><i
 										class="far fa-trash-alt" style="font-size:20px; color: black;"></i></a></li>
 							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><img
 										src="{% static 'img/message.png' %}" alt="#"></a></li>
-							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab5" role="tab"><i
+							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab6" role="tab"><i
 										class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
 							</li>
+							<!-- <li><a class="list-group-item" data-bs-toggle="list" href="#f-tab6" role="tab" style="display: none;"><i
+										class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
+							</li> -->
 						</ul>
 						<img src="{% static 'img/calander-banner.png' %}">
 					</div>
@@ -233,11 +264,117 @@
 									</div>
 								</div>
 							</div>
+
 						</div>
 					</div>
 				</div>
 			</div>
+			<div class="calendar-wd__form calendar-wd__form-three_drag">
+				<div class="close-icon close-three" @click="onCloseDrag" ><img src="{% static 'img/close.png' %}" alt="">
+				</div>
 
+				<div class="calendar-wd__form-three-body">
+					<div class="calendar-wd__form-three--two">
+						<div class="calendar-wd__form-1">
+							<form class="form">
+								<div class="form-group">
+									<div class="input-group">
+										<input id="eventpick" type="text" placeholder="">
+									</div>
+								</div>
+								{% comment %}
+								<div class="form-group calendar-wd__date-pick">
+									<div class="form-control wide" tabindex="0"><i class="fa fa-calendar"></i><span
+											class="current"><input id="datepick" type="text"
+												placeholder="Wednesday, 1 December"></span>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="list-inner-group">
+										<div class="list-single-group">
+											<select class="form-select" aria-label="Default select example">
+												<option selected="">
+													15.30</option>
+												<option value="1">15.30
+												</option>
+												<option value="2">15.30
+												</option>
+												<option value="3">15.30
+												</option>
+											</select>
+										</div>
+										<div class="list-single-group">
+											<select class="form-select" aria-label="Default select example">
+												<option selected="">
+													16.30</option>
+												<option value="1">16.30
+												</option>
+												<option value="2">16.30
+												</option>
+												<option value="3">16.30
+												</option>
+											</select>
+										</div>
+										<div class="list-single-group   project-dropdown">
+											<select class="form-select" aria-label="Default select example">
+												<option selected="">
+													Don't repeat
+												</option>
+												<option value="1">Don't
+													repeat</option>
+												<option value="2">Don't
+													repeat</option>
+												<option value="3">Don't
+													repeat</option>
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<span class="input-icon"><i class="fa fa-map-marker"></i></span>
+										<input id="datepick" type="text" placeholder="Add location">
+									</div>
+								</div>
+								<div class="form-group project-dropdown">
+									<select class="form-select" aria-label="Default select example">
+										<option selected="">Project B
+										</option>
+										<option value="1">15.30</option>
+										<option value="2">15.30</option>
+										<option value="3">15.30</option>
+									</select>
+								</div>
+								<div class="form-group select-man">
+									<ul class="select-list-img">
+										<li><a href="#"><img src="img/icon.png" alt="#"></a></li>
+										<li><a href="#"><img src="img/icon-2.png" alt="#"></a></li>
+										<li><a href="#"><img src="img/icon-3.png" alt="#"></a></li>
+										<li><span class="plus-icon"><i class="fa fa-plus"></i></span>
+										</li>
+									</ul>
+								</div>
+								<div class="form-group">
+									<ul class="calendar-wd__clist">
+										<li><img src="img/calender.png">Email
+											Participants</li>
+										<li><img src="img/memo.png">Add
+											Notes</li>
+										<li><img src="img/bell.png">Set
+											Reminder</li>
+									</ul>
+								</div>
+								{% endcomment %}
+								<div class="form-group button">
+									<button type="submit" class="theme-btn theme-sec">More
+										options</button>
+									<b type="submit" class="theme-btn theme-primary calendar-wd__submit" id="eventFlag" >Save</b>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -306,6 +443,9 @@
 				popup: false,
 				flag: null,
 				interval: '',
+				drag: {
+					drag_event_name: '',
+				}
 
 			},
 			mounted: function () {
@@ -317,15 +457,13 @@
 					$(".calendar-wd__form-three").toggleClass('active-event');
 
 				},
-				// oncloseEvent: function () {
-				// 	if(this.flag == 1){
-				// 		console.log(this.flag);
-				// 		$(".calendar-wd__form-three").removeClass('active-event');	
-				// 	}
-				// 	// if($('.calendar-wd__form-three').hasClass('active-event')){
-				// 	// 	$(".calendar-wd__form-three").removeClass('active-event');
-				// 	// }
-				// },
+				onCloseDrag: function () {
+					$("#eventpick").val('');
+					$(".calendar-wd__form-three_drag").toggleClass('active-event');
+
+
+				},
+
 				onEdit: function () {
 					$('#f-tab4').addClass('show active');
 					$('#f-tab3').removeClass('show active');
@@ -349,16 +487,45 @@
 						that.weeklyCalendar();
 					})
 				},
+				
 
 				weeklyCalendar: function () {
 					var that = this;
-
-
 					var calendarEl = document.getElementById('calendar');
 					// calendarEl.addEventListener("click", function () {
 					// 	alert("Hello World!");
 					// });
+
 					var calendar = new FullCalendar.Calendar(calendarEl, {
+						
+						select: function (selectionInfo) {
+							
+
+							//.log(selectionInfo)
+							// var name = prompt("prompt - Please enter your name")
+							//console.log(name)
+							//alert("alert - Hello, " + name + "! You can't enter text here!");
+
+							//var clickedOk = confirm("confirm - Do you understand now?");
+							//alert()
+							// $(".drag-event").show();
+
+							$('.calendar-wd__form-three_drag').addClass('active-event');
+							
+							var value;
+							$("#eventFlag").click(function(){
+								value = $("#eventpick").val();
+								calendar.addEvent({
+									title: value,
+									start: selectionInfo.start,
+									end: selectionInfo.end,
+									allDay: selectionInfo.allDay
+								});
+								$('.calendar-wd__form-three_drag').removeClass('active-event');
+
+							});
+						},
+
 
 						headerToolbar: {
 							left: 'prev,add_event,slot',
@@ -457,9 +624,12 @@
 							that.end_time = end_hour + ":" + end_min;
 
 							if (date == last_date) {
+								that.start_date = month + ' ' + date + ' ' + '(' + day + ')';
+
+
 								if (event.event.allDay == true) {
 									console.log(last_date);
-									that.end_date = end_month + ' ' + (last_date + 1) + ',' + ' ' + end_year + ' ' + '(' + end_day + ')';
+									that.end_date = end_month + ' ' + (last_date + 1) + ' ' + '(' + end_day + ')';
 									that.interval = that.start_date + ' ' + '00:00' + ' - ' + that.end_date + ' 00:00';
 									console.log(that.interval);
 
@@ -467,6 +637,7 @@
 
 								}
 								else {
+
 									that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_time
 								}
 							}
@@ -474,9 +645,14 @@
 							else {
 
 								if (event.event.allDay == true) {
+									var c = ('0' + new Date(event.event._def.extendedProps.allday_start_time).getMinutes()).slice(-2);
+									var d = new Date(event.event._def.extendedProps.allday_start_time).getHours()
+									
+									var em = ('0' + new Date(event.event._def.extendedProps.allday_end_time).getMinutes()).slice(-2);
+									var eh = new Date(event.event._def.extendedProps.allday_end_time).getHours()
 									that.end_date = end_month + ' ' + (last_date + 1) + ',' + ' ' + end_year + ' ' + '(' + end_day + ')';
 									console.log(that.end_date);
-									that.interval = that.start_date + ' ' + '00:00' + ' - ' + that.end_date + ' 00:00';
+									that.interval = that.start_date + ' ' + d + ":" + c + ' - ' + that.end_date + ' ' + eh + ":" + em;
 
 								}
 								else {
@@ -488,7 +664,7 @@
 									// console.log(d)
 									// var em = ('0' + new Date(event.event._def.extendedProps.allday_end_time).getMinutes()).slice(-2);
 									// var eh = new Date(event.event._def.extendedProps.allday_end_time).getHours()
-									that.interval = that.start_date + ' ' + that.start_time  + ' - ' + that.end_date + ' ' + that.end_time 
+									that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_date + ' ' + that.end_time
 								}
 
 							}

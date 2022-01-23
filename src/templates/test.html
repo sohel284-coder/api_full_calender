@@ -1,239 +1,565 @@
 {% load static %}
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lysa Calendar</title>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lysa Calendar</title>
 
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="{% static 'css/font-awesome.min.css' %}">
-
-
-
-
-
-  <!-- helper libraries -->
-  <!-- <script src="http://javascript.daypilot.org/demo/helpers/jquery-1.12.2.min.js" type="text/javascript"></script> -->
+	<link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<link rel="stylesheet" href="{% static 'css/all.min.css' %}">
+	<!-- <link rel="stylesheet" href="{% static 'custom.css' %}"> -->
+	<link rel="stylesheet" href="{% static 'style.css' %}">
 
 
 
-  <!-- <link rel="stylesheet" href="{% static 'daypilot/scheduler_green.css' %}"> -->
-  <!-- <link rel="stylesheet" href="{% static 'daypilot/calendar_g.css' %}"> -->
-  <link rel="stylesheet" href="{% static 'daypilot/calendar_green.css' %}">
+	<link rel="stylesheet" href="{% static 'full_calendar/main.css' %}">
+	<style>
+		.fc .fc-details-button {
+			background-color: blue;
+		}
 
-  <!-- <link rel="stylesheet" href="{% static 'daypilot/areas.css' %}"> -->
-  <!-- <link rel="stylesheet" href="{% static 'daypilot/scheduler_white.css' %}"> -->
+		#app {
+			background-color: rgb(251, 199, 251);
+		}
+
+		@media screen and (max-width:767px) {
+			.fc .fc-toolbar.fc-header-toolbar {
+				font-size: 60%
+			}
+
+			.fc .fc-timegrid-slot {
+				font-size: 60%;
+
+			}
+
+		}
+
+		.fc .fc-details-button {
+			background-color: blue;
+		}
 
 
+		.fc .fc-view-harness {
+			background-color: #FBFBFB;
 
-  <style type="text/css">
-    p,
-    body,
-    td {
-      font-family: Tahoma, Arial, Helvetica, sans-serif;
-      font-size: 10pt;
-    }
+			height: 100%;
+			width: 75%;
+			margin: auto;
 
-    body {
-      padding: 0px;
-      margin: 0px;
-      background-color: #ffffff;
-    }
+		}
 
-    a {
-      color: #1155a3;
-    }
+		.fc .fc-timegrid-slot {
+			height: 1px;
+			border-bottom: 0 !important;
+			/* background-color: floralwhite; */
 
-    .space {
-      margin: 10px 0px 10px 0px;
-    }
 
-    .header {
-      background: #003267;
-      background: linear-gradient(to right, #011329 0%, #00639e 44%, #011329 100%);
-      padding: 20px 10px;
-      color: white;
-      box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.75);
-    }
+		}
 
-    .header a {
-      color: white;
-    }
+		.fc .fc-view-harness fc-view-harness-active {
+			background-color: antiquewhite;
+		}
 
-    .header h1 a {
-      text-decoration: none;
-    }
 
-    .header h1 {
-      padding: 0px;
-      margin: 0px;
-    }
+		.calendar-wd__popbar {
+			background: #FFCBC3;
+			z-index: 3333;
+			position: absolute;
+			text-align: left;
+			padding: 10px;
+			border-radius: 4px;
+			top: 2%;
+			left: 2%;
+			width: 96%;
+			height: 100%;
+			border-radius: 15px;
+			color: #F37764;
+			z-index: 999999;
+		}
+	</style>
 
-    .main {
-      padding: 10px;
-      margin-top: 10px;
-    }
-  </style>
-
-  <style>
-    .toolbar {
-      margin-bottom: 10px;
-    }
-
-    .toolbar-item a {
-      background-color: #fff;
-      border: 1px solid #c0c0c0;
-      color: #333;
-      padding: 8px 0px;
-      width: 80px;
-      border-radius: 2px;
-      cursor: pointer;
-      display: inline-block;
-      text-align: center;
-      text-decoration: none;
-    }
-
-    .toolbar-item a.selected-button {
-      background-color: #f3f3f3;
-      color: #000;
-    }
-
-    /* context menu icons */
-    .icon:before {
-      position: absolute;
-      margin-left: 0px;
-      margin-top: 3px;
-      width: 14px;
-      height: 14px;
-      content: '';
-    }
-
-    .icon-blue:before {
-      background-color: #3d85c6;
-    }
-
-    .icon-green:before {
-      background-color: #6aa84f;
-    }
-
-    .icon-orange:before {
-      background-color: #e69138;
-    }
-
-    .icon-red:before {
-      background-color: #cc4125;
-    }
-
-    /* active areas */
-    .area-menu-icon {
-      background-color: #333333;
-      box-sizing: border-box;
-      xborder: 1px solid white;
-      border-radius: 10px;
-      opacity: 0.7;
-      color: white;
-      display: flex;
-      justify-content: center;
-      xalign-items: center;
-      font-size: 14px;
-    }
-
-    /*      .area-menu-icon:hover {
-              opacity: 1;
-          }*/
-  </style>
 
 </head>
 
 <body>
-  <div class="main">
-    <div style="display:flex">
-      <div>
-        <div id="nav"></div>
-      </div>
-      <div style="flex-grow: 1; margin-left: 10px;">
-        <div class="calendar-wd__top-left">
-          <h4 class="calender-wd__title">January<span>2022</span></h4>
-          <div class="calendar-wd__button"><a href="#">＋ ADD EVENT</a><a href="#">＋ Find Slot</a></div>
+	<div class="calendar-wd__section" id="app">
+		<div class="calendar-wd" @click.prevent="oncloseEvent">
+			<div id='calendar'></div>
+			<br>
+			<br>
+			<div class="calendar-wd__form calendar-wd__form-three">
+				<div class="close-icon close-three" @click.prevent="onClose"><img src="{% static 'img/close.png' %}"
+						alt=""></div>
+				<div class="calendar-wd__form-three--one">
+					<div class="calendar-wd__form-three-head">
+						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist">
+							<li><a @click.prevent="onEdit" class="list-group-item" data-bs-toggle="list" href="#f-tab4"
+									role="tab"><img src="{% static 'img/pen.png' %}" alt="#"></a></li>
+							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><i
+										class="far fa-trash-alt" style="font-size:20px; color: black;"></i></a></li>
+							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><img
+										src="{% static 'img/message.png' %}" alt="#"></a></li>
+							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab5" role="tab"><i
+										class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
+							</li>
+						</ul>
+						<img src="{% static 'img/calander-banner.png' %}">
+					</div>
+					<div class="calendar-wd__form-three-body">
+						<div class="tab-content" id="nav-tabContent">
+							<!-- Property Tab One -->
+							<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
+								<div class="calendar-wd__form-separate-column">
+									<div class="calendar-wd__form-three-one">
+										<h2 class="calendar-wd__form-three-title">
+											<span>[[calendar_name]]</span>[[event_title]]
+										</h2>
+										<div class="calendar-wd__form-body">
+											<div class="calendar-wd__form-single">
+												<h4 class="calendar-wd__form-heading"><i
+														class="far fa-calendar-alt"></i>
+													[[interval]]</h4>
+											</div>
+											<div class="calendar-wd__form-single">
+												<h4 class="calendar-wd__form-heading"><a href="#"><img
+															src="{% static 'img/memo.png' %}"
+															alt="#">[[event_location]]</a></h4>
+												<div class="calendar-wd__form-list">
+													[[description]]
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="calendar-wd__form-three-two">
+										<ul class="calendar-wd__form-list-img calendar-wd__form-list-two"
+											v-for="attendee in attendees">
+											<li><img src="{% static 'img/icon.png' %}"
+													alt="#">[[attendee.event_attendee]]</li>
 
-        </div>
-        <div class="toolbar buttons" style="text-align: right;">
-          <span class="toolbar-item"><a id="buttonDay" href="#">Day</a></span>
-          <span class="toolbar-item"><a id="buttonWeek" href="#">Week</a></span>
-          <span class="toolbar-item"><a id="buttonMonth" href="#">Month</a></span>
-        </div>
-        <div id="dpDay"></div>
-        <div id="dpWeek"></div>
-        <div id="dpMonth"></div>
-      </div>
-    </div>
-  </div>
-  <script src="{% static 'js/vue.js' %}"></script>
-  <script src="{% static 'js/jquery.min.js' %}"></script>
+										</ul>
+										<div class="calander-wd__button calander-wd__button-guest">
+											<span class="plus-icon"><a href="#"><i class="fa fa-plus"></i></span>Add
+											guests</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="tab-pane fade" id="f-tab4" role="tabpanel" style="display: none;">
+								<div class="calendar-wd__form-three--two">
+									<div class="calendar-wd__form-1">
+										<form class="form">
+											<div class="form-group">
+												<div class="input-group">
+													<input id="datepick" v-model="event_title" type="text"
+														placeholder="">
+												</div>
+											</div>
+											<div class="form-group calendar-wd__date-pick">
+												<div class="form-control wide" tabindex="0"><i
+														class="fa fa-calendar"></i><span class="current"><input
+															id="datepick" v-model="interval" type="text"
+															placeholder=""></span></div>
+											</div>
+											<div class="form-group">
+												<div class="list-inner-group">
+													<div class="list-single-group">
+														<input type="text" v-model="start_time">
+													</div>
+													<div class="list-single-group">
+														<input type="text" v-model="end_time">
 
-  <script src="{% static 'daypilot/daypilot-all.min.js' %}"></script>
+													</div>
+													<div class="list-single-group   project-dropdown">
+														<select class="form-select" aria-label="Default select example">
+															<option selected="">Don't repeat</option>
+															<option value="1">Don't repeat</option>
+															<option value="2">Don't repeat</option>
+															<option value="3">Don't repeat</option>
+														</select>
+													</div>
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="input-group">
+													<span class="input-icon"><i class="fa fa-map-marker"></i></span>
+													<input id="datepick" v-model="event_location" type="text"
+														placeholder="Add location">
 
-  <script type="text/javascript">
-    $(document).ready(function () {
-      $(".calender-wd__title").css("background-color", "yellow");
-    })
-    var tag = $("div:contains('DEMO')")
-    console.log(tag.selector);
-    tag.selector.innerHTML = '';
+												</div>
+											</div>
+											<div class="form-group">
+												<div class="input-group">
+													<input type="text" v-model="calendar_name">
 
-    const week = new DayPilot.Calendar("dpWeek");
-    console.log(week)
-    var weekly_events;
-    week.viewType = "Week";
-    week.theme = "calendar_green"
+												</div>
+
+											</div>
+											<div class="form-group">
+												<div class="input-group">
+													<textarea class="p-3" name="" id="" cols="70" rows="5"
+														v-model="description"></textarea>
+												</div>
+											</div>
+											<div class="form-group select-man mt-3">
+												<ul class="select-list-img" v-for="attendee in attendees">
+													<li><a href="#"><img src="{% static 'img/icon.png' %}"
+																alt="#">[[attendee.event_attendee]]</a>
+													</li>
+												</ul>
+												<ul>
+													<li> <span><i class="fa fa-plus"></i></span> <span>Add People</span>
+													</li>
+												</ul>
+											</div>
+											<div class="form-group">
+												<ul class="calendar-wd__clist">
+													<li><img src="{% static 'img/calender.png' %}">Email Participants
+													</li>
+													<li><img src="{% static 'img/memo.png' %}">Add Notes</li>
+													<li><img src="{% static 'img/bell.png' %}">Set Reminder</li>
+												</ul>
+											</div>
+											<div class="form-group button">
+												<button type="submit" class="theme-btn theme-sec">More options</button>
+												<b class="theme-btn theme-primary calendar-wd__submit">Save</b>
+												<b class="btn btn-danger btn-sm" @click.prevent="backTopopup">cancel</b>
+
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<script src="{% static 'js/jquery.min.js' %}"></script>
+	<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
+	<script src="{% static 'js/all.min.js' %}"></script>
+
+	<script src="{% static 'js/bootstrap.min.js' %}"></script>
+	<script src="{% static '/full_calendar/main.js'%}"></script>
+	<script src='https://cdn.jsdelivr.net/npm/moment@2.27.0/min/moment.min.js'></script>
+	<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/moment@5.5.0/main.global.min.js'></script>
+
+
+	{% if debug %}
+	<script src="{% static 'js/vue.js' %}"></script>
+	{% else %}
+	<script src="{% static 'js/vue.min.js' %}"></script>
+	{% endif %}
+
+	<script>
+		$(document).ready(function () {
+
+			$('.calendar-wd__blank_box,.close-one').on("click", function () {
+				$('.calendar-wd__form').toggleClass('active');
+			});
+			$('.calendar-wd__submit,.close-one').on("click", function () {
+				$('.calendar-wd__form-two,.calendar-wd__form-one').toggleClass('active');
+			});
+
+
+			$('.calendar-wd__popbar').on("click", function () {
+				$('.calendar-wd__form-three').toggleClass('active-event');
+
+			});
+
+			$('.calendar-wd__form-three').hover(function () {
+				$('.calendar-wd__form-three').addClass('plus-bonus');
+			});
+
+			$(".calendar-wd__form-three").hover(
+				function () {
+					$(this).removeClass("hover-active");
+				}, function () {
+					$(this).addClass("hover-active");
+				}
+			);
+		})
+
+		var app = new Vue({
+			el: '#app',
+			delimiters: ['[[', ']]'],
+			data: {
+				weekly_events: [],
+				popup: false,
+				event_title: '',
+				calendar_name: '',
+				attendees: [],
+				start_time: '',
+				end_time: '',
+				event_location: '',
+				start_date: '',
+				edit_st_date: '',
+				description: '',
+				popup: false,
+				flag: null,
+				interval: '',
+
+			},
+			mounted: function () {
+				this.showEvents();
+			},
+			methods: {
+				onClose: function () {
+					console.log('test');
+					$(".calendar-wd__form-three").toggleClass('active-event');
+
+				},
+				oncloseEvent: function () {
+					console.log('event');
+					$(".calendar-wd__form-three active-event").removeClass('active-event');
+
+
+					// $(".calendar-wd__form-three active-event").css('opacity', 0);
+
+				},
+				onEdit: function () {
+					$('.tab-pane').show();
+				},
+				backTopopup: function () {
+					// // $(".calendar-wd__form-three").toggleClass('active-event');
+					// $('tab-pane').hide();
+					// $('.calendar-wd__form-three-body').show();
+
+					// $(".calendar-wd__form-three active-event").removeClass('active-event');
+
+				},
 
 
 
-    week.onBeforeCellRender = function (args) {
-      if (args.cell.end.getMinutes() > 0) {
-        args.cell.cssClass = "intrahour";
-      }
-    };
-    week.headerHeightAutoFit = false;
-    week.headerHeight = 50;
-    week.onBeforeHeaderRender = function (args) {
-      console.log(args.header);
-      args.header.html = args.header.start.toString("dddd");
-      args.header.html += args.header.start.toString(" d");
+				showEvents: function () {
+					var that = this;
+					$.ajax({
+						method: 'GET',
+						url: 'api/event-filter/' + 'weekly',
+					}).then(response => {
+						that.weekly_events = response.events;
+						that.weeklyCalendar();
+					})
+				},
+
+				weeklyCalendar: function () {
+					var that = this;
 
 
-    }
-    week.headerDateFormat = "dddd";
-    week.init();
+					var calendarEl = document.getElementById('calendar');
+					var calendar = new FullCalendar.Calendar(calendarEl, {
 
-    $.ajax({
-      method: 'GET',
-      url: 'api/event-filter/' + 'weekly',
 
-      success: function (Response) {
-        weekly_events = Response.events;
-        console.log(weekly_events);
-        tests = [
-          {
-            "start": "2022-01-12T13:30:00",
-            "end": "2022-01-12T17:00:00",
-            "id": "2",
-            "text": "Meeting"
-          }
-        ];
-        console.log(tests);
-        // console.log(weekly_events[0].start);
-        // week.events.list = tests;
-        week.events.list = weekly_events;
-        week.update();
+						select: function (selectionInfo) {
+							//.log(selectionInfo)
+							var name = prompt("prompt - Please enter your name")
+							//console.log(name)
+							//alert("alert - Hello, " + name + "! You can't enter text here!");
 
-      }
-    })
+							//var clickedOk = confirm("confirm - Do you understand now?");
+							//alert()
+							//$('.calendar-wd__form-three').addClass('active-event');
+							if (name!=null){
+								console.log('if')
 
-  </script>
+								calendar.addEvent({
+								title: 'name',
+								start: selectionInfo.start,
+								end: selectionInfo.end,
+								allDay: selectionInfo.allDay
+								})
+							}
+							else
+							{
+								console.log('else')
+
+							}
+
+						},
+							
+
+							//console.log(info)
+						
+
+
+
+						dateClick: function (info) {
+
+							//alert('Clicked on: ' + info.dateStr);
+							//alert('Coordinates: ' + info.jsEvent.pageX + ',' + info.jsEvent.pageY);
+							//alert('Current view: ' + info.view.type);
+							// change the day's background color just for fun
+							//info.dayEl.style.backgroundColor = 'red';
+							alert()
+							console.log(info)
+						},
+						// drop: function() {
+						// 	alert('dropped!');
+						// },
+						eventDrop: function (event, delta, revertFunc, jsEvent, ui, view) {
+							alert('hi')
+						},
+						headerToolbar: {
+							left: 'prev,add_event,slot',
+							center: 'title',
+							right: 'setting,dayGridMonth,timeGridWeek,timeGridDay,listWeek,next'
+						},
+						customButtons: {
+							add_event: {
+								text: '+ Add Event',
+							},
+							slot: {
+								text: 'Find Slot',
+							},
+							setting: {
+								text: 'setting',
+								// bootstrapFontAwesome:'fas fa-cog',
+							},
+
+						},
+						droppable: true,
+						eventResizableFromStart: true,
+						eventStartEditable: true,
+						initialView: 'timeGridWeek',
+						alldaySlot: true,
+						duration: { hours: 8 },
+						slotDuration: '00:30',
+						navLinks: true, // can click day/week names to navigate views
+						nowIndicator: true,
+
+						weekNumbers: true,
+
+						editable: true,
+						// defaultView: 'week',
+						selectable: true,
+						dayMaxEvents: true,
+						allDayMaintainDuration: true,
+
+						//editable: true,
+						// defaultView: 'week',
+						//selectable: true,
+						dayMaxEvents: true,
+						selectMirror: true,
+						unselectAuto: true,
+						selectOverlap: true,
+
+
+						droppable: true,
+						dropAccept: '.cool-event',
+						drop: function () {
+							alert('dropped!');
+						},
+						events: that.weekly_events,
+
+						// selectOverlap: function(event) {
+						// 	return event.rendering === 'background';
+						// },
+
+						eventDidMount: function (info) {
+							now = new Date()
+							if (info.event.end < now) {
+								info.el.style.opacity = "0.5";
+							}
+							// {description: "Lecture", department: "BioChemistry"}
+						},
+						eventDataTransform: function (event) {
+							if (event.allDay) {
+								// moment(end_date, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD HH:mm:SS')                                                                                                                                            
+								event.end = moment(event.end, 'YYYY-MM-DD').add(1, 'days').format('YYYY-MM-DD HH:mm:SS')
+							}
+							return event;
+						},
+						eventClick: function (event) {
+							console.log(event);
+
+							$('.calendar-wd__form-three').addClass('active-event');
+
+							that.event_title = event.event._def.title;
+
+							that.event_location = event.event._def.extendedProps.event_location;
+							that.description = event.event._def.extendedProps.event_description.slice(0, 400);
+
+							// that.start_time = new Date(event.event.start).toLocaleTimeString();
+							// that.end_time = new Date(event.event.end).toLocaleTimeString();
+							var st_date = new Date(event.event.start);
+							var ed_date = new Date(event.event.end);
+							date = st_date.getDate();
+							year = st_date.getFullYear();
+							month = st_date.toLocaleString('en-us', { month: 'long' });
+							day = st_date.toLocaleString('en-us', { weekday: 'short' });
+							that.edit_st_date = day + ',' + date + ' ' + month;
+
+							if (event.event.allDay == true) {
+
+								// end_date = ed_date.getDate() - 1;
+							}
+							else {
+								startStr = year + ' ' + day
+								//end_date = ed_date.getDate();
+							}
+
+							end_date = ed_date.getDate();
+							end_year = ed_date.getFullYear();
+							end_month = ed_date.toLocaleString('en-us', { month: 'long' });
+							end_day = ed_date.toLocaleString('en-us', { weekday: 'short' });
+
+							that.start_date = month + ' ' + date + ',' + ' ' + year + ' ' + '(' + day + ')';
+
+							that.end_date = end_month + ' ' + end_date + ',' + ' ' + end_year + ' ' + '(' + end_day + ')';
+
+							var minute = ('0' + new Date(event.event.start).getMinutes()).slice(-2);
+							var hour = new Date(event.event.start).getHours()
+
+							var end_min = ('0' + new Date(event.event.end).getMinutes()).slice(-2);
+							var end_hour = new Date(event.event.end).getHours()
+
+							that.start_time = hour + ":" + minute;
+
+							that.end_time = end_hour + ":" + end_min;
+
+							// if (date == end_date) {
+
+							// 	that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_time
+							// }
+
+							// else {
+							// 	// var c = ('0' + new Date(event.event._def.extendedProps.a).getMinutes()).slice(-2);
+							// 	// var d = new Date(event.event._def.extendedProps.b).getHours()
+							// 	// console.log(c)
+							// 	// console.log(d)
+							// 	that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_time
+							// }
+
+							that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_date + ' ' + that.end_time
+							that.calendar_name = event.event._def.extendedProps.calendar_name
+							that.attendees = event.event._def.extendedProps.calendar_attendee
+
+
+							calender_id = event.event._def.extendedProps.calender_id;
+
+
+
+						},
+
+
+
+
+					});
+					calendar.render();
+
+				}
+			},
+		})
+
+
+	</script>
+
 
 </body>
 
