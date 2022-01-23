@@ -124,7 +124,8 @@
 						alt=""></div>
 				<div class="calendar-wd__form-three--one">
 					<div class="calendar-wd__form-three-head">
-						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist" style="list-style-type:none">
+						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist"
+							style="list-style-type:none">
 							<li><a @click.prevent="onEdit" class="list-group-item" data-bs-toggle="list" href="#"
 									role="tab"><img src="{% static 'img/pen.png' %}" alt="#"></a></li>
 							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><i
@@ -270,22 +271,23 @@
 				</div>
 			</div>
 			<div class="calendar-wd__form calendar-wd__form-three_drag">
-				<div class="close-icon close-three" @click="onCloseDrag" ><img src="{% static 'img/close.png' %}" alt="">
+				<div class="close-icon close-three" @click="onCloseDrag"><img src="{% static 'img/close.png' %}" alt="">
 				</div>
 
 				<div class="calendar-wd__form-three-body">
 					<div class="calendar-wd__form-three--two">
 						<div class="calendar-wd__form-1">
-							<form class="form">
+							<form class="form" @submit.prevent="saveEvent">
+
+								
 								<div class="form-group">
 									<div class="input-group">
-										<input id="eventpick" type="text" placeholder="">
+										<input id="eventpick" v-model="drag.drag_event_name" type="text" placeholder="">
 									</div>
 								</div>
-								{% comment %}
 								<div class="form-group calendar-wd__date-pick">
 									<div class="form-control wide" tabindex="0"><i class="fa fa-calendar"></i><span
-											class="current"><input id="datepick" type="text"
+											class="current"><input id="datepick" v-model="drag.datepick" type="text"
 												placeholder="Wednesday, 1 December"></span>
 									</div>
 								</div>
@@ -364,11 +366,11 @@
 											Reminder</li>
 									</ul>
 								</div>
-								{% endcomment %}
 								<div class="form-group button">
 									<button type="submit" class="theme-btn theme-sec">More
 										options</button>
-									<b type="submit" class="theme-btn theme-primary calendar-wd__submit" id="eventFlag" >Save</b>
+									<button type="submit" class="theme-btn theme-primary calendar-wd__submit"
+										id="eventFlag">Save</button>
 								</div>
 							</form>
 						</div>
@@ -444,7 +446,10 @@
 				flag: null,
 				interval: '',
 				drag: {
+					selectionInfo: null,
+					calendar: '',
 					drag_event_name: '',
+					datepick:'',
 				}
 
 			},
@@ -461,7 +466,6 @@
 					$("#eventpick").val('');
 					$(".calendar-wd__form-three_drag").toggleClass('active-event');
 
-
 				},
 
 				onEdit: function () {
@@ -477,6 +481,7 @@
 
 
 
+
 				showEvents: function () {
 					var that = this;
 					$.ajax({
@@ -487,7 +492,19 @@
 						that.weeklyCalendar();
 					})
 				},
-				
+				saveEvent: function () {
+					console.log(this.drag.drag_event_name);
+					calendar = this.drag.calendar;
+					
+					calendar.addEvent({
+						title: this.drag.drag_event_name,
+						start: this.drag.datepick,
+						end: this.drag.selectionInfo.end,
+						allDay: this.drag.selectionInfo.allDay,
+					});
+					$(".calendar-wd__form-three_drag").removeClass('active-event');
+				},
+
 
 				weeklyCalendar: function () {
 					var that = this;
@@ -497,9 +514,9 @@
 					// });
 
 					var calendar = new FullCalendar.Calendar(calendarEl, {
-						
+
 						select: function (selectionInfo) {
-							
+
 
 							//.log(selectionInfo)
 							// var name = prompt("prompt - Please enter your name")
@@ -511,19 +528,23 @@
 							// $(".drag-event").show();
 
 							$('.calendar-wd__form-three_drag').addClass('active-event');
-							
-							var value;
-							$("#eventFlag").click(function(){
-								value = $("#eventpick").val();
-								calendar.addEvent({
-									title: value,
-									start: selectionInfo.start,
-									end: selectionInfo.end,
-									allDay: selectionInfo.allDay
-								});
-								$('.calendar-wd__form-three_drag').removeClass('active-event');
+							// that.saveEvent(calendar, selectionInfo);
+							that.drag.selectionInfo = selectionInfo;
+							that.drag.calendar = calendar;
+							that.drag.datepick = selectionInfo.start;
+							// var value;
+							// $("#eventFlag").click(function(){
+							// 	value = $("#eventpick").val();
+							// 	calendar.addEvent({
+							// 		title: value,
+							// 		start: selectionInfo.start,
+							// 		end: selectionInfo.end,
+							// 		allDay: selectionInfo.allDay
+							// 	});
 
-							});
+							// 	$('.calendar-wd__form-three_drag').removeClass('active-event');
+
+							// });
 						},
 
 
@@ -647,7 +668,7 @@
 								if (event.event.allDay == true) {
 									var c = ('0' + new Date(event.event._def.extendedProps.allday_start_time).getMinutes()).slice(-2);
 									var d = new Date(event.event._def.extendedProps.allday_start_time).getHours()
-									
+
 									var em = ('0' + new Date(event.event._def.extendedProps.allday_end_time).getMinutes()).slice(-2);
 									var eh = new Date(event.event._def.extendedProps.allday_end_time).getHours()
 									that.end_date = end_month + ' ' + (last_date + 1) + ',' + ' ' + end_year + ' ' + '(' + end_day + ')';
