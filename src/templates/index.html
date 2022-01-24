@@ -147,9 +147,19 @@
 							<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
 								<div class="calendar-wd__form-separate-column">
 									<div class="calendar-wd__form-three-one">
-										<h2 class="calendar-wd__form-three-title">
-											<span>[[calendar_name]]</span>[[event_title]]
-										</h2>
+										<div class="calendar-wd__form-three-title">
+											<div class="row">
+												<div class="col-3">
+													<span style="background-color:#EDD5EB;">[[calendar_name]]</span>
+												</div>
+												<div class="col-9">
+													[[event_title]]
+												</div>
+											</div>
+											<!-- <h2 class="calendar-wd__form-three-title">
+												<span>[[calendar_name]]</span>[[event_title]]</h2> -->
+										</div>
+										
 										<div class="calendar-wd__form-body">
 											<div class="calendar-wd__form-single">
 												<h4 class="calendar-wd__form-heading"><i
@@ -237,16 +247,18 @@
 												</div>
 											</div>
 											<div class="form-group select-man mt-3">
-												<ul class="select-list-img" v-for="attendee in attendees">
+												<ul class="select-list-img" style="list-style-type:none"
+													v-for="attendee in attendees">
 													<li><a href="#"><img src="{% static 'img/icon.png' %}"
 																alt="#">[[attendee.event_attendee]]</a>
 													</li>
 												</ul>
-												<ul>
+												<ul style="list-style-type:none">
 													<li> <span><i class="fa fa-plus"></i></span> <span>Add People</span>
 													</li>
 												</ul>
 											</div>
+											{% comment %}
 											<div class="form-group">
 												<ul class="calendar-wd__clist">
 													<li><img src="{% static 'img/calender.png' %}">Email Participants
@@ -255,6 +267,7 @@
 													<li><img src="{% static 'img/bell.png' %}">Set Reminder</li>
 												</ul>
 											</div>
+											{% endcomment %}
 											<div class="form-group button">
 												<button type="submit" class="theme-btn theme-sec">More options</button>
 												<b class="theme-btn theme-primary calendar-wd__submit">Save</b>
@@ -279,7 +292,7 @@
 						<div class="calendar-wd__form-1">
 							<form class="form" @submit.prevent="saveEvent">
 
-								
+
 								<div class="form-group">
 									<div class="input-group">
 										<input id="eventpick" v-model="drag.drag_event_name" type="text" placeholder="">
@@ -348,7 +361,7 @@
 									</select>
 								</div>
 								<div class="form-group select-man">
-									<ul class="select-list-img">
+									<ul class="select-list-img" style="list-style-type:none">
 										<li><a href="#"><img src="img/icon.png" alt="#"></a></li>
 										<li><a href="#"><img src="img/icon-2.png" alt="#"></a></li>
 										<li><a href="#"><img src="img/icon-3.png" alt="#"></a></li>
@@ -356,16 +369,8 @@
 										</li>
 									</ul>
 								</div>
-								<div class="form-group">
-									<ul class="calendar-wd__clist">
-										<li><img src="img/calender.png">Email
-											Participants</li>
-										<li><img src="img/memo.png">Add
-											Notes</li>
-										<li><img src="img/bell.png">Set
-											Reminder</li>
-									</ul>
-								</div>
+
+
 								<div class="form-group button">
 									<button type="submit" class="theme-btn theme-sec">More
 										options</button>
@@ -449,7 +454,8 @@
 					selectionInfo: null,
 					calendar: '',
 					drag_event_name: '',
-					datepick:'',
+					datepick: '',
+					start_time:'',
 				}
 
 			},
@@ -495,7 +501,9 @@
 				saveEvent: function () {
 					console.log(this.drag.drag_event_name);
 					calendar = this.drag.calendar;
+					console.log(this.drag.start_time);
 					
+
 					calendar.addEvent({
 						title: this.drag.drag_event_name,
 						start: this.drag.datepick,
@@ -529,9 +537,27 @@
 
 							$('.calendar-wd__form-three_drag').addClass('active-event');
 							// that.saveEvent(calendar, selectionInfo);
+							console.log(selectionInfo.start);
+							// var st = new Date(selectionInfo.start);
+							// var st_date = st.getDate();
+							// var st_year = st.getFullYear();
+							// var st_month = st.toLocaleString('en-us', { month: 'long' });
+							// var st_day = st.toLocaleString('en-us', { weekday: 'short' });
+							// console.log(st_date)
+							// console.log(st_year)
+							// console.log(st_month)
+							// console.log(st_day)
+							// var st_minute = ('0' + new Date(st).getMinutes()).slice(-2);
+							// var st_hour = ('0' + new Date(st).getHours()).slice(-2);
+							// var start_time = hour + ":" + st_minute
+							// var start_date = st_month + ' ' + st_date + ',' + ' ' + st_year + " (" + st_day + ")";
+
+
 							that.drag.selectionInfo = selectionInfo;
 							that.drag.calendar = calendar;
 							that.drag.datepick = selectionInfo.start;
+							that.drag.start_time = start_time;
+
 							// var value;
 							// $("#eventFlag").click(function(){
 							// 	value = $("#eventpick").val();
@@ -673,7 +699,7 @@
 									var eh = new Date(event.event._def.extendedProps.allday_end_time).getHours()
 									that.end_date = end_month + ' ' + (last_date + 1) + ',' + ' ' + end_year + ' ' + '(' + end_day + ')';
 									console.log(that.end_date);
-									that.interval = that.start_date + ' ' + d + ":" + c + ' - ' + that.end_date + ' ' + eh + ":" + em;
+									that.interval = that.start_date + ' ' + "00:00" + ' - ' + that.end_date + ' ' + "00:00";
 
 								}
 								else {
@@ -722,7 +748,12 @@
 			},
 		})
 
-
+		$(document).keyup(function (e) {
+			if (e.key === "Escape") {
+				$('.calendar-wd__form-three').removeClass('active-event');
+				$(".calendar-wd__form-three_drag").removeClass('active-event');
+			}
+		});
 	</script>
 
 
