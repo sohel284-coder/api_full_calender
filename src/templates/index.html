@@ -128,7 +128,7 @@
 							style="list-style-type:none">
 							<li><a @click.prevent="onEdit" class="list-group-item" data-bs-toggle="list" href="#"
 									role="tab"><img src="{% static 'img/pen.png' %}" alt="#"></a></li>
-							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><i
+							<li><a class="list-group-item" @click.prevent="onDelete" data-bs-toggle="list" href="#" role="tab"><i
 										class="far fa-trash-alt" style="font-size:20px; color: black;"></i></a></li>
 							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><img
 										src="{% static 'img/message.png' %}" alt="#"></a></li>
@@ -140,6 +140,8 @@
 							</li> -->
 						</ul>
 						<img src="{% static 'img/calander-banner.png' %}">
+                        <!-- delete modal start here -->
+
 					</div>
 					<div class="calendar-wd__form-three-body">
 						<div class="tab-content" id="nav-tabContent">
@@ -279,6 +281,20 @@
 								</div>
 							</div>
 
+							<div class="tab-pane fade" id="f-tab_delete" role="tabpanel">
+								<div class="calendar-wd__form-three--two">
+									<div class="calendar-wd__form-1">
+										<form class="form">
+											<h1 class="text-center mb-3">Are you sure want to delete Event?</h1>
+											<div class="form-group button">
+												<button class="btn btn-danger btn-sm" @click.prevent="backTopopup">cancel</button>
+												<button type="submit" class="btn btn-primary btn-sm ms-3">Yes</button>
+											</div>
+										</form>
+									</div>
+								</div>
+							</div>
+
 						</div>
 					</div>
 				</div>
@@ -352,12 +368,8 @@
 									</div>
 								</div>
 								<div class="form-group project-dropdown">
-									<select class="form-select" aria-label="Default select example">
-										<option selected="">Project B
-										</option>
-										<option value="1">15.30</option>
-										<option value="2">15.30</option>
-										<option value="3">15.30</option>
+									<select v-model="cal_name" @change="selectedCalendar($event)" class="form-select" aria-label="Default select example">
+										<option v-for="calendar in calendars" :value="calendar.calendar_name">[[calendar.calendar_name]]</option>
 									</select>
 								</div>
 								<div class="form-group select-man">
@@ -441,6 +453,7 @@
 				event_title: '',
 				calendar_name: '',
 				attendees: [],
+				calendars:[],
 				start_time: '',
 				end_time: '',
 				event_location: '',
@@ -450,17 +463,20 @@
 				popup: false,
 				flag: null,
 				interval: '',
+				cal_name:null,
 				drag: {
 					selectionInfo: null,
 					calendar: '',
 					drag_event_name: '',
 					datepick: '',
 					start_time:'',
+					cal_name:'',
 				}
 
 			},
 			mounted: function () {
 				this.showEvents();
+				this.getCalendars();
 			},
 			methods: {
 				onClose: function () {
@@ -479,14 +495,22 @@
 					$('#f-tab3').removeClass('show active');
 					// $('')
 				},
+				onDelete:function(){
+					$("#f-tab_delete").addClass('show active');
+					$('#f-tab3').removeClass('show active');
+					$('#f-tab4').removeClass('show active');
+
+				},
 				backTopopup: function () {
 					$('#f-tab4').removeClass('show active');
 					$('#f-tab3').addClass('show active');
+					$("#f-tab_delete").removeClass('show active');
 
 				},
-
-
-
+				selectedCalendar:function(value){
+					console.log(this.cal_name);
+					this.drag.cal_name = this.cal_name;
+				},
 
 				showEvents: function () {
 					var that = this;
@@ -498,12 +522,22 @@
 						that.weeklyCalendar();
 					})
 				},
+				getCalendars:function(){
+					var that = this;
+					$.ajax({
+						method: 'GET',
+						url: 'api/calendars/',
+					}).then(response => {
+						that.calendars = response;
+						console.log(that.calendars);
+						that.cal_name = response[0].calendar_name;
+						console.log(that.cal_name);
+					})
+				},
 				saveEvent: function () {
 					console.log(this.drag.drag_event_name);
 					calendar = this.drag.calendar;
-					console.log(this.drag.start_time);
-					
-
+					console.log(this.drag.cal_name);
 					calendar.addEvent({
 						title: this.drag.drag_event_name,
 						start: this.drag.datepick,
@@ -556,7 +590,7 @@
 							that.drag.selectionInfo = selectionInfo;
 							that.drag.calendar = calendar;
 							that.drag.datepick = selectionInfo.start;
-							that.drag.start_time = start_time;
+							// that.drag.start_time = start_time;
 
 							// var value;
 							// $("#eventFlag").click(function(){

@@ -130,6 +130,10 @@ class CalendarEventListView(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
+class CalendarListAPIView(APIView):
+    def get(self, request, format=None):
+        calendars = CalendarList.objects.all()
+        return Response(CalendarListSerializer(calendars, many=True).data, status=status.HTTP_200_OK)
 
 
 # class CalenderAPIView(APIView):

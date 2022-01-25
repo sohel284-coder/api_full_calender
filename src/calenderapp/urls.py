@@ -22,6 +22,7 @@ urlpatterns = [
     # path('api/event-search/', EventSearch.as_view(), ),
     # path('api/today-event/', TodayEvent.as_view(), ),
     path('api/event-filter/<str:query>', CalendarEventListView.as_view(), name='event_filter'),
+    path('api/calendars/', CalendarListAPIView.as_view(), ),
 
 ]
 
