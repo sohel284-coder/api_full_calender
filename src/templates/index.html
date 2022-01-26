@@ -558,7 +558,7 @@
 						method: 'DELETE',
 						url: 'api/delete-event/' + event_id,
 					}).then(response => {
-						alert('successfully delete')
+						$(".calendar-wd__form-three").toggleClass('active-event');
 					}).fail(errors => {
 						console.log(errors);
 					})
@@ -619,20 +619,22 @@
 					var calendar = new FullCalendar.Calendar(calendarEl, {
 
 						select: function (selectionInfo) {
-							if ($('.calendar-wd__form-three_drag').hasClass('active-event')) {
-								console.log($('.calendar-wd__form-three_drag'));
-								$("#calendar").click(function (e) {
-									var dtg = $(e.target).parents(".fc-highlight").get(0);
-									console.log(dtg);
-									if (!dtg) {
-										$('.calendar-wd__form-three_drag').removeClass('active-event');
+							$('.calendar-wd__form-three_drag').addClass('active-event');
 
-									}
-								});
-							}
-							else{
-								$('.calendar-wd__form-three_drag').addClass('active-event');
-							}
+							// if ($('.calendar-wd__form-three_drag').hasClass('active-event')) {
+							// 	$("#calendar").click(function (e) {
+							// 		$('.calendar-wd__form-three_drag').toggleClass('active-event');
+							// 		// var dtg = $(e.target).parents(".fc-highlight").get(0);
+							// 		// console.log(dtg);
+							// 		// if (!dtg) {
+
+							// 		// }
+							// 	});
+							// }
+							// else{
+								
+							// 	$('.calendar-wd__form-three_drag').addClass('active-event');
+							// }
 							// that.saveEvent(calendar, selectionInfo);
 
 
