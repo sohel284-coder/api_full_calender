@@ -128,8 +128,9 @@
 							style="list-style-type:none">
 							<li><a @click.prevent="onEdit" class="list-group-item" data-bs-toggle="list" href="#"
 									role="tab"><img src="{% static 'img/pen.png' %}" alt="#"></a></li>
-							<li><a class="list-group-item" @click.prevent="onDelete" data-bs-toggle="list" href="#" role="tab"><i
-										class="far fa-trash-alt" style="font-size:20px; color: black;"></i></a></li>
+							<li><a class="list-group-item" @click.prevent="onDelete" data-bs-toggle="list" href="#"
+									role="tab"><i class="far fa-trash-alt"
+										style="font-size:20px; color: black;"></i></a></li>
 							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><img
 										src="{% static 'img/message.png' %}" alt="#"></a></li>
 							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab6" role="tab"><i
@@ -140,7 +141,7 @@
 							</li> -->
 						</ul>
 						<img src="{% static 'img/calander-banner.png' %}">
-                        <!-- delete modal start here -->
+						<!-- delete modal start here -->
 
 					</div>
 					<div class="calendar-wd__form-three-body">
@@ -150,18 +151,9 @@
 								<div class="calendar-wd__form-separate-column">
 									<div class="calendar-wd__form-three-one">
 										<div class="calendar-wd__form-three-title">
-											<div class="row">
-												<div class="col-3">
-													<span style="background-color:#EDD5EB;">[[calendar_name]]</span>
-												</div>
-												<div class="col-9">
-													[[event_title]]
-												</div>
-											</div>
-											<!-- <h2 class="calendar-wd__form-three-title">
-												<span>[[calendar_name]]</span>[[event_title]]</h2> -->
+											<span>[[calendar_name]]</span>
 										</div>
-										
+										<p class="mt-0">[[event_title]]</p>
 										<div class="calendar-wd__form-body">
 											<div class="calendar-wd__form-single">
 												<h4 class="calendar-wd__form-heading"><i
@@ -169,12 +161,17 @@
 													[[interval]]</h4>
 											</div>
 											<div class="calendar-wd__form-single">
-												<h4 class="calendar-wd__form-heading"><a href="#"><img
-															src="{% static 'img/memo.png' %}"
-															alt="#">[[event_location]]</a></h4>
-												<div class="calendar-wd__form-list">
+												<span><i class="fas fa-map-marker-alt"
+														style="color: #FFCBC3; font-size: 22px;"></i></span>
+												<span class="ms-3"><a href="#">[[event_location]]</a></span>
+
+												<!-- <h4 class="calendar-wd__form-heading"></h4> -->
+											</div>
+											<div class="calendar-wd__form-single">
+												<p>
 													[[description]]
-												</div>
+
+												</p>
 											</div>
 										</div>
 									</div>
@@ -211,10 +208,30 @@
 											<div class="form-group">
 												<div class="list-inner-group">
 													<div class="list-single-group">
-														<input type="text" v-model="start_time">
+														<select class="form-select" aria-label="Default select example">
+															<option selected>[[start_time]]</option>
+															<option>
+																15.30</option>
+															<option value="1">15.30
+															</option>
+															<option value="2">15.30
+															</option>
+															<option value="3">15.30
+															</option>
+														</select>
 													</div>
 													<div class="list-single-group">
-														<input type="text" v-model="end_time">
+														<select class="form-select" aria-label="Default select example">
+															<option selected>[[end_time]]</option>
+															<option>
+																15.30</option>
+															<option value="1">15.30
+															</option>
+															<option value="2">15.30
+															</option>
+															<option value="3">15.30
+															</option>
+														</select>
 
 													</div>
 													<div class="list-single-group   project-dropdown">
@@ -236,11 +253,14 @@
 												</div>
 											</div>
 											<div class="form-group">
-												<div class="input-group">
-													<input type="text" v-model="calendar_name">
-
+												<div class="form-group project-dropdown">
+													<select v-model="calendar_name" @change="selectedCalendar($event)"
+														class="form-select" aria-label="Default select example">
+														<option v-for="calendar in calendars"
+															:value="calendar.calendar_name">[[calendar.calendar_name]]
+														</option>
+													</select>
 												</div>
-
 											</div>
 											<div class="form-group">
 												<div class="input-group">
@@ -284,10 +304,11 @@
 							<div class="tab-pane fade" id="f-tab_delete" role="tabpanel">
 								<div class="calendar-wd__form-three--two">
 									<div class="calendar-wd__form-1">
-										<form class="form">
+										<form class="form" @submit.prevent="onDeleteEvent(event_id)">
 											<h1 class="text-center mb-3">Are you sure want to delete Event?</h1>
 											<div class="form-group button">
-												<button class="btn btn-danger btn-sm" @click.prevent="backTopopup">cancel</button>
+												<button class="btn btn-danger btn-sm"
+													@click.prevent="backTopopup">cancel</button>
 												<button type="submit" class="btn btn-primary btn-sm ms-3">Yes</button>
 											</div>
 										</form>
@@ -324,7 +345,8 @@
 									<div class="list-inner-group">
 										<div class="list-single-group">
 											<select class="form-select" aria-label="Default select example">
-												<option selected="">
+												<option selected>[[drag.start_time]]</option>
+												<option>
 													15.30</option>
 												<option value="1">15.30
 												</option>
@@ -336,7 +358,8 @@
 										</div>
 										<div class="list-single-group">
 											<select class="form-select" aria-label="Default select example">
-												<option selected="">
+												<option selected value="">[[drag.end_time]]</option>
+												<option>
 													16.30</option>
 												<option value="1">16.30
 												</option>
@@ -368,8 +391,10 @@
 									</div>
 								</div>
 								<div class="form-group project-dropdown">
-									<select v-model="cal_name" @change="selectedCalendar($event)" class="form-select" aria-label="Default select example">
-										<option v-for="calendar in calendars" :value="calendar.calendar_name">[[calendar.calendar_name]]</option>
+									<select v-model="cal_name" @change="selectedCalendar($event)" class="form-select"
+										aria-label="Default select example">
+										<option v-for="calendar in calendars" :value="calendar.calendar_name">
+											[[calendar.calendar_name]]</option>
 									</select>
 								</div>
 								<div class="form-group select-man">
@@ -453,7 +478,7 @@
 				event_title: '',
 				calendar_name: '',
 				attendees: [],
-				calendars:[],
+				calendars: [],
 				start_time: '',
 				end_time: '',
 				event_location: '',
@@ -463,14 +488,17 @@
 				popup: false,
 				flag: null,
 				interval: '',
-				cal_name:null,
+				cal_name: null,
+				event_id: null,
 				drag: {
 					selectionInfo: null,
 					calendar: '',
 					drag_event_name: '',
 					datepick: '',
-					start_time:'',
-					cal_name:'',
+					start_time: '',
+					end_time:'',
+					cal_name: '',
+					cal_color: '',
 				}
 
 			},
@@ -495,7 +523,7 @@
 					$('#f-tab3').removeClass('show active');
 					// $('')
 				},
-				onDelete:function(){
+				onDelete: function () {
 					$("#f-tab_delete").addClass('show active');
 					$('#f-tab3').removeClass('show active');
 					$('#f-tab4').removeClass('show active');
@@ -507,9 +535,9 @@
 					$("#f-tab_delete").removeClass('show active');
 
 				},
-				selectedCalendar:function(value){
-					console.log(this.cal_name);
+				selectedCalendar: function (value) {
 					this.drag.cal_name = this.cal_name;
+
 				},
 
 				showEvents: function () {
@@ -518,11 +546,24 @@
 						method: 'GET',
 						url: 'api/event-filter/' + 'weekly',
 					}).then(response => {
+						console.log(response);
 						that.weekly_events = response.events;
+
 						that.weeklyCalendar();
 					})
 				},
-				getCalendars:function(){
+				onDeleteEvent: function (event_id) {
+					console.log(event_id);
+					$.ajax({
+						method: 'DELETE',
+						url: 'api/delete-event/' + event_id,
+					}).then(response => {
+						alert('successfully delete')
+					}).fail(errors => {
+						console.log(errors);
+					})
+				},
+				getCalendars: function () {
 					var that = this;
 					$.ajax({
 						method: 'GET',
@@ -535,17 +576,36 @@
 						console.log(that.cal_name);
 					})
 				},
+
 				saveEvent: function () {
 					console.log(this.drag.drag_event_name);
 					calendar = this.drag.calendar;
-					console.log(this.drag.cal_name);
-					calendar.addEvent({
-						title: this.drag.drag_event_name,
-						start: this.drag.datepick,
-						end: this.drag.selectionInfo.end,
-						allDay: this.drag.selectionInfo.allDay,
-					});
+					var change_st_date = this.drag.start_date + ' ' + this.drag.start_time
+					var change_st_date = new Date(change_st_date)
+					console.log(change_st_date);
+					$.ajax({
+						method: 'GET',
+						url: 'api/cal-color/' + this.drag.cal_name,
+					}).then(response => {
+						console.log(response);
+						calendar.addEvent({
+							title: this.drag.drag_event_name,
+							start: this.drag.selectionInfo.start,
+							end: this.drag.selectionInfo.end,
+							allDay: this.drag.selectionInfo.allDay,
+							color: response,
+						});
+						this.calendar_name = this.drag.cal_name;
+						this.saveBackendEvent();
+
+					})
+
+
 					$(".calendar-wd__form-three_drag").removeClass('active-event');
+				},
+				saveBackendEvent: function () {
+					console.log(this.drag.drag_event_name);
+					console.log('test');
 				},
 
 
@@ -559,58 +619,57 @@
 					var calendar = new FullCalendar.Calendar(calendarEl, {
 
 						select: function (selectionInfo) {
+							if ($('.calendar-wd__form-three_drag').hasClass('active-event')) {
+								console.log($('.calendar-wd__form-three_drag'));
+								$("#calendar").click(function (e) {
+									var dtg = $(e.target).parents(".fc-highlight").get(0);
+									console.log(dtg);
+									if (!dtg) {
+										$('.calendar-wd__form-three_drag').removeClass('active-event');
 
-
-							//.log(selectionInfo)
-							// var name = prompt("prompt - Please enter your name")
-							//console.log(name)
-							//alert("alert - Hello, " + name + "! You can't enter text here!");
-
-							//var clickedOk = confirm("confirm - Do you understand now?");
-							//alert()
-							// $(".drag-event").show();
-
-							$('.calendar-wd__form-three_drag').addClass('active-event');
+									}
+								});
+							}
+							else{
+								$('.calendar-wd__form-three_drag').addClass('active-event');
+							}
 							// that.saveEvent(calendar, selectionInfo);
+
+
 							console.log(selectionInfo.start);
-							// var st = new Date(selectionInfo.start);
-							// var st_date = st.getDate();
-							// var st_year = st.getFullYear();
-							// var st_month = st.toLocaleString('en-us', { month: 'long' });
-							// var st_day = st.toLocaleString('en-us', { weekday: 'short' });
+							var st = new Date(selectionInfo.start);
+							console.log(selectionInfo.end);
+							var ed = new Date(selectionInfo.end);
+							console.log(ed);
+							var st_date = st.getDate();
+							var st_year = st.getFullYear();
+							var st_month = st.toLocaleString('en-us', { month: 'long' });
+							var st_day = st.toLocaleString('en-us', { weekday: 'short' });
 							// console.log(st_date)
 							// console.log(st_year)
 							// console.log(st_month)
 							// console.log(st_day)
-							// var st_minute = ('0' + new Date(st).getMinutes()).slice(-2);
-							// var st_hour = ('0' + new Date(st).getHours()).slice(-2);
-							// var start_time = hour + ":" + st_minute
-							// var start_date = st_month + ' ' + st_date + ',' + ' ' + st_year + " (" + st_day + ")";
+							var st_minute = ('0' + new Date(st).getMinutes()).slice(-2);
+							var st_hour = ('0' + new Date(st).getHours()).slice(-2);
+							
+							var ed_minute = ('0' + new Date(ed).getMinutes()).slice(-2);
+							var ed_hour = ('0' + new Date(ed).getHours()).slice(-2);
 
+							var start_time = st_hour + ":" + st_minute;
+							var start_date = st_month + ' ' + st_date + ',' + ' ' + st_year + " (" + st_day + ")";
+							var end_time = ed_hour + ":" + ed_minute;
 
 							that.drag.selectionInfo = selectionInfo;
 							that.drag.calendar = calendar;
-							that.drag.datepick = selectionInfo.start;
-							// that.drag.start_time = start_time;
-
-							// var value;
-							// $("#eventFlag").click(function(){
-							// 	value = $("#eventpick").val();
-							// 	calendar.addEvent({
-							// 		title: value,
-							// 		start: selectionInfo.start,
-							// 		end: selectionInfo.end,
-							// 		allDay: selectionInfo.allDay
-							// 	});
-
-							// 	$('.calendar-wd__form-three_drag').removeClass('active-event');
-
-							// });
+							that.drag.datepick = start_date;
+							that.drag.start_time = start_time;
+							that.drag.end_time = end_time;
+							console.log(that.drag.start_time);
 						},
 
 
 						headerToolbar: {
-							left: 'prev,add_event,slot',
+							left: 'prev,add_event,slot,today',
 							center: 'title',
 							right: 'setting,dayGridMonth,timeGridWeek,timeGridDay,listWeek,next'
 						},
@@ -666,9 +725,8 @@
 							$('.calendar-wd__form-three').addClass('active-event');
 							$('#f-tab4').removeClass('show active');
 							$('#f-tab3').addClass('show active');
-
+							that.event_id = event.event._def.extendedProps.event_id;
 							that.event_title = event.event._def.title;
-
 							that.event_location = event.event._def.extendedProps.event_location;
 							that.description = event.event._def.extendedProps.event_description.slice(0, 400);
 
@@ -760,15 +818,16 @@
 
 							var flag = 1;
 							$("#calendar").click(function (e) {
-								console.log(event.el);
 								var dtg = $(e.target).parents(".fc-daygrid-event").get(0);
 								var ttg = $(e.target).parents(".fc-timegrid-event").get(0);
 
 								if (!(dtg || ttg)) {
 									console.log('close');
 									$('.calendar-wd__form-three').removeClass('active-event');
+									$('.calendar-wd__form-three_drag').removeClass('active-event');
+
 								}
-							})
+							});
 
 
 
