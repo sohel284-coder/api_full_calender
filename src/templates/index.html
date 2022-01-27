@@ -202,7 +202,7 @@
 											<div class="form-group calendar-wd__date-pick">
 												<div class="form-control wide" tabindex="0"><i
 														class="fa fa-calendar"></i><span class="current"><input
-															id="datepick" v-model="interval" type="text"
+															id="datepick" v-model="edit_interval" type="text"
 															placeholder=""></span></div>
 											</div>
 											<div class="form-group">
@@ -387,7 +387,12 @@
 								<div class="form-group">
 									<div class="input-group">
 										<span class="input-icon"><i class="fa fa-map-marker"></i></span>
-										<input id="datepick" type="text" placeholder="Add location">
+										<input id="datepick" v-model="drag.location" type="text" placeholder="Add location">
+									</div>
+								</div>
+								<div class="form-group">
+									<div class="input-group">
+										<textarea name="" id="" v-model="drag.description" cols="30" rows="10"></textarea>
 									</div>
 								</div>
 								<div class="form-group project-dropdown">
@@ -490,15 +495,18 @@
 				interval: '',
 				cal_name: null,
 				event_id: null,
+				edit_interval: '',
 				drag: {
 					selectionInfo: null,
 					calendar: '',
 					drag_event_name: '',
+					location:'',
 					datepick: '',
 					start_time: '',
-					end_time:'',
+					end_time: '',
 					cal_name: '',
 					cal_color: '',
+					description:'',
 				}
 
 			},
@@ -547,6 +555,7 @@
 						url: 'api/event-filter/' + 'weekly',
 					}).then(response => {
 						console.log(response);
+
 						that.weekly_events = response.events;
 
 						that.weeklyCalendar();
@@ -580,9 +589,8 @@
 				saveEvent: function () {
 					console.log(this.drag.drag_event_name);
 					calendar = this.drag.calendar;
-					var change_st_date = this.drag.start_date + ' ' + this.drag.start_time
-					var change_st_date = new Date(change_st_date)
-					console.log(change_st_date);
+
+					console.log(this.drag.selectionInfo.start);
 					$.ajax({
 						method: 'GET',
 						url: 'api/cal-color/' + this.drag.cal_name,
@@ -604,8 +612,50 @@
 					$(".calendar-wd__form-three_drag").removeClass('active-event');
 				},
 				saveBackendEvent: function () {
-					console.log(this.drag.drag_event_name);
-					console.log('test');
+					
+					var ds = new Date(this.drag.selectionInfo.start);
+					var de = new Date(this.drag.selectionInfo.end)
+
+					var startdateString =
+						ds.getUTCFullYear() + "-" +
+						("0" + (ds.getUTCMonth() + 1)).slice(-2) + "-" +
+						("0" + ds.getUTCDate()).slice(-2) + "T" +
+						("0" + ds.getUTCHours()).slice(-2) + ":" +
+						("0" + ds.getUTCMinutes()).slice(-2) + ":" +
+						("0" + ds.getUTCSeconds()).slice(-2);
+
+					console.log(startdateString);
+					var enddateString =
+						de.getUTCFullYear() + "-" +
+						("0" + (de.getUTCMonth() + 1)).slice(-2) + "-" +
+						("0" + de.getUTCDate()).slice(-2) + "T" +
+						("0" + de.getUTCHours()).slice(-2) + ":" +
+						("0" + de.getUTCMinutes()).slice(-2) + ":" +
+						("0" + de.getUTCSeconds()).slice(-2);
+
+					console.log(enddateString);
+					console.log(this.drag.cal_name);
+					var formData = {};
+					formData.event_name = this.drag.drag_event_name;
+					formData.event_start_dt = startdateString;
+					formData.event_end_dt = enddateString;
+					formData.event_description = this.drag.description;
+					formData.event_location = this.drag.location;
+					formData.calendar_info_id = this.drag.cal_name;
+
+					$.ajax({
+						method: 'POST',
+						url: 'api/drag-event-save/',
+						data: JSON.stringify(formData),
+						contentType: 'application/json'
+					}).then(response => {
+						alert('successfully create')
+						console.log(response);
+					}).fail(errors => {
+						alert('falid to create');
+						console.log(errors);
+					})
+
 				},
 
 
@@ -632,11 +682,10 @@
 							// 	});
 							// }
 							// else{
-								
+
 							// 	$('.calendar-wd__form-three_drag').addClass('active-event');
 							// }
 							// that.saveEvent(calendar, selectionInfo);
-
 
 							console.log(selectionInfo.start);
 							var st = new Date(selectionInfo.start);
@@ -653,7 +702,7 @@
 							// console.log(st_day)
 							var st_minute = ('0' + new Date(st).getMinutes()).slice(-2);
 							var st_hour = ('0' + new Date(st).getHours()).slice(-2);
-							
+
 							var ed_minute = ('0' + new Date(ed).getMinutes()).slice(-2);
 							var ed_hour = ('0' + new Date(ed).getHours()).slice(-2);
 
@@ -776,10 +825,10 @@
 									console.log(that.interval);
 
 									// that.interval = that.start_date + ' ' + '00:00' + ' - ' + '00:00'
-
+									that.edit_interval = that.start_date + ' ' + ' - ' + that.end_date;
 								}
 								else {
-
+									that.edit_interval = month + ' ' + date + ',' + ' ' + year + ' ' + '(' + day + ')';
 									that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_time
 								}
 							}
@@ -795,6 +844,7 @@
 									that.end_date = end_month + ' ' + (last_date + 1) + ',' + ' ' + end_year + ' ' + '(' + end_day + ')';
 									console.log(that.end_date);
 									that.interval = that.start_date + ' ' + "00:00" + ' - ' + that.end_date + ' ' + "00:00";
+									that.edit_interval = that.start_date + ' ' + ' - ' + that.end_date;
 
 								}
 								else {

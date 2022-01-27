@@ -1,6 +1,7 @@
 from calendar import calendar
 from functools import partial
 from itertools import count
+from unicodedata import name
 from django.http.response import HttpResponse
 from django.shortcuts import render
 from django.db.models import DurationField, ExpressionWrapper, F, IntegerField, Value, Sum
@@ -78,6 +79,8 @@ class CalendarEventListView(APIView):
             values['title'] = dt['event_name']
             s = dt['event_start_dt']
             e = dt['event_end_dt']
+            print(s)
+            print(e)
             # print(val)
             # d =  datetime.datetime(val)   
             d = s.split('T')
@@ -160,5 +163,14 @@ class CalendarColor(CalendarEventListView):
             print(color_name, calendar_id)
         return Response(color_name)        
 
+class DragEventSave(APIView):
+    def post(self, request, format=None):
+        calendar_info_id = CalendarList.objects.get(calendar_name=request.data['calendar_info_id']).id
+        request.data['calendar_info_id'] = calendar_info_id
+        serializer = CalendarEventsSerializer(data=request.data)
 
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response('Successfully eventb save', status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 

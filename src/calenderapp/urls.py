@@ -11,6 +11,7 @@ urlpatterns = [
     path('api/calendars/', CalendarListAPIView.as_view(), ),
     path('api/delete-event/<int:event_id>', EventDelete.as_view(), ),
     path('api/cal-color/<str:calendar_name>', CalendarColor.as_view(), ),
+    path('api/drag-event-save/', DragEventSave.as_view(), ),
 
 ]
 
