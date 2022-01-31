@@ -22,6 +22,8 @@
 			background-color: blue;
 		}
 
+
+
 		#app {
 			background-color: rgb(251, 199, 251);
 		}
@@ -108,6 +110,31 @@
 			z-index: 333333333333;
 			left: -100px;
 		}
+
+		.form-group.project-dropdown:before {
+			content: "";
+			position: absolute;
+			left: 10px;
+			top: 10px;
+			width: 10px;
+			height: 10px;
+			background: #FFCBC3;
+			z-index: 333;
+			border-radius: 100%;
+		}
+
+		div.project-dropdown select:before {
+			content: "";
+			position: absolute;
+			left: 0;
+			width: 10px;
+			height: 10px;
+			background: red;
+		}
+
+		.form-group.project-dropdown select {
+			padding-left: 20px;
+		}
 	</style>
 
 
@@ -151,7 +178,7 @@
 								<div class="calendar-wd__form-separate-column">
 									<div class="calendar-wd__form-three-one">
 										<div class="calendar-wd__form-three-title">
-											<span>[[calendar_name]]</span>
+											<span :style="{background:event_color}">[[calendar_name]]</span>
 										</div>
 										<p class="mt-0">[[event_title]]</p>
 										<div class="calendar-wd__form-body">
@@ -253,11 +280,14 @@
 												</div>
 											</div>
 											<div class="form-group">
-												<div class="form-group project-dropdown">
-													<select v-model="calendar_name" @change="selectedCalendar($event)"
-														class="form-select" aria-label="Default select example">
+												<div class="form-group">
+													<select v-model="calendar_name" :style="{color:event_color}"
+														@change="selectedCalendar($event)" class="form-select"
+														aria-label="Default select example">
 														<option v-for="calendar in calendars"
-															:value="calendar.calendar_name">[[calendar.calendar_name]]
+															:value="calendar.calendar_name"> <span
+																class="me-2">&#9679;</span> <span
+																style="color: black;">[[calendar.calendar_name]]</span>
 														</option>
 													</select>
 												</div>
@@ -387,12 +417,14 @@
 								<div class="form-group">
 									<div class="input-group">
 										<span class="input-icon"><i class="fa fa-map-marker"></i></span>
-										<input id="datepick" v-model="drag.location" type="text" placeholder="Add location">
+										<input id="datepick" v-model="drag.location" type="text"
+											placeholder="Add location">
 									</div>
 								</div>
 								<div class="form-group">
 									<div class="input-group">
-										<textarea name="" id="" v-model="drag.description" cols="30" rows="10"></textarea>
+										<textarea name="" id="" v-model="drag.description" cols="30"
+											rows="10"></textarea>
 									</div>
 								</div>
 								<div class="form-group project-dropdown">
@@ -444,35 +476,7 @@
 	{% endif %}
 
 	<script>
-		$(document).ready(function () {
 
-
-			$('.calendar-wd__blank_box,.close-one').on("click", function () {
-				$('.calendar-wd__form').toggleClass('active');
-			});
-			$('.calendar-wd__submit,.close-one').on("click", function () {
-				$('.calendar-wd__form-two,.calendar-wd__form-one').toggleClass('active');
-			});
-
-
-
-			$('.calendar-wd__popbar').on("click", function () {
-				$('.calendar-wd__form-three').toggleClass('active-event');
-
-			});
-
-			$('.calendar-wd__form-three').hover(function () {
-				$('.calendar-wd__form-three').addClass('plus-bonus');
-			});
-
-			$(".calendar-wd__form-three").hover(
-				function () {
-					$(this).removeClass("hover-active");
-				}, function () {
-					$(this).addClass("hover-active");
-				}
-			);
-		})
 
 		var app = new Vue({
 			el: '#app',
@@ -496,17 +500,18 @@
 				cal_name: null,
 				event_id: null,
 				edit_interval: '',
+				event_color: '',
 				drag: {
 					selectionInfo: null,
 					calendar: '',
 					drag_event_name: '',
-					location:'',
+					location: '',
 					datepick: '',
 					start_time: '',
 					end_time: '',
 					cal_name: '',
 					cal_color: '',
-					description:'',
+					description: '',
 				}
 
 			},
@@ -518,7 +523,6 @@
 				onClose: function () {
 					console.log('test');
 					$(".calendar-wd__form-three").toggleClass('active-event');
-
 				},
 				onCloseDrag: function () {
 					$("#eventpick").val('');
@@ -529,7 +533,13 @@
 				onEdit: function () {
 					$('#f-tab4').addClass('show active');
 					$('#f-tab3').removeClass('show active');
-					// $('')
+					console.log(this.event_color);
+					// $(".dot").css('backgroundColor', this.event_color);
+					// $(".dot").css('border-radius', '50%');
+					// $(".dot").css('height', '25px');
+					// $(".dot").css('width', '25px');
+					// $(".dot").css('display', 'inline-block');
+
 				},
 				onDelete: function () {
 					$("#f-tab_delete").addClass('show active');
@@ -567,7 +577,7 @@
 						method: 'DELETE',
 						url: 'api/delete-event/' + event_id,
 					}).then(response => {
-						$(".calendar-wd__form-three").toggleClass('active-event');
+						location.href = '/';
 					}).fail(errors => {
 						console.log(errors);
 					})
@@ -609,10 +619,10 @@
 					})
 
 
-					$(".calendar-wd__form-three_drag").removeClass('active-event');
+					$(".calendar-wd__form-three_drag").toggleClass('active-event');
 				},
 				saveBackendEvent: function () {
-					
+
 					var ds = new Date(this.drag.selectionInfo.start);
 					var de = new Date(this.drag.selectionInfo.end)
 
@@ -649,7 +659,7 @@
 						data: JSON.stringify(formData),
 						contentType: 'application/json'
 					}).then(response => {
-						alert('successfully create')
+						location.href = '/';
 						console.log(response);
 					}).fail(errors => {
 						alert('falid to create');
@@ -669,20 +679,20 @@
 					var calendar = new FullCalendar.Calendar(calendarEl, {
 
 						select: function (selectionInfo) {
+							console.log('drag');
 							$('.calendar-wd__form-three_drag').addClass('active-event');
 
 							// if ($('.calendar-wd__form-three_drag').hasClass('active-event')) {
 							// 	$("#calendar").click(function (e) {
-							// 		$('.calendar-wd__form-three_drag').toggleClass('active-event');
 							// 		// var dtg = $(e.target).parents(".fc-highlight").get(0);
 							// 		// console.log(dtg);
 							// 		// if (!dtg) {
-
 							// 		// }
+							// 		$('.calendar-wd__form-three_drag').removeClass('active-event');
+
 							// 	});
 							// }
 							// else{
-
 							// 	$('.calendar-wd__form-three_drag').addClass('active-event');
 							// }
 							// that.saveEvent(calendar, selectionInfo);
@@ -780,6 +790,8 @@
 							that.event_title = event.event._def.title;
 							that.event_location = event.event._def.extendedProps.event_location;
 							that.description = event.event._def.extendedProps.event_description.slice(0, 400);
+							that.event_color = event.event.backgroundColor;
+							console.log(that.event_color);
 
 							// that.start_time = new Date(event.event.start).toLocaleTimeString();
 							// that.end_time = new Date(event.event.end).toLocaleTimeString();
@@ -869,18 +881,19 @@
 							calender_id = event.event._def.extendedProps.calender_id;
 
 							var flag = 1;
-							$("#calendar").click(function (e) {
-								var dtg = $(e.target).parents(".fc-daygrid-event").get(0);
-								var ttg = $(e.target).parents(".fc-timegrid-event").get(0);
+							if ($('.calendar-wd__form-three').hasClass('active-event')) {
+								$("#calendar").click(function (e) {
+									var dtg = $(e.target).parents(".fc-daygrid-event").get(0);
+									var ttg = $(e.target).parents(".fc-timegrid-event").get(0);
 
-								if (!(dtg || ttg)) {
-									console.log('close');
-									$('.calendar-wd__form-three').removeClass('active-event');
-									$('.calendar-wd__form-three_drag').removeClass('active-event');
+									if (!(dtg || ttg)) {
+										console.log('close');
+										$('.calendar-wd__form-three').removeClass('active-event');
+										// $('.calendar-wd__form-three_drag').removeClass('active-event');
 
-								}
-							});
-
+									}
+								});
+							}
 
 
 						},

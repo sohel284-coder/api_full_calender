@@ -162,7 +162,7 @@ div.project-dropdown select:before {
   height: 10px;
   background: red;
 }
-.form-group.project-dropdown:before {
+.form-group.project-dropdown:before{
   content: "";
   position: absolute;
   left: 10px;
