@@ -222,21 +222,21 @@
 										<form class="form">
 											<div class="form-group">
 												<div class="input-group">
-													<input id="datepick" v-model="event_title" type="text"
+													<input id="datepick" v-model="edit.event_title" type="text"
 														placeholder="">
 												</div>
 											</div>
 											<div class="form-group calendar-wd__date-pick">
 												<div class="form-control wide" tabindex="0"><i
 														class="fa fa-calendar"></i><span class="current"><input
-															id="datepick" v-model="edit_interval" type="text"
+															id="datepick" v-model="edit.interval" type="text"
 															placeholder=""></span></div>
 											</div>
 											<div class="form-group">
 												<div class="list-inner-group">
 													<div class="list-single-group">
-														<select class="form-select" aria-label="Default select example">
-															<option selected>[[start_time]]</option>
+														<select v-model="edit.start_time" class="form-select" aria-label="Default select example">
+															<option selected>[[edit.start_time]]</option>
 															<option>
 																15.30</option>
 															<option value="1">15.30
@@ -248,8 +248,8 @@
 														</select>
 													</div>
 													<div class="list-single-group">
-														<select class="form-select" aria-label="Default select example">
-															<option selected>[[end_time]]</option>
+														<select v-model="edit.end_time" class="form-select" aria-label="Default select example">
+															<option selected>[[edit.end_time]]</option>
 															<option>
 																15.30</option>
 															<option value="1">15.30
@@ -274,17 +274,17 @@
 											<div class="form-group">
 												<div class="input-group">
 													<span class="input-icon"><i class="fa fa-map-marker"></i></span>
-													<input id="datepick" v-model="event_location" type="text"
+													<input id="datepick" v-model="edit.event_location" type="text"
 														placeholder="Add location">
 
 												</div>
 											</div>
 											<div class="form-group">
 												<div class="form-group">
-													<select v-model="calendar_name" :style="{color:event_color}"
+													<select v-model="edit.calendar_name" :style="{color:event_color}"
 														@change="selectedCalendar($event)" class="form-select"
 														aria-label="Default select example">
-														<option v-for="calendar in calendars"
+														<option v-for="calendar in edit.calendars"
 															:value="calendar.calendar_name"> <span
 																class="me-2">&#9679;</span> <span
 																style="color: black;">[[calendar.calendar_name]]</span>
@@ -295,12 +295,12 @@
 											<div class="form-group">
 												<div class="input-group">
 													<textarea class="p-3" name="" id="" cols="70" rows="5"
-														v-model="description"></textarea>
+														v-model="edit.description"></textarea>
 												</div>
 											</div>
 											<div class="form-group select-man mt-3">
 												<ul class="select-list-img" style="list-style-type:none"
-													v-for="attendee in attendees">
+													v-for="attendee in edit.attendees">
 													<li><a href="#"><img src="{% static 'img/icon.png' %}"
 																alt="#">[[attendee.event_attendee]]</a>
 													</li>
@@ -501,6 +501,17 @@
 				event_id: null,
 				edit_interval: '',
 				event_color: '',
+				edit:{
+					event_title:'',
+					attendees: [],
+					calendars: [],
+					calendar_name:'',
+					event_location:'',
+					start_time: '',
+					end_time: '',
+					description:'',
+					interval:'',
+				},
 				drag: {
 					selectionInfo: null,
 					calendar: '',
@@ -534,6 +545,16 @@
 					$('#f-tab4').addClass('show active');
 					$('#f-tab3').removeClass('show active');
 					console.log(this.event_color);
+					this.edit.event_title = this.event_title;
+					this.edit.attendees = this.attendees;
+					this.edit.calendars = this.calendars;
+					this.edit.calendar_name = this.calendar_name;
+					this.edit.event_location = this.event_location;
+					this.edit.start_time = this.start_time;
+					this.edit.end_time = this.end_time;
+					this.edit.description = this.description;
+					this.edit.interval = this.edit_interval;
+					
 					// $(".dot").css('backgroundColor', this.event_color);
 					// $(".dot").css('border-radius', '50%');
 					// $(".dot").css('height', '25px');
@@ -548,6 +569,15 @@
 
 				},
 				backTopopup: function () {
+					this.edit.event_title = '';
+					this.edit.attendees = [];
+					this.edit.calendars = [];
+					this.edit.calendar_name = '';
+					this.edit.event_location = '';
+					this.edit.start_time = '';
+					this.edit.end_time = '';
+					this.edit.description = '';
+					this.edit.interval = '';
 					$('#f-tab4').removeClass('show active');
 					$('#f-tab3').addClass('show active');
 					$("#f-tab_delete").removeClass('show active');
