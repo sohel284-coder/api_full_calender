@@ -135,6 +135,10 @@
 		.form-group.project-dropdown select {
 			padding-left: 20px;
 		}
+
+		.form-control {
+			text-align: center;
+		}
 	</style>
 
 
@@ -142,6 +146,7 @@
 
 <body>
 	<div class="calendar-wd__section" id="app">
+
 		<div class="calendar-wd">
 			<div id='calendar'></div>
 			<br>
@@ -171,7 +176,7 @@
 						<!-- delete modal start here -->
 
 					</div>
-					<div class="calendar-wd__form-three-body">
+					<div class="calendar-wd__form-three-body bg-light">
 						<div class="tab-content" id="nav-tabContent">
 							<!-- Property Tab One -->
 							<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
@@ -218,7 +223,100 @@
 							</div>
 							<div class="tab-pane fade" id="f-tab4" role="tabpanel">
 								<div class="calendar-wd__form-three--two">
-									<div class="calendar-wd__form-1">
+									<div class="">
+										<form action="">
+											<div class="row">
+												<div class="col-2">
+													<label for="eventName" class="mt-2">Event Name :</label>
+												</div>
+												<div class="col-10">
+													<input id="eventName" v-model="edit.event_title" type="text"
+														class="form-control form-control-lg">
+												</div>
+											</div>
+											<div class="row mt-5" v-if="edit.isallDay">
+												<div class="col-2">
+													<label class="mt-2" for="startDate"> Start Date :</label>
+												</div>
+												<div class="col-4">
+													<input id="startDate" v-model="edit.all_day_start_date" type="text"
+														class="form-control form-control-lg">
+												</div>
+												<div class="col-2">
+													<label class="mt-2" for="endtDate"> End Date :</label>
+												</div>
+												<div class="col-4">
+													<input id="endDate" v-model="edit.all_day_end_date" type="text"
+														class="form-control form-control-lg">
+												</div>
+											</div>
+											<div class="row mt-5" v-else>
+												<div class="col-2">
+													<label class="mt-2" for="startDate"> Start Date :</label>
+												</div>
+												<div class="col-10">
+													<input id="startDate" v-model="edit.single_day_start_date" type="text"
+														class="form-control form-control-lg">
+												</div>
+											</div>
+
+											<div class="row mt-5">
+												<div class="col-2">
+													<label class="mt-2" for="startTime"> Start Time :</label>
+												</div>
+												<div class="col-4">
+													<input id="startTime" v-model="start_time" type="text"
+														class="form-control form-control-lg">
+												</div>
+												<div class="col-2">
+													<label class="mt-2" for="endtTime"> End Time :</label>
+												</div>
+												<div class="col-4">
+													<input id="endTime" type="text" v-model="end_time"
+														class="form-control form-control-lg">
+												</div>
+											</div>
+											<div class="row mt-5">
+												<div class="col-2">
+													<label for="eventLocation" class="mt-2">Location :</label>
+												</div>
+												<div class="col-10">
+													<input id="eventLocation" v-model="event_location" type="text"
+														class="form-control form-control-lg">
+												</div>
+											</div>
+											<div class="row mt-5">
+												<div class="col-3">
+													<label for="calendarName" class="mt-2">Calendar Name :</label>
+												</div>
+												<div class="col-9">
+													<select v-model="edit.calendar_name" :style="{color:event_color}"
+														@change="selectedCalendar($event)"
+														class="form-select form-select-lg"
+														aria-label="Default select example">
+														<option v-for="calendar in edit.calendars"
+															:value="calendar.calendar_name"> <span
+																class="me-2">&#9679;</span> <span
+																style="color: black;">[[calendar.calendar_name]]</span>
+														</option>
+													</select>
+												</div>
+											</div>
+											<div class="row mt-5">
+												<div class="col-1"></div>
+												<div class="col-4">
+													<button type="button" class="btn btn-secondary btn-lg">More Options</button>
+												</div>
+												<div class="col-3">
+													<button type="submit" class="btn btn-primary btn-lg">Save</button>
+												</div>
+												<div class="col-3">
+													<button type="button" @click.prevent="backTopopup" class="btn btn-danger btn-lg">Cancel</button>
+												</div>
+												<div class="col-1"></div>
+											</div>
+										</form>
+										{% comment %}
 										<form class="form">
 											<div class="form-group">
 												<div class="input-group">
@@ -235,7 +333,8 @@
 											<div class="form-group">
 												<div class="list-inner-group">
 													<div class="list-single-group">
-														<select v-model="edit.start_time" class="form-select" aria-label="Default select example">
+														<select v-model="edit.start_time" class="form-select"
+															aria-label="Default select example">
 															<option selected>[[edit.start_time]]</option>
 															<option>
 																15.30</option>
@@ -248,7 +347,8 @@
 														</select>
 													</div>
 													<div class="list-single-group">
-														<select v-model="edit.end_time" class="form-select" aria-label="Default select example">
+														<select v-model="edit.end_time" class="form-select"
+															aria-label="Default select example">
 															<option selected>[[edit.end_time]]</option>
 															<option>
 																15.30</option>
@@ -310,7 +410,6 @@
 													</li>
 												</ul>
 											</div>
-											{% comment %}
 											<div class="form-group">
 												<ul class="calendar-wd__clist">
 													<li><img src="{% static 'img/calender.png' %}">Email Participants
@@ -319,7 +418,6 @@
 													<li><img src="{% static 'img/bell.png' %}">Set Reminder</li>
 												</ul>
 											</div>
-											{% endcomment %}
 											<div class="form-group button">
 												<button type="submit" class="theme-btn theme-sec">More options</button>
 												<b class="theme-btn theme-primary calendar-wd__submit">Save</b>
@@ -327,6 +425,7 @@
 
 											</div>
 										</form>
+										{% endcomment %}
 									</div>
 								</div>
 							</div>
@@ -501,16 +600,36 @@
 				event_id: null,
 				edit_interval: '',
 				event_color: '',
-				edit:{
-					event_title:'',
+				allDayEvent: false,
+				single_day_start_date: '',
+				single_day_end_date: '',
+				single_day_start_time: '',
+				single_day_end_time: '',
+
+				all_day_start_date: '',
+				all_day_end_date: '',
+				all_day_start_time: '00:00',
+				all_day_end_time: '00:00',
+
+				edit: {
+					event_title: '',
 					attendees: [],
 					calendars: [],
-					calendar_name:'',
-					event_location:'',
-					start_time: '',
-					end_time: '',
-					description:'',
-					interval:'',
+					calendar_name: '',
+					event_location: '',
+					description: '',
+					start_time:'',
+					end_time:'',
+					isallDay: false,
+					single_day_start_date: '',
+					single_day_end_date: '',
+					// single_day_start_time: '',
+					// single_day_end_time: '',
+
+					all_day_start_date: '',
+					all_day_end_date: '',
+					// all_day_start_time: '00:00',
+					// all_day_end_time: '00:00',
 				},
 				drag: {
 					selectionInfo: null,
@@ -545,16 +664,28 @@
 					$('#f-tab4').addClass('show active');
 					$('#f-tab3').removeClass('show active');
 					console.log(this.event_color);
+					if (this.allDayEvent == true) {
+						this.edit.isallDay = true;
+						this.edit.all_day_start_date = this.all_day_start_date;
+						this.edit.all_day_end_date = this.all_day_end_date;
+						
+					}
+					else {
+						this.edit.isallDay = false;
+						this.edit.single_day_start_date = this.single_day_start_date;
+						this.edit.single_day_end_date = this.single_day_end_date;
+						
+					}
 					this.edit.event_title = this.event_title;
 					this.edit.attendees = this.attendees;
 					this.edit.calendars = this.calendars;
-					this.edit.calendar_name = this.calendar_name;
-					this.edit.event_location = this.event_location;
 					this.edit.start_time = this.start_time;
 					this.edit.end_time = this.end_time;
+					this.edit.calendar_name = this.calendar_name;
+					this.edit.event_location = this.event_location
 					this.edit.description = this.description;
-					this.edit.interval = this.edit_interval;
-					
+				
+
 					// $(".dot").css('backgroundColor', this.event_color);
 					// $(".dot").css('border-radius', '50%');
 					// $(".dot").css('height', '25px');
@@ -822,6 +953,7 @@
 							that.description = event.event._def.extendedProps.event_description.slice(0, 400);
 							that.event_color = event.event.backgroundColor;
 							console.log(that.event_color);
+							that.allDayEvent = event.event.allDay;
 
 							// that.start_time = new Date(event.event.start).toLocaleTimeString();
 							// that.end_time = new Date(event.event.end).toLocaleTimeString();
@@ -865,13 +997,21 @@
 									that.end_date = end_month + ' ' + (last_date + 1) + ' ' + '(' + end_day + ')';
 									that.interval = that.start_date + ' ' + '00:00' + ' - ' + that.end_date + ' 00:00';
 									console.log(that.interval);
+									that.all_day_start_date = that.start_date;
+									that.all_day_end_date = that.end_date;
+									that.start_time = '00:00';
+									that.end_time = '00:00';
 
 									// that.interval = that.start_date + ' ' + '00:00' + ' - ' + '00:00'
 									that.edit_interval = that.start_date + ' ' + ' - ' + that.end_date;
 								}
 								else {
 									that.edit_interval = month + ' ' + date + ',' + ' ' + year + ' ' + '(' + day + ')';
-									that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_time
+									that.single_day_start_date = that.start_date;
+									that.single_day_end_date = that.end_date;
+									that.single_day_start_time = that.start_time;
+									that.single_day_end_time = that.end_time;
+
 								}
 							}
 
@@ -887,6 +1027,10 @@
 									console.log(that.end_date);
 									that.interval = that.start_date + ' ' + "00:00" + ' - ' + that.end_date + ' ' + "00:00";
 									that.edit_interval = that.start_date + ' ' + ' - ' + that.end_date;
+									that.all_day_start_date = that.start_date;
+									that.all_day_end_date = that.end_date;
+									that.start_time = "00:00";
+									that.end_time = "00:00";
 
 								}
 								else {
@@ -899,6 +1043,12 @@
 									// var em = ('0' + new Date(event.event._def.extendedProps.allday_end_time).getMinutes()).slice(-2);
 									// var eh = new Date(event.event._def.extendedProps.allday_end_time).getHours()
 									that.interval = that.start_date + ' ' + that.start_time + ' - ' + that.end_date + ' ' + that.end_time
+
+									that.single_day_start_date = that.start_date;
+									that.single_day_end_date = that.end_date;
+									that.single_day_start_time = that.start_time;
+									that.single_day_end_time = that.end_time
+
 								}
 
 							}
