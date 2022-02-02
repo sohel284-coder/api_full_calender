@@ -307,8 +307,10 @@
 												<div class="col-2"></div>
 												<div class="col-10">
 													<div class="input-group mb-3">
-														<input type="text" class="form-control form-control-lg"  aria-label="Attendee" aria-describedby="basic-addon1">
-														<span class="input-group-text" style="font-size:20px" type="button" id="basic-addon1">+</span>
+														<input type="text" class="form-control form-control-lg"
+															aria-label="Attendee" aria-describedby="basic-addon1">
+														<span class="input-group-text" style="font-size:20px"
+															type="button" id="basic-addon1">+</span>
 													</div>
 												</div>
 											</div>
@@ -320,8 +322,8 @@
 															class="btn btn-secondary btn-lg me-3">More Options</button>
 														<button type="button" id="btnSubmit"
 															class="btn btn-primary btn-lg me-3">Save</button>
-														<button type="button" @click.prevent="backTopopup" id="btnCancel"
-															class="btn btn-danger btn-lg">Cancel</button>
+														<button type="button" @click.prevent="backTopopup"
+															id="btnCancel" class="btn btn-danger btn-lg">Cancel</button>
 													</div>
 												</div>
 												<div class="col-2"></div>
@@ -467,101 +469,115 @@
 				<div class="calendar-wd__form-three-body">
 					<div class="calendar-wd__form-three--two">
 						<div class="calendar-wd__form-1">
-							<form class="form" @submit.prevent="saveEvent">
-
-
-								<div class="form-group">
-									<div class="input-group">
-										<input id="eventpick" v-model="drag.drag_event_name" type="text" placeholder="">
+							<form action="" @submit.prevent="saveEvent">
+								<div class="form-group row">
+									<div class="col-2">
+										<label for="eventName" class="mt-2">Event Name :</label>
+									</div>
+									<div class="col-10">
+										<input id="eventName" v-model="drag.drag_event_name" type="text"
+											class="form-control form-control-lg">
 									</div>
 								</div>
-								<div class="form-group calendar-wd__date-pick">
-									<div class="form-control wide" tabindex="0"><i class="fa fa-calendar"></i><span
-											class="current"><input id="datepick" v-model="drag.datepick" type="text"
-												placeholder="Wednesday, 1 December"></span>
+								<div class="form-group row mt-5" v-if="drag.isallDay">
+									<div class="col-2">
+										<label class="mt-2" for="startDate"> Start Date :</label>
+									</div>
+									<div class="col-4">
+										<input id="startDate" v-model="drag.start_date" type="text"
+											class="form-control form-control-lg">
+									</div>
+									<div class="col-2">
+										<label class="mt-2" for="endtDate"> End Date :</label>
+									</div>
+									<div class="col-4">
+										<input id="endDate" v-model="drag.end_date" type="text"
+											class="form-control form-control-lg">
 									</div>
 								</div>
-								<div class="form-group">
-									<div class="list-inner-group">
-										<div class="list-single-group">
-											<select class="form-select" aria-label="Default select example">
-												<option selected>[[drag.start_time]]</option>
-												<option>
-													15.30</option>
-												<option value="1">15.30
-												</option>
-												<option value="2">15.30
-												</option>
-												<option value="3">15.30
-												</option>
-											</select>
+								<div class="form-group row mt-5" v-else>
+									<div class="col-2">
+										<label class="mt-2" for="startDate"> Start Date :</label>
+									</div>
+									<div class="col-10">
+										<input id="startDate" v-model="drag.start_date" type="text"
+											class="form-control form-control-lg">
+									</div>
+								</div>
+
+								<div class="form-group row mt-5">
+									<div class="col-2">
+										<label class="mt-2" for="startTime"> Start Time :</label>
+									</div>
+									<div class="col-4">
+										<input id="startTime" v-model="drag.start_time" type="text"
+											class="form-control form-control-lg">
+									</div>
+									<div class="col-2">
+										<label class="mt-2" for="endtTime"> End Time :</label>
+									</div>
+									<div class="col-4">
+										<input id="endTime" type="text" v-model="drag.end_time"
+											class="form-control form-control-lg">
+									</div>
+								</div>
+								<div class="form-group row mt-5">
+									<div class="col-2">
+										<label for="eventLocation" class="mt-2">Location :</label>
+									</div>
+									<div class="col-10">
+										<input id="eventLocation" v-model="drag.location" type="text"
+											class="form-control form-control-lg">
+									</div>
+								</div>
+								<div class="form-group row mt-5">
+									<div class="col-2">
+										<label for="eventDescription" class="mt-2">Description :</label>
+									</div>
+									<div class="col-10">
+										<input id="eventDescription" v-model="drag.description" type="text"
+											class="form-control form-control-lg">
+									</div>
+								</div>
+								<div class="form-group row mt-5">
+									<div class="col-2">
+										<label for="calendarName" class="mt-2">Calendar Name :</label>
+									</div>
+									<div class="col-10">
+										<select v-model="cal_name" @change="selectedCalendar($event)"
+											class="form-select" aria-label="Default select example">
+											<option v-for="calendar in calendars" :value="calendar.calendar_name">
+												[[calendar.calendar_name]]</option>
+										</select>
+									</div>
+								</div>
+								<div class="form-group row">
+									<div class="col-2"></div>
+									<div class="col-10">
+										<div class="input-group mb-3">
+											<input type="text" class="form-control form-control-lg"
+												aria-label="Attendee" aria-describedby="basic-addon1">
+											<span class="input-group-text" style="font-size:20px" type="button"
+												id="basic-addon1">+</span>
 										</div>
-										<div class="list-single-group">
-											<select class="form-select" aria-label="Default select example">
-												<option selected value="">[[drag.end_time]]</option>
-												<option>
-													16.30</option>
-												<option value="1">16.30
-												</option>
-												<option value="2">16.30
-												</option>
-												<option value="3">16.30
-												</option>
-											</select>
-										</div>
-										<div class="list-single-group   project-dropdown">
-											<select class="form-select" aria-label="Default select example">
-												<option selected="">
-													Don't repeat
-												</option>
-												<option value="1">Don't
-													repeat</option>
-												<option value="2">Don't
-													repeat</option>
-												<option value="3">Don't
-													repeat</option>
-											</select>
+									</div>
+								</div>
+								<div class="form-group row mt-5">
+									<div class="col-2"></div>
+									<div class="col-8">
+										<div class="btn-toolbar text-center">
+											<button type="button" id="btnSubmit"
+												class="btn btn-secondary btn-lg me-3">More Options</button>
+											<button type="submit" id="btnSubmit"
+												class="btn btn-primary btn-lg me-3">Save</button>
+											<button type="button" @click.prevent="backTopopup" id="btnCancel"
+												class="btn btn-danger btn-lg">Cancel</button>
 										</div>
 									</div>
-								</div>
-								<div class="form-group">
-									<div class="input-group">
-										<span class="input-icon"><i class="fa fa-map-marker"></i></span>
-										<input id="datepick" v-model="drag.location" type="text"
-											placeholder="Add location">
-									</div>
-								</div>
-								<div class="form-group">
-									<div class="input-group">
-										<textarea name="" id="" v-model="drag.description" cols="30"
-											rows="10"></textarea>
-									</div>
-								</div>
-								<div class="form-group project-dropdown">
-									<select v-model="cal_name" @change="selectedCalendar($event)" class="form-select"
-										aria-label="Default select example">
-										<option v-for="calendar in calendars" :value="calendar.calendar_name">
-											[[calendar.calendar_name]]</option>
-									</select>
-								</div>
-								<div class="form-group select-man">
-									<ul class="select-list-img" style="list-style-type:none">
-										<li><a href="#"><img src="img/icon.png" alt="#"></a></li>
-										<li><a href="#"><img src="img/icon-2.png" alt="#"></a></li>
-										<li><a href="#"><img src="img/icon-3.png" alt="#"></a></li>
-										<li><span class="plus-icon"><i class="fa fa-plus"></i></span>
-										</li>
-									</ul>
-								</div>
-
-
-								<div class="form-group button">
-									<button type="submit" class="theme-btn theme-sec">More
-										options</button>
-									<button type="submit" class="theme-btn theme-primary calendar-wd__submit"
-										id="eventFlag">Save</button>
+									<div class="col-2"></div>
 								</div>
 							</form>
+							
 						</div>
 					</div>
 				</div>
@@ -609,18 +625,14 @@
 				interval: '',
 				cal_name: null,
 				event_id: null,
-				edit_interval: '',
 				event_color: '',
 				allDayEvent: false,
 				single_day_start_date: '',
 				single_day_end_date: '',
-				single_day_start_time: '',
-				single_day_end_time: '',
 
 				all_day_start_date: '',
 				all_day_end_date: '',
-				all_day_start_time: '00:00',
-				all_day_end_time: '00:00',
+
 
 				edit: {
 					event_title: '',
@@ -629,8 +641,12 @@
 					calendar_name: '',
 					event_location: '',
 					description: '',
+					start_date: '',
+					end_date: '',
+
 					start_time: '',
 					end_time: '',
+
 					isallDay: false,
 					single_day_start_date: '',
 					single_day_end_date: '',
@@ -647,12 +663,14 @@
 					calendar: '',
 					drag_event_name: '',
 					location: '',
-					datepick: '',
+					start_date: '',
+					end_date:'',
 					start_time: '',
 					end_time: '',
 					cal_name: '',
 					cal_color: '',
 					description: '',
+					isallDay:false,
 				}
 
 			},
@@ -800,23 +818,21 @@
 
 					var startdateString =
 						ds.getUTCFullYear() + "-" +
-						("0" + (ds.getUTCMonth() + 1)).slice(-2) + "-" +
-						("0" + ds.getUTCDate()).slice(-2) + "T" +
-						("0" + ds.getUTCHours()).slice(-2) + ":" +
-						("0" + ds.getUTCMinutes()).slice(-2) + ":" +
-						("0" + ds.getUTCSeconds()).slice(-2);
+						("0" + (ds.getMonth() + 1)).slice(-2) + "-" +
+						("0" + ds.getDate()).slice(-2) + "T" +
+						("0" + ds.getHours()).slice(-2) + ":" +
+						("0" + ds.getMinutes()).slice(-2) + ":" +
+						("0" + ds.getSeconds()).slice(-2);
 
 					console.log(startdateString);
 					var enddateString =
 						de.getUTCFullYear() + "-" +
-						("0" + (de.getUTCMonth() + 1)).slice(-2) + "-" +
-						("0" + de.getUTCDate()).slice(-2) + "T" +
-						("0" + de.getUTCHours()).slice(-2) + ":" +
-						("0" + de.getUTCMinutes()).slice(-2) + ":" +
-						("0" + de.getUTCSeconds()).slice(-2);
+						("0" + (de.getMonth() + 1)).slice(-2) + "-" +
+						("0" + de.getDate()).slice(-2) + "T" +
+						("0" + de.getHours()).slice(-2) + ":" +
+						("0" + de.getMinutes()).slice(-2) + ":" +
+						("0" + de.getSeconds()).slice(-2);
 
-					console.log(enddateString);
-					console.log(this.drag.cal_name);
 					var formData = {};
 					formData.event_name = this.drag.drag_event_name;
 					formData.event_start_dt = startdateString;
@@ -832,7 +848,6 @@
 						contentType: 'application/json'
 					}).then(response => {
 						location.href = '/';
-						console.log(response);
 					}).fail(errors => {
 						alert('falid to create');
 						console.log(errors);
@@ -868,6 +883,15 @@
 							// 	$('.calendar-wd__form-three_drag').addClass('active-event');
 							// }
 							// that.saveEvent(calendar, selectionInfo);
+							if(selectionInfo.start !== selectionInfo.end){
+								console.log(that.drag.isallDay);
+								that.drag.isallDay = true;
+							}
+							else{
+								console.log('drag_date');
+								that.drag.allDay = false;
+
+							}
 
 							console.log(selectionInfo.start);
 							var st = new Date(selectionInfo.start);
@@ -878,6 +902,11 @@
 							var st_year = st.getFullYear();
 							var st_month = st.toLocaleString('en-us', { month: 'long' });
 							var st_day = st.toLocaleString('en-us', { weekday: 'short' });
+
+							var ed_date = ed.getDate();
+							var ed_year = ed.getFullYear();
+							var ed_month = ed.toLocaleString('en-us', { month: 'long' });
+							var ed_day = ed.toLocaleString('en-us', { weekday: 'short' });
 							// console.log(st_date)
 							// console.log(st_year)
 							// console.log(st_month)
@@ -888,16 +917,20 @@
 							var ed_minute = ('0' + new Date(ed).getMinutes()).slice(-2);
 							var ed_hour = ('0' + new Date(ed).getHours()).slice(-2);
 
-							var start_time = st_hour + ":" + st_minute;
 							var start_date = st_month + ' ' + st_date + ',' + ' ' + st_year + " (" + st_day + ")";
+							var end_date = ed_month + ' ' + ed_date + ',' + ' ' + ed_year + " (" + ed_day + ")";
+
+							var start_time = st_hour + ":" + st_minute;
 							var end_time = ed_hour + ":" + ed_minute;
 
 							that.drag.selectionInfo = selectionInfo;
 							that.drag.calendar = calendar;
-							that.drag.datepick = start_date;
 							that.drag.start_time = start_time;
 							that.drag.end_time = end_time;
 							console.log(that.drag.start_time);
+							that.drag.start_date = start_date;
+							that.drag.end_date = end_date;
+							
 						},
 
 
@@ -1017,11 +1050,12 @@
 									that.edit_interval = that.start_date + ' ' + ' - ' + that.end_date;
 								}
 								else {
-									that.edit_interval = month + ' ' + date + ',' + ' ' + year + ' ' + '(' + day + ')';
 									that.single_day_start_date = that.start_date;
 									that.single_day_end_date = that.end_date;
 									that.single_day_start_time = that.start_time;
 									that.single_day_end_time = that.end_time;
+									that.interval = month + ' ' + date + ', ' + '(' + day + ')' + ' ' + that.start_time + ' - ' + that.end_time;
+
 
 								}
 							}
