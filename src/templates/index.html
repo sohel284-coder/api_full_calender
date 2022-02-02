@@ -137,6 +137,7 @@
 		}
 
 		.form-control {
+			border: solid 1px #eee;
 			text-align: center;
 		}
 	</style>
@@ -176,7 +177,7 @@
 						<!-- delete modal start here -->
 
 					</div>
-					<div class="calendar-wd__form-three-body bg-light">
+					<div class="calendar-wd__form-three-body">
 						<div class="tab-content" id="nav-tabContent">
 							<!-- Property Tab One -->
 							<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
@@ -225,7 +226,7 @@
 								<div class="calendar-wd__form-three--two">
 									<div class="">
 										<form action="">
-											<div class="row">
+											<div class="form-group row">
 												<div class="col-2">
 													<label for="eventName" class="mt-2">Event Name :</label>
 												</div>
@@ -234,7 +235,7 @@
 														class="form-control form-control-lg">
 												</div>
 											</div>
-											<div class="row mt-5" v-if="edit.isallDay">
+											<div class="form-group row mt-5" v-if="edit.isallDay">
 												<div class="col-2">
 													<label class="mt-2" for="startDate"> Start Date :</label>
 												</div>
@@ -250,17 +251,17 @@
 														class="form-control form-control-lg">
 												</div>
 											</div>
-											<div class="row mt-5" v-else>
+											<div class="form-group row mt-5" v-else>
 												<div class="col-2">
 													<label class="mt-2" for="startDate"> Start Date :</label>
 												</div>
 												<div class="col-10">
-													<input id="startDate" v-model="edit.single_day_start_date" type="text"
-														class="form-control form-control-lg">
+													<input id="startDate" v-model="edit.single_day_start_date"
+														type="text" class="form-control form-control-lg">
 												</div>
 											</div>
 
-											<div class="row mt-5">
+											<div class="form-group row mt-5">
 												<div class="col-2">
 													<label class="mt-2" for="startTime"> Start Time :</label>
 												</div>
@@ -276,7 +277,7 @@
 														class="form-control form-control-lg">
 												</div>
 											</div>
-											<div class="row mt-5">
+											<div class="form-group row mt-5">
 												<div class="col-2">
 													<label for="eventLocation" class="mt-2">Location :</label>
 												</div>
@@ -285,11 +286,11 @@
 														class="form-control form-control-lg">
 												</div>
 											</div>
-											<div class="row mt-5">
-												<div class="col-3">
+											<div class="form-group row mt-5">
+												<div class="col-2">
 													<label for="calendarName" class="mt-2">Calendar Name :</label>
 												</div>
-												<div class="col-9">
+												<div class="col-10">
 													<select v-model="edit.calendar_name" :style="{color:event_color}"
 														@change="selectedCalendar($event)"
 														class="form-select form-select-lg"
@@ -302,18 +303,28 @@
 													</select>
 												</div>
 											</div>
-											<div class="row mt-5">
-												<div class="col-1"></div>
-												<div class="col-4">
-													<button type="button" class="btn btn-secondary btn-lg">More Options</button>
+											<div class="form-group row">
+												<div class="col-2"></div>
+												<div class="col-10">
+													<div class="input-group mb-3">
+														<input type="text" class="form-control form-control-lg"  aria-label="Attendee" aria-describedby="basic-addon1">
+														<span class="input-group-text" style="font-size:20px" type="button" id="basic-addon1">+</span>
+													</div>
 												</div>
-												<div class="col-3">
-													<button type="submit" class="btn btn-primary btn-lg">Save</button>
+											</div>
+											<div class="form-group row mt-5">
+												<div class="col-2"></div>
+												<div class="col-8">
+													<div class="btn-toolbar text-center">
+														<button type="button" id="btnSubmit"
+															class="btn btn-secondary btn-lg me-3">More Options</button>
+														<button type="button" id="btnSubmit"
+															class="btn btn-primary btn-lg me-3">Save</button>
+														<button type="button" @click.prevent="backTopopup" id="btnCancel"
+															class="btn btn-danger btn-lg">Cancel</button>
+													</div>
 												</div>
-												<div class="col-3">
-													<button type="button" @click.prevent="backTopopup" class="btn btn-danger btn-lg">Cancel</button>
-												</div>
-												<div class="col-1"></div>
+												<div class="col-2"></div>
 											</div>
 										</form>
 										{% comment %}
@@ -618,8 +629,8 @@
 					calendar_name: '',
 					event_location: '',
 					description: '',
-					start_time:'',
-					end_time:'',
+					start_time: '',
+					end_time: '',
 					isallDay: false,
 					single_day_start_date: '',
 					single_day_end_date: '',
@@ -668,13 +679,13 @@
 						this.edit.isallDay = true;
 						this.edit.all_day_start_date = this.all_day_start_date;
 						this.edit.all_day_end_date = this.all_day_end_date;
-						
+
 					}
 					else {
 						this.edit.isallDay = false;
 						this.edit.single_day_start_date = this.single_day_start_date;
 						this.edit.single_day_end_date = this.single_day_end_date;
-						
+
 					}
 					this.edit.event_title = this.event_title;
 					this.edit.attendees = this.attendees;
@@ -684,7 +695,7 @@
 					this.edit.calendar_name = this.calendar_name;
 					this.edit.event_location = this.event_location
 					this.edit.description = this.description;
-				
+
 
 					// $(".dot").css('backgroundColor', this.event_color);
 					// $(".dot").css('border-radius', '50%');

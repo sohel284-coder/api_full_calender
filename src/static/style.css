@@ -71,17 +71,13 @@
 	padding: 0;
 	margin: 0;
 }
-.calendar-wd__form input {
+/* .calendar-wd__form input {
 	border: none;
 	border-bottom: 1px solid #eee;
 	width: 100%;
 	height: 38px;
-}
-.form-control {
-	border: none;
-	padding: 0;
-	margin: 0;
-}
+} */
+
 
 .calendar-wd__clist li img {
 	margin-right: 10px;
@@ -105,13 +101,13 @@
 	width: auto;
 	padding: 0 20px;
 }
-.input-group {
+/* .input-group {
 	justify-content: center;
 	align-items: center;
 	gap: 5px;
 	flex-wrap: initial;
 	gap: 10px;
-}
+} */
 .list-inner-group .nice-select::after {
 	top: 12px;
 	left: ;
