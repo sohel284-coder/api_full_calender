@@ -768,6 +768,7 @@
 					let formData = {}
 					console.log(this.edit.start_date);
 					console.log(this.edit.start_time);
+					console.log(this.allDayEvent);
 					console.log(new Date(this.edit.start_date));
 
 					var st_month = ("0" + (new Date(this.edit.start_date).getMonth() + 1)).slice(-2);
@@ -776,12 +777,11 @@
 					var ed_month = ("0" + (new Date(this.edit.end_date).getMonth() + 1)).slice(-2);
 					console.log(ed_month);
 					var ed_date = ("0" + (new Date(this.edit.end_date).getDate())).slice(-2);
-					console.log(ed_date);
 
 
 					var new_start_date = '2022' + '-' + st_month + '-' + st_date + "T" + this.edit.start_time + ":00";
 					console.log(new_start_date, 'new start date')
-					if (st_date == ed_date) {
+					if (!this.allDayEvent) {
 						var new_end_date = '2022' + '-' + st_month + '-' + st_date + "T" + this.edit.end_time + ":00";
 						console.log(new_end_date, 'if secrion new end date');
 
