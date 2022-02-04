@@ -225,7 +225,7 @@
 							<div class="tab-pane fade" id="f-tab4" role="tabpanel">
 								<div class="calendar-wd__form-three--two">
 									<div class="">
-										<form action="">
+										<form @submit.prevent="oneditEvent(edit.event_id)">
 											<div class="form-group row">
 												<div class="col-2">
 													<label for="eventName" class="mt-2">Event Name :</label>
@@ -240,14 +240,14 @@
 													<label class="mt-2" for="startDate"> Start Date :</label>
 												</div>
 												<div class="col-4">
-													<input id="startDate" v-model="edit.all_day_start_date" type="text"
+													<input id="startDate" v-model="edit.start_date" type="text"
 														class="form-control form-control-lg">
 												</div>
 												<div class="col-2">
 													<label class="mt-2" for="endtDate"> End Date :</label>
 												</div>
 												<div class="col-4">
-													<input id="endDate" v-model="edit.all_day_end_date" type="text"
+													<input id="endDate" v-model="edit.end_date" type="text"
 														class="form-control form-control-lg">
 												</div>
 											</div>
@@ -256,8 +256,8 @@
 													<label class="mt-2" for="startDate"> Start Date :</label>
 												</div>
 												<div class="col-10">
-													<input id="startDate" v-model="edit.single_day_start_date"
-														type="text" class="form-control form-control-lg">
+													<input id="startDate" v-model="edit.start_date" type="text"
+														class="form-control form-control-lg">
 												</div>
 											</div>
 
@@ -266,14 +266,14 @@
 													<label class="mt-2" for="startTime"> Start Time :</label>
 												</div>
 												<div class="col-4">
-													<input id="startTime" v-model="start_time" type="text"
+													<input id="startTime" v-model="edit.start_time" type="text"
 														class="form-control form-control-lg">
 												</div>
 												<div class="col-2">
 													<label class="mt-2" for="endtTime"> End Time :</label>
 												</div>
 												<div class="col-4">
-													<input id="endTime" type="text" v-model="end_time"
+													<input id="endTime" type="text" v-model="edit.end_time"
 														class="form-control form-control-lg">
 												</div>
 											</div>
@@ -282,7 +282,7 @@
 													<label for="eventLocation" class="mt-2">Location :</label>
 												</div>
 												<div class="col-10">
-													<input id="eventLocation" v-model="event_location" type="text"
+													<input id="eventLocation" v-model="edit.event_location" type="text"
 														class="form-control form-control-lg">
 												</div>
 											</div>
@@ -320,7 +320,7 @@
 													<div class="btn-toolbar text-center">
 														<button type="button" id="btnSubmit"
 															class="btn btn-secondary btn-lg me-3">More Options</button>
-														<button type="button" id="btnSubmit"
+														<button type="submit" id="btnSubmit"
 															class="btn btn-primary btn-lg me-3">Save</button>
 														<button type="button" @click.prevent="backTopopup"
 															id="btnCancel" class="btn btn-danger btn-lg">Cancel</button>
@@ -577,7 +577,7 @@
 									<div class="col-2"></div>
 								</div>
 							</form>
-							
+
 						</div>
 					</div>
 				</div>
@@ -643,6 +643,7 @@
 					description: '',
 					start_date: '',
 					end_date: '',
+					event_id: null,
 
 					start_time: '',
 					end_time: '',
@@ -664,13 +665,13 @@
 					drag_event_name: '',
 					location: '',
 					start_date: '',
-					end_date:'',
+					end_date: '',
 					start_time: '',
 					end_time: '',
 					cal_name: '',
 					cal_color: '',
 					description: '',
-					isallDay:false,
+					isallDay: false,
 				}
 
 			},
@@ -695,16 +696,17 @@
 					console.log(this.event_color);
 					if (this.allDayEvent == true) {
 						this.edit.isallDay = true;
-						this.edit.all_day_start_date = this.all_day_start_date;
-						this.edit.all_day_end_date = this.all_day_end_date;
+						this.edit.start_date = this.all_day_start_date;
+						this.edit.end_date = this.all_day_end_date;
 
 					}
 					else {
 						this.edit.isallDay = false;
-						this.edit.single_day_start_date = this.single_day_start_date;
-						this.edit.single_day_end_date = this.single_day_end_date;
+						this.edit.start_date = this.single_day_start_date;
+						this.edit.end_date = this.single_day_end_date;
 
 					}
+
 					this.edit.event_title = this.event_title;
 					this.edit.attendees = this.attendees;
 					this.edit.calendars = this.calendars;
@@ -713,6 +715,7 @@
 					this.edit.calendar_name = this.calendar_name;
 					this.edit.event_location = this.event_location
 					this.edit.description = this.description;
+					this.edit.event_id = this.event_id;
 
 
 					// $(".dot").css('backgroundColor', this.event_color);
@@ -759,6 +762,56 @@
 						that.weekly_events = response.events;
 
 						that.weeklyCalendar();
+					})
+				},
+				oneditEvent: function (event_id) {
+					let formData = {}
+					console.log(this.edit.start_date);
+					console.log(this.edit.start_time);
+					console.log(new Date(this.edit.start_date));
+
+					var st_month = ("0" + (new Date(this.edit.start_date).getMonth() + 1)).slice(-2);
+					var st_date = ("0" + (new Date(this.edit.start_date).getDate())).slice(-2);
+
+					var ed_month = ("0" + (new Date(this.edit.end_date).getMonth() + 1)).slice(-2);
+					console.log(ed_month);
+					var ed_date = ("0" + (new Date(this.edit.end_date).getDate())).slice(-2);
+					console.log(ed_date);
+
+
+					var new_start_date = '2022' + '-' + st_month + '-' + st_date + "T" + this.edit.start_time + ":00";
+					console.log(new_start_date, 'new start date')
+					if (st_date == ed_date) {
+						var new_end_date = '2022' + '-' + st_month + '-' + st_date + "T" + this.edit.end_time + ":00";
+						console.log(new_end_date, 'if secrion new end date');
+
+					}
+					else {
+						var new_end_date = '2022' + '-' + ed_month + '-' + ed_date + "T" + this.edit.end_time + ":00";
+						console.log(new_end_date, 'else new end date');
+					}
+					console.log(this.edit.event_location);
+
+					formData.event_name = this.edit.event_title;
+					formData.event_start_dt = new_start_date;
+					formData.event_end_dt = new_end_date;
+					formData.event_description = this.edit.description;
+					formData.event_location = this.edit.event_location;
+					formData.calendar_info_id = this.edit.calendar_name;
+					$.ajax({
+						method: 'PUT',
+						url: 'api/edit-event/' + event_id,
+						data: JSON.stringify(formData),
+						contentType: 'application/json'
+					}).then(response => {
+						this.showEvents();
+						$(".calendar-wd__form-three").toggleClass('active-event');
+						// $('#f-tab4').removeClass('show active');
+						
+						// $('#f-tab3').addClass('show active');
+
+					}).fail(errors => {
+						console.log(errors);
 					})
 				},
 				onDeleteEvent: function (event_id) {
@@ -812,7 +865,6 @@
 					$(".calendar-wd__form-three_drag").toggleClass('active-event');
 				},
 				saveBackendEvent: function () {
-
 					var ds = new Date(this.drag.selectionInfo.start);
 					var de = new Date(this.drag.selectionInfo.end)
 
@@ -883,11 +935,12 @@
 							// 	$('.calendar-wd__form-three_drag').addClass('active-event');
 							// }
 							// that.saveEvent(calendar, selectionInfo);
-							if(selectionInfo.start !== selectionInfo.end){
+
+							if (selectionInfo.start.getDate() != selectionInfo.end.getDate()) {
 								console.log(that.drag.isallDay);
 								that.drag.isallDay = true;
 							}
-							else{
+							else {
 								console.log('drag_date');
 								that.drag.allDay = false;
 
@@ -930,7 +983,7 @@
 							console.log(that.drag.start_time);
 							that.drag.start_date = start_date;
 							that.drag.end_date = end_date;
-							
+
 						},
 
 

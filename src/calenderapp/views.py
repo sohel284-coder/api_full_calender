@@ -152,6 +152,24 @@ class EventDelete(APIView):
         return Response('delete successfully')
 
 
+class EventEdit(APIView):
+    permission_class = (permissions.AllowAny, )
+    
+    def put(self, request, event_id):
+        print(request.data)
+        print(event_id)
+        calendar_info_id = CalendarList.objects.get(calendar_name=request.data['calendar_info_id']).id
+        request.data['calendar_info_id'] = calendar_info_id
+        event = CalendarEvents.objects.get(id=event_id)
+        serializer = CalendarEventsSerializer(event, data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response('edit successfully', status=status.HTTP_200_OK)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
 class CalendarColor(CalendarEventListView):
     def get(self, request, calendar_name):
         cal_colors = self.calendar_color()
@@ -173,4 +191,5 @@ class DragEventSave(APIView):
             serializer.save()
             return Response('Successfully eventb save', status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
+
 

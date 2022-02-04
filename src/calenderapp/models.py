@@ -21,10 +21,10 @@ class CalendarEvents(models.Model):
     calendar_info_id = models.ForeignKey(CalendarList, on_delete=models.CASCADE, related_name='calender_event')
     event_name = models.CharField(max_length=263, )
     event_name_prev = models.CharField(max_length=250, null=True, blank=True, )
-    event_description = models.TextField()
+    event_description = models.TextField(null=True, blank=True, )
     event_start_dt = models.DateTimeField()
     event_end_dt = models.DateTimeField()
-    event_location = models.TextField()
+    event_location = models.TextField(null=True, blank=True, )
     
     delete_flg = models.IntegerField(null=True, blank=True, default=0)
     new_flg = models.IntegerField(null=True, blank=True, default=0)
