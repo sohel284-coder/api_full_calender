@@ -56,7 +56,6 @@ class CalendarEventListView(APIView):
         cal_colors = self.calendar_color()
         
         for dt in data:
-            # print(dt)
             
             calendar_name = CalendarList.objects.get(id=dt['calendar_info_id'])
             calendar_attendee = CalendarAttendees.objects.filter(event_info_id=dt['user_event_key']).values('event_attendee')
@@ -79,39 +78,35 @@ class CalendarEventListView(APIView):
             values['title'] = dt['event_name']
             s = dt['event_start_dt']
             e = dt['event_end_dt']
-            print(s)
-            print(e)
-            # print(val)
+           
             # d =  datetime.datetime(val)   
             d = s.split('T')
             d = d[0]
             d1= e.split('T')
             d1= d1[0]
-            if d1 != d:
+            if dt['all_day_flg'] == 1:
                 values['allDay'] = True
             else:
                 values['allDay'] = False
+            
+            # values['allDay'] = dt['allDay']
             values['allday_start_time'] = dt['event_start_dt']
             values['allday_end_time'] = dt['event_end_dt']
                
 
-            # print(datetime.strptime(dt['event_start_dt'], '%Y-%m-%d'))
            
             weeks.append(values)
         return weeks
     def get(self, request, query):
         # query = request.GET.get('q', "")
         today = date.today()
-        # print(today)
         weekday = today.weekday()
 
         start_delta = timedelta(days=weekday)
-        print(start_delta, 'delta')
         start_date_week = today - start_delta
 
         end_date_week = start_date_week + timedelta(days=6)
 
-        # print(datetime.now().month, datetime.now().year)
         current_month = datetime.now().month
         current_year = datetime.now().year
         event = CalendarEvents.objects.filter(event_start_dt=today)
@@ -135,17 +130,26 @@ class CalendarEventListView(APIView):
         return Response(context, status=status.HTTP_200_OK)
 
 
-class CalendarListAPIView(APIView):
+class CalendarListAPIView(CalendarEventListView):
     def get(self, request, format=None):
         calendars = CalendarList.objects.all()
-        return Response(CalendarListSerializer(calendars, many=True).data, status=status.HTTP_200_OK)
+        cal_colors = self.calendar_color()
+        print(cal_colors)
+        serializers = CalendarListSerializer(calendars, many=True).data
+        for serializer in serializers:
+            calendar_id = serializer['id']
+            if calendar_id in cal_colors.keys():
+                get_color = cal_colors[calendar_id]
+                print(get_color, calendar_id) 
+                serializer['calendar_color'] = get_color
+                print(serializer)
+        return Response(serializers, status=status.HTTP_200_OK)
 
 
 class EventDelete(APIView):
     permission_class = (permissions.AllowAny, )
     
     def delete(self, request, event_id):
-        print(event_id)
         event = CalendarEvents.objects.get(id=event_id)
         event.delete()
         # event.save()
@@ -156,8 +160,7 @@ class EventEdit(APIView):
     permission_class = (permissions.AllowAny, )
     
     def put(self, request, event_id):
-        print(request.data)
-        print(event_id)
+        
         calendar_info_id = CalendarList.objects.get(calendar_name=request.data['calendar_info_id']).id
         request.data['calendar_info_id'] = calendar_info_id
         event = CalendarEvents.objects.get(id=event_id)
@@ -173,18 +176,23 @@ class EventEdit(APIView):
 class CalendarColor(CalendarEventListView):
     def get(self, request, calendar_name):
         cal_colors = self.calendar_color()
-        print(cal_colors)
         calendar_id = CalendarList.objects.get(calendar_name=calendar_name).id
         if calendar_id in cal_colors:
             color_name = cal_colors[calendar_id]
             
-            print(color_name, calendar_id)
         return Response(color_name)        
 
 class DragEventSave(APIView):
     def post(self, request, format=None):
+        print(request.data)
+
         calendar_info_id = CalendarList.objects.get(calendar_name=request.data['calendar_info_id']).id
         request.data['calendar_info_id'] = calendar_info_id
+        if request.data['all_day_flg'] == True:
+           request.data['all_day_flg'] = 1
+        else:
+            request.data['all_day_flg'] = 0  
+
         serializer = CalendarEventsSerializer(data=request.data)
 
         if serializer.is_valid(raise_exception=True):

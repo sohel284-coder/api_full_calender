@@ -25,6 +25,7 @@ class CalendarEvents(models.Model):
     event_start_dt = models.DateTimeField()
     event_end_dt = models.DateTimeField()
     event_location = models.TextField(null=True, blank=True, )
+    allDay = models.BooleanField(default=False, blank=True, null=True, )
     
     delete_flg = models.IntegerField(null=True, blank=True, default=0)
     new_flg = models.IntegerField(null=True, blank=True, default=0)
@@ -44,7 +45,7 @@ class CalendarEvents(models.Model):
     num_attendees = models.IntegerField(null=True, blank=True, )
     organizer_flg = models.IntegerField(null=True, blank=True, default=0)
     creator_flg = models.IntegerField(null=True, blank=True, default=0)
-
+    
      # Not auto-add since we want to captur
 
 

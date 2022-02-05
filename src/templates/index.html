@@ -146,7 +146,10 @@
 </head>
 
 <body>
+
 	<div class="calendar-wd__section" id="app">
+
+		
 
 		<div class="calendar-wd">
 			<div id='calendar'></div>
@@ -291,14 +294,14 @@
 													<label for="calendarName" class="mt-2">Calendar Name :</label>
 												</div>
 												<div class="col-10">
-													<select v-model="edit.calendar_name" :style="{color:event_color}"
+													<select v-model="edit.calendar_name" 
 														@change="selectedCalendar($event)"
 														class="form-select form-select-lg"
 														aria-label="Default select example">
 														<option v-for="calendar in edit.calendars"
 															:value="calendar.calendar_name"> <span
-																class="me-2">&#9679;</span> <span
-																style="color: black;">[[calendar.calendar_name]]</span>
+																class="me-2" style="background-color: red;">&#9679; </span>
+																<span>[[calendar.calendar_name]]</span>
 														</option>
 													</select>
 												</div>
@@ -693,12 +696,12 @@
 				onEdit: function () {
 					$('#f-tab4').addClass('show active');
 					$('#f-tab3').removeClass('show active');
+
 					console.log(this.event_color);
 					if (this.allDayEvent == true) {
 						this.edit.isallDay = true;
 						this.edit.start_date = this.all_day_start_date;
 						this.edit.end_date = this.all_day_end_date;
-
 					}
 					else {
 						this.edit.isallDay = false;
@@ -843,7 +846,7 @@
 					console.log(this.drag.drag_event_name);
 					calendar = this.drag.calendar;
 
-					console.log(this.drag.selectionInfo.start);
+					console.log(this.drag.selectionInfo.allDay);
 					$.ajax({
 						method: 'GET',
 						url: 'api/cal-color/' + this.drag.cal_name,
@@ -865,33 +868,65 @@
 					$(".calendar-wd__form-three_drag").toggleClass('active-event');
 				},
 				saveBackendEvent: function () {
-					var ds = new Date(this.drag.selectionInfo.start);
-					var de = new Date(this.drag.selectionInfo.end)
+					console.log(this.drag.start_date)
+					console.log(this.drag.end_date)
+					console.log(this.drag.start_time);
+					console.log(this.drag.end_time)
+					console.log(this.drag.selectionInfo.start)
 
-					var startdateString =
-						ds.getUTCFullYear() + "-" +
-						("0" + (ds.getMonth() + 1)).slice(-2) + "-" +
-						("0" + ds.getDate()).slice(-2) + "T" +
-						("0" + ds.getHours()).slice(-2) + ":" +
-						("0" + ds.getMinutes()).slice(-2) + ":" +
-						("0" + ds.getSeconds()).slice(-2);
+                    var st_year = (this.drag.selectionInfo.start).getFullYear();
+					console.log(st_year)
+					var ed_year = (this.drag.selectionInfo.end).getFullYear();
+					console.log(ed_year)
+					var st_month = ("0" + (new Date(this.drag.start_date).getMonth() + 1)).slice(-2);
+					var st_date = ("0" + (new Date(this.drag.start_date).getDate())).slice(-2);
 
-					console.log(startdateString);
-					var enddateString =
-						de.getUTCFullYear() + "-" +
-						("0" + (de.getMonth() + 1)).slice(-2) + "-" +
-						("0" + de.getDate()).slice(-2) + "T" +
-						("0" + de.getHours()).slice(-2) + ":" +
-						("0" + de.getMinutes()).slice(-2) + ":" +
-						("0" + de.getSeconds()).slice(-2);
+					var ed_month = ("0" + (new Date(this.drag.end_date).getMonth() + 1)).slice(-2);
+					console.log(ed_month);
+					var ed_date = ("0" + (new Date(this.drag.end_date).getDate())).slice(-2);
 
+
+					var new_start_date = st_year + '-' + st_month + '-' + st_date + "T" + this.drag.start_time + ":00";
+					console.log(new_start_date, 'new start date')
+					if (!this.drag.selectionInfo.allDay) {
+						// var new_end_date = ed_year + '-' + st_month + '-' + st_date + "T" + this.drag.end_time + ":00";
+						// console.log(new_end_date, 'if secrion new end date');
+						if( st_date == ed_date){
+							var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + this.drag.end_time + ":00";
+							console.log(new_end_date, 'else new end date');
+							this.drag.selectionInfo.allDay = false;
+						}
+						else{
+							var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + this.drag.end_time + ":00";
+							this.drag.selectionInfo.allDay = true;
+						}
+						
+
+					}
+					else {
+						if( st_date == ed_date){
+							var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + this.drag.end_time + ":00";
+							console.log(new_end_date, 'else new end date');
+							this.drag.selectionInfo.allDay = true;
+						}
+						else{
+							var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + this.drag.end_time + ":00";
+							console.log(new_end_date, 'else new end date');
+							this.drag.selectionInfo.allDay = true;
+						}
+					
+					}
+					
+						
 					var formData = {};
+					console.log(this.drag.selectionInfo.allDay)
 					formData.event_name = this.drag.drag_event_name;
-					formData.event_start_dt = startdateString;
-					formData.event_end_dt = enddateString;
+					formData.event_start_dt = new_start_date;
+					formData.event_end_dt = new_end_date;
 					formData.event_description = this.drag.description;
 					formData.event_location = this.drag.location;
 					formData.calendar_info_id = this.drag.cal_name;
+					formData.all_day_flg = this.drag.selectionInfo.allDay;
 
 					$.ajax({
 						method: 'POST',
@@ -899,7 +934,9 @@
 						data: JSON.stringify(formData),
 						contentType: 'application/json'
 					}).then(response => {
-						location.href = '/';
+						// location.href = '/';
+						alert('sucessfully');
+						this.showEvents();
 					}).fail(errors => {
 						alert('falid to create');
 						console.log(errors);
@@ -957,6 +994,13 @@
 							var st_day = st.toLocaleString('en-us', { weekday: 'short' });
 
 							var ed_date = ed.getDate();
+							if(selectionInfo.allDay == true){
+								var ed_date = ed.getDate() - 1 ;
+							}
+							else{
+								ed_date = ed.getDate(); 
+							}
+							// ed_date = ed.getDate();
 							var ed_year = ed.getFullYear();
 							var ed_month = ed.toLocaleString('en-us', { month: 'long' });
 							var ed_day = ed.toLocaleString('en-us', { weekday: 'short' });
@@ -970,19 +1014,21 @@
 							var ed_minute = ('0' + new Date(ed).getMinutes()).slice(-2);
 							var ed_hour = ('0' + new Date(ed).getHours()).slice(-2);
 
+						
+
 							var start_date = st_month + ' ' + st_date + ',' + ' ' + st_year + " (" + st_day + ")";
 							var end_date = ed_month + ' ' + ed_date + ',' + ' ' + ed_year + " (" + ed_day + ")";
 
 							var start_time = st_hour + ":" + st_minute;
 							var end_time = ed_hour + ":" + ed_minute;
-
+							console.log(selectionInfo);
 							that.drag.selectionInfo = selectionInfo;
 							that.drag.calendar = calendar;
 							that.drag.start_time = start_time;
 							that.drag.end_time = end_time;
-							console.log(that.drag.start_time);
 							that.drag.start_date = start_date;
 							that.drag.end_date = end_date;
+							console.log(that.drag.start_date, that.drag.end_date, 'creating');
 
 						},
 
