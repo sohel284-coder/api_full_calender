@@ -89,7 +89,7 @@
 	align-items: center;
 }
 .list-inner-group .nice-select {
-  /* border: none; */
+  border: none;
   border-bottom: 1px solid #eee;
   border-radius: 0px;
 }

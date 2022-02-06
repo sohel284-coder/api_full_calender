@@ -14,9 +14,8 @@
 	<!-- <link rel="stylesheet" href="{% static 'custom.css' %}"> -->
 	<link rel="stylesheet" href="{% static 'style.css' %}">
 
-
-
 	<link rel="stylesheet" href="{% static 'full_calendar/main.css' %}">
+	<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 	<style>
 		.fc .fc-details-button {
 			background-color: blue;
@@ -149,7 +148,7 @@
 
 	<div class="calendar-wd__section" id="app">
 
-		
+
 
 		<div class="calendar-wd">
 			<div id='calendar'></div>
@@ -291,19 +290,37 @@
 											</div>
 											<div class="form-group row mt-5">
 												<div class="col-2">
+													<label for="eventDescription" class="mt-2">Description :</label>
+												</div>
+												<div class="col-10">
+													<input id="eventDescription" v-model="edit.description" type="text"
+														class="form-control form-control-lg">
+												</div>
+											</div>
+											<div class="form-group row mt-5">
+												<div class="col-2">
 													<label for="calendarName" class="mt-2">Calendar Name :</label>
 												</div>
 												<div class="col-10">
-													<select v-model="edit.calendar_name" 
+													<v-select :options="options"   v-model="selected"  label="title">
+														<template v-slot:option="option">
+															<span :class="option.icon" :style="{color:option.color}"></span>
+															[[ option.title ]]
+														</template>
+													</v-select>
+
+													<!-- <select id="editSelect" v-model="edit.calendar_name"
 														@change="selectedCalendar($event)"
 														class="form-select form-select-lg"
-														aria-label="Default select example">
+														aria-label=".form-select-lg example">
 														<option v-for="calendar in edit.calendars"
-															:value="calendar.calendar_name"> <span
-																class="me-2" style="background-color: red;">&#9679; </span>
-																<span>[[calendar.calendar_name]]</span>
+															:value="calendar.calendar_name"> <i class="fas fa-circle"
+																:style="{color:calendar.calendar_color}"></i>
+															<span>[[calendar.calendar_name]]</span>
 														</option>
-													</select>
+													</select> -->
+
+
 												</div>
 											</div>
 											<div class="form-group row">
@@ -547,11 +564,18 @@
 										<label for="calendarName" class="mt-2">Calendar Name :</label>
 									</div>
 									<div class="col-10">
-										<select v-model="cal_name" @change="selectedCalendar($event)"
+										<v-select :options="options"   v-model="selected"  label="title">
+											<template v-slot:option="option">
+												<span :class="option.icon" :style="{color:option.color}"></span>
+												[[ option.title ]]
+											</template>
+										</v-select>
+
+										<!-- <select v-model="cal_name" @change="selectedCalendar($event)"
 											class="form-select" aria-label="Default select example">
 											<option v-for="calendar in calendars" :value="calendar.calendar_name">
 												[[calendar.calendar_name]]</option>
-										</select>
+										</select> -->
 									</div>
 								</div>
 								<div class="form-group row">
@@ -594,23 +618,28 @@
 
 	<script src="{% static 'js/bootstrap.min.js' %}"></script>
 	<script src="{% static '/full_calendar/main.js'%}"></script>
+	<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
 	<script src='https://cdn.jsdelivr.net/npm/moment@2.27.0/min/moment.min.js'></script>
 	<script src='https://cdn.jsdelivr.net/npm/@fullcalendar/moment@5.5.0/main.global.min.js'></script>
-
 
 	{% if debug %}
 	<script src="{% static 'js/vue.js' %}"></script>
 	{% else %}
 	<script src="{% static 'js/vue.min.js' %}"></script>
 	{% endif %}
+	<script src="https://unpkg.com/vue-select@2.4.0/dist/vue-select.js"></script>
 
 	<script>
-
-
+		Vue.component("v-select", VueSelect.VueSelect);
 		var app = new Vue({
 			el: '#app',
 			delimiters: ['[[', ']]'],
 			data: {
+				options:[
+
+				],
+				selected:'',
 				weekly_events: [],
 				popup: false,
 				event_title: '',
@@ -635,6 +664,10 @@
 
 				all_day_start_date: '',
 				all_day_end_date: '',
+				styleObject: {
+					color: 'red',
+					fontSize: '28px',
+				},
 
 
 				edit: {
@@ -678,11 +711,20 @@
 				}
 
 			},
+			
 			mounted: function () {
 				this.showEvents();
 				this.getCalendars();
 			},
+			computed:{
+				selectedName:function(){
+					return this.selected.title
+				}
+			},
 			methods: {
+				getColor: function () {
+					return 'bg-primary me-2'
+				},
 				onClose: function () {
 					console.log('test');
 					$(".calendar-wd__form-three").toggleClass('active-event');
@@ -697,6 +739,7 @@
 					$('#f-tab4').addClass('show active');
 					$('#f-tab3').removeClass('show active');
 
+
 					console.log(this.event_color);
 					if (this.allDayEvent == true) {
 						this.edit.isallDay = true;
@@ -709,13 +752,19 @@
 						this.edit.end_date = this.single_day_end_date;
 
 					}
-
+					console.log(this.selectedName)
+					if(!this.selectedName){
+						this.edit.calendar_name = this.selected;
+					}
+					else{
+						this.edit.calendar_name = this.selectedName;
+					}
+					console.log(this.selected)
 					this.edit.event_title = this.event_title;
 					this.edit.attendees = this.attendees;
 					this.edit.calendars = this.calendars;
 					this.edit.start_time = this.start_time;
 					this.edit.end_time = this.end_time;
-					this.edit.calendar_name = this.calendar_name;
 					this.edit.event_location = this.event_location
 					this.edit.description = this.description;
 					this.edit.event_id = this.event_id;
@@ -750,6 +799,8 @@
 
 				},
 				selectedCalendar: function (value) {
+					console.log(value);
+					alert('selected Calendar');
 					this.drag.cal_name = this.cal_name;
 
 				},
@@ -769,10 +820,12 @@
 				},
 				oneditEvent: function (event_id) {
 					let formData = {}
+					console.log(this.edit.calendar_name, 'calendar_name');
 					console.log(this.edit.start_date);
 					console.log(this.edit.start_time);
 					console.log(this.allDayEvent);
 					console.log(new Date(this.edit.start_date));
+					
 
 					var st_month = ("0" + (new Date(this.edit.start_date).getMonth() + 1)).slice(-2);
 					var st_date = ("0" + (new Date(this.edit.start_date).getDate())).slice(-2);
@@ -810,7 +863,7 @@
 						this.showEvents();
 						$(".calendar-wd__form-three").toggleClass('active-event');
 						// $('#f-tab4').removeClass('show active');
-						
+
 						// $('#f-tab3').addClass('show active');
 
 					}).fail(errors => {
@@ -835,6 +888,14 @@
 						url: 'api/calendars/',
 					}).then(response => {
 						that.calendars = response;
+						for (var i = 0; i < that.calendars.length; i ++){
+							var singleObj = {}
+							singleObj['title'] = that.calendars[i].calendar_name;
+							singleObj['icon'] = 'fas fa-circle';
+							singleObj['color'] = that.calendars[i].calendar_color;
+							that.options.push(singleObj);
+						}
+						console.log(that.options);
 						console.log(that.calendars);
 						that.cal_name = response[0].calendar_name;
 						that.drag.cal_name = response[0].calendar_name;
@@ -845,6 +906,7 @@
 				saveEvent: function () {
 					console.log(this.drag.drag_event_name);
 					calendar = this.drag.calendar;
+					this.drag.cal_name = this.selectedName;
 
 					console.log(this.drag.selectionInfo.allDay);
 					$.ajax({
@@ -868,13 +930,8 @@
 					$(".calendar-wd__form-three_drag").toggleClass('active-event');
 				},
 				saveBackendEvent: function () {
-					console.log(this.drag.start_date)
-					console.log(this.drag.end_date)
-					console.log(this.drag.start_time);
-					console.log(this.drag.end_time)
-					console.log(this.drag.selectionInfo.start)
-
-                    var st_year = (this.drag.selectionInfo.start).getFullYear();
+					console.log(this.drag.cal_name);
+					var st_year = (this.drag.selectionInfo.start).getFullYear();
 					console.log(st_year)
 					var ed_year = (this.drag.selectionInfo.end).getFullYear();
 					console.log(ed_year)
@@ -884,40 +941,20 @@
 					var ed_month = ("0" + (new Date(this.drag.end_date).getMonth() + 1)).slice(-2);
 					console.log(ed_month);
 					var ed_date = ("0" + (new Date(this.drag.end_date).getDate())).slice(-2);
+					if( this.drag.selectionInfo.allDay){
+						ed_date = ed_date - 1;
+						if (ed_date == 0){
+							ed_date = st_date;
+							ed_month = st_month;
+							ed_year = st_year;
+						}
+					}
 
 
 					var new_start_date = st_year + '-' + st_month + '-' + st_date + "T" + this.drag.start_time + ":00";
 					console.log(new_start_date, 'new start date')
-					if (!this.drag.selectionInfo.allDay) {
-						// var new_end_date = ed_year + '-' + st_month + '-' + st_date + "T" + this.drag.end_time + ":00";
-						// console.log(new_end_date, 'if secrion new end date');
-						if( st_date == ed_date){
-							var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + this.drag.end_time + ":00";
-							console.log(new_end_date, 'else new end date');
-							this.drag.selectionInfo.allDay = false;
-						}
-						else{
-							var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + this.drag.end_time + ":00";
-							this.drag.selectionInfo.allDay = true;
-						}
-						
-
-					}
-					else {
-						if( st_date == ed_date){
-							var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + this.drag.end_time + ":00";
-							console.log(new_end_date, 'else new end date');
-							this.drag.selectionInfo.allDay = true;
-						}
-						else{
-							var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + this.drag.end_time + ":00";
-							console.log(new_end_date, 'else new end date');
-							this.drag.selectionInfo.allDay = true;
-						}
+					var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + this.drag.end_time + ":00";
 					
-					}
-					
-						
 					var formData = {};
 					console.log(this.drag.selectionInfo.allDay)
 					formData.event_name = this.drag.drag_event_name;
@@ -936,6 +973,12 @@
 					}).then(response => {
 						// location.href = '/';
 						alert('sucessfully');
+						this.drag.drag_event_name = ' ';
+						this.drag.description = ' ';
+						this.drag.location = ' ';
+						this.drag.cal_name = ' ';
+						this.selectedName = ' ';
+						this.selected = ' ';
 						this.showEvents();
 					}).fail(errors => {
 						alert('falid to create');
@@ -994,12 +1037,12 @@
 							var st_day = st.toLocaleString('en-us', { weekday: 'short' });
 
 							var ed_date = ed.getDate();
-							if(selectionInfo.allDay == true){
-								var ed_date = ed.getDate() - 1 ;
-							}
-							else{
-								ed_date = ed.getDate(); 
-							}
+							// if(selectionInfo.allDay == true){
+							// 	var ed_date = ed.getDate() - 1 ;
+							// }
+							// else{
+							// 	ed_date = ed.getDate(); 
+							// }
 							// ed_date = ed.getDate();
 							var ed_year = ed.getFullYear();
 							var ed_month = ed.toLocaleString('en-us', { month: 'long' });
@@ -1014,7 +1057,7 @@
 							var ed_minute = ('0' + new Date(ed).getMinutes()).slice(-2);
 							var ed_hour = ('0' + new Date(ed).getHours()).slice(-2);
 
-						
+
 
 							var start_date = st_month + ' ' + st_date + ',' + ' ' + st_year + " (" + st_day + ")";
 							var end_date = ed_month + ' ' + ed_date + ',' + ' ' + ed_year + " (" + ed_day + ")";
@@ -1199,6 +1242,8 @@
 
 
 							that.calendar_name = event.event._def.extendedProps.calendar_name
+							that.selected = event.event._def.extendedProps.calendar_name
+
 							that.attendees = event.event._def.extendedProps.calendar_attendee
 
 
@@ -1236,6 +1281,9 @@
 				$('.calendar-wd__form-three').removeClass('active-event');
 				$(".calendar-wd__form-three_drag").removeClass('active-event');
 			}
+
+
+
 		});
 	</script>
 
