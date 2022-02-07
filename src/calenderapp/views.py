@@ -160,13 +160,15 @@ class EventEdit(APIView):
     permission_class = (permissions.AllowAny, )
     
     def put(self, request, event_id):
-        
+        print(request.data)
         calendar_info_id = CalendarList.objects.get(calendar_name=request.data['calendar_info_id']).id
         request.data['calendar_info_id'] = calendar_info_id
         event = CalendarEvents.objects.get(id=event_id)
         serializer = CalendarEventsSerializer(event, data=request.data, partial=True)
+
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            print(serializer.data)
             return Response('edit successfully', status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

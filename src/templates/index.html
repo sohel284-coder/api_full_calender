@@ -139,6 +139,9 @@
 			border: solid 1px #eee;
 			text-align: center;
 		}
+		body{
+			/* overflow: hidden; */
+		}
 	</style>
 
 
@@ -147,8 +150,6 @@
 <body>
 
 	<div class="calendar-wd__section" id="app">
-
-
 
 		<div class="calendar-wd">
 			<div id='calendar'></div>
@@ -302,9 +303,10 @@
 													<label for="calendarName" class="mt-2">Calendar Name :</label>
 												</div>
 												<div class="col-10">
-													<v-select :options="options"   v-model="selected"  label="title">
+													<v-select :options="options" v-model="selected" label="title">
 														<template v-slot:option="option">
-															<span :class="option.icon" :style="{color:option.color}"></span>
+															<span :class="option.icon"
+																:style="{color:option.color}"></span>
 															[[ option.title ]]
 														</template>
 													</v-select>
@@ -564,7 +566,7 @@
 										<label for="calendarName" class="mt-2">Calendar Name :</label>
 									</div>
 									<div class="col-10">
-										<v-select :options="options"   v-model="selected"  label="title">
+										<v-select :options="options" v-model="selected" label="title">
 											<template v-slot:option="option">
 												<span :class="option.icon" :style="{color:option.color}"></span>
 												[[ option.title ]]
@@ -636,10 +638,10 @@
 			el: '#app',
 			delimiters: ['[[', ']]'],
 			data: {
-				options:[
+				options: [
 
 				],
-				selected:'',
+				selected: '',
 				weekly_events: [],
 				popup: false,
 				event_title: '',
@@ -711,13 +713,13 @@
 				}
 
 			},
-			
+
 			mounted: function () {
 				this.showEvents();
 				this.getCalendars();
 			},
-			computed:{
-				selectedName:function(){
+			computed: {
+				selectedName: function () {
 					return this.selected.title
 				}
 			},
@@ -753,10 +755,10 @@
 
 					}
 					console.log(this.selectedName)
-					if(!this.selectedName){
+					if (!this.selectedName) {
 						this.edit.calendar_name = this.selected;
 					}
-					else{
+					else {
 						this.edit.calendar_name = this.selectedName;
 					}
 					console.log(this.selected)
@@ -825,7 +827,7 @@
 					console.log(this.edit.start_time);
 					console.log(this.allDayEvent);
 					console.log(new Date(this.edit.start_date));
-					
+
 
 					var st_month = ("0" + (new Date(this.edit.start_date).getMonth() + 1)).slice(-2);
 					var st_date = ("0" + (new Date(this.edit.start_date).getDate())).slice(-2);
@@ -888,7 +890,7 @@
 						url: 'api/calendars/',
 					}).then(response => {
 						that.calendars = response;
-						for (var i = 0; i < that.calendars.length; i ++){
+						for (var i = 0; i < that.calendars.length; i++) {
 							var singleObj = {}
 							singleObj['title'] = that.calendars[i].calendar_name;
 							singleObj['icon'] = 'fas fa-circle';
@@ -898,7 +900,7 @@
 						console.log(that.options);
 						console.log(that.calendars);
 						that.cal_name = response[0].calendar_name;
-						that.drag.cal_name = response[0].calendar_name;
+						that.selected = response[0].calendar_name;
 						console.log(that.cal_name);
 					})
 				},
@@ -906,7 +908,15 @@
 				saveEvent: function () {
 					console.log(this.drag.drag_event_name);
 					calendar = this.drag.calendar;
-					this.drag.cal_name = this.selectedName;
+					console.log(this.selected);
+					console.log(this.selectedName)
+					if (!this.selectedName) {
+						this.drag.cal_name = this.selected;
+					}
+					else {
+						this.drag.cal_name = this.selectedName;
+					}
+					console.log(this.drag.cal_name)
 
 					console.log(this.drag.selectionInfo.allDay);
 					$.ajax({
@@ -941,9 +951,9 @@
 					var ed_month = ("0" + (new Date(this.drag.end_date).getMonth() + 1)).slice(-2);
 					console.log(ed_month);
 					var ed_date = ("0" + (new Date(this.drag.end_date).getDate())).slice(-2);
-					if( this.drag.selectionInfo.allDay){
+					if (this.drag.selectionInfo.allDay) {
 						ed_date = ed_date - 1;
-						if (ed_date == 0){
+						if (ed_date == 0) {
 							ed_date = st_date;
 							ed_month = st_month;
 							ed_year = st_year;
@@ -954,7 +964,7 @@
 					var new_start_date = st_year + '-' + st_month + '-' + st_date + "T" + this.drag.start_time + ":00";
 					console.log(new_start_date, 'new start date')
 					var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + this.drag.end_time + ":00";
-					
+
 					var formData = {};
 					console.log(this.drag.selectionInfo.allDay)
 					formData.event_name = this.drag.drag_event_name;
@@ -978,8 +988,8 @@
 						this.drag.location = ' ';
 						this.drag.cal_name = ' ';
 						this.selectedName = ' ';
-						this.selected = ' ';
 						this.showEvents();
+
 					}).fail(errors => {
 						alert('falid to create');
 						console.log(errors);
@@ -1112,6 +1122,41 @@
 						dayMaxEvents: true,
 						allDayMaintainDuration: true,
 						events: that.weekly_events,
+						eventDrop: function (info) {
+							console.log(info);
+							formData = {}
+							if(info.event.allDay){
+								formData.all_day_flg = 1;
+							}
+							else{
+								formData.all_day_flg = 0;
+							}
+							console.log(info.event.startStr);
+							var index_st = info.event.startStr.indexOf('+')
+							var index_ed = info.event.startStr.indexOf('+')
+
+							var start_dt = info.event.startStr.slice(0, index_st);
+							var end_dt = info.event.endStr.slice(0, index_ed);
+							console.log(start_dt);
+							console.log(end_dt);
+							formData.event_start_dt = start_dt;
+							formData.event_end_dt = end_dt;
+							formData.calendar_info_id = info.event._def.extendedProps.calendar_name;
+							var event_id = info.event._def.extendedProps.event_id;
+							$.ajax({
+								method: 'PUT',
+								url: 'api/edit-event/' + event_id,
+								data: JSON.stringify(formData),
+								contentType: 'application/json'
+							}).then(response => {
+								alert('success');
+								that.showEvents();
+							}).fail(errors => {
+								alert('fail');
+								console.log(errors);
+							})
+						},
+
 						eventDidMount: function (info) {
 							now = new Date()
 							if (info.event.end < now) {
