@@ -24,7 +24,7 @@
 
 
 		#app {
-			background-color: rgb(251, 199, 251);
+			/* background-color: rgb(251, 199, 251); */
 		}
 
 		@media screen and (max-width:767px) {
@@ -45,14 +45,12 @@
 
 
 		.fc .fc-view-harness {
-			background-color: #FBFBFB;
-
-			height: 100%;
+			background-color: #fff !important;
 			width: 75%;
 			margin: auto;
 
 		}
-
+		
 		.fc .fc-timegrid-slot {
 			height: 1px;
 			border-bottom: 0 !important;
@@ -140,479 +138,494 @@
 			text-align: center;
 		}
 		body{
-			/* overflow: hidden; */
+			/* overflow-y: hidden; */
+			/* background: #FFCBC3; */
+			background-image: url('{% static "img/bg-image.png" %}');
+			
 		}
+		#calendar{
+			min-height: 360px;
+			max-height: 650px;
+		}
+		
 	</style>
 
 
 </head>
 
 <body>
+	<div class="container mt-4">
+		<div class="calendar-wd__section"  id="app">
 
-	<div class="calendar-wd__section" id="app">
-
-		<div class="calendar-wd">
-			<div id='calendar'></div>
-			<br>
-			<br>
-			<div class="calendar-wd__form calendar-wd__form-three">
-				<div class="close-icon close-three" @click.prevent="onClose"><img src="{% static 'img/close.png' %}"
-						alt=""></div>
-				<div class="calendar-wd__form-three--one">
-					<div class="calendar-wd__form-three-head">
-						<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist"
-							style="list-style-type:none">
-							<li><a @click.prevent="onEdit" class="list-group-item" data-bs-toggle="list" href="#"
-									role="tab"><img src="{% static 'img/pen.png' %}" alt="#"></a></li>
-							<li><a class="list-group-item" @click.prevent="onDelete" data-bs-toggle="list" href="#"
-									role="tab"><i class="far fa-trash-alt"
-										style="font-size:20px; color: black;"></i></a></li>
-							<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><img
-										src="{% static 'img/message.png' %}" alt="#"></a></li>
-							<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab6" role="tab"><i
-										class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
-							</li>
-							<!-- <li><a class="list-group-item" data-bs-toggle="list" href="#f-tab6" role="tab" style="display: none;"><i
-										class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
-							</li> -->
-						</ul>
-						<img src="{% static 'img/calander-banner.png' %}">
-						<!-- delete modal start here -->
-
-					</div>
-					<div class="calendar-wd__form-three-body">
-						<div class="tab-content" id="nav-tabContent">
-							<!-- Property Tab One -->
-							<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
-								<div class="calendar-wd__form-separate-column">
-									<div class="calendar-wd__form-three-one">
-										<div class="calendar-wd__form-three-title">
-											<span :style="{background:event_color}">[[calendar_name]]</span>
+			<div class="calendar-wd">
+				<div id='calendar'></div>
+				<br>
+				<br>
+				<div class="calendar-wd__form calendar-wd__form-three">
+					<div class="close-icon close-three" @click.prevent="onClose"><img src="{% static 'img/close.png' %}"
+							alt=""></div>
+					<div class="calendar-wd__form-three--one">
+						<div class="calendar-wd__form-three-head">
+							<ul class="list-group calendar-wd__form-three-list" id="list-tab" role="tablist"
+								style="list-style-type:none">
+								<li><a @click.prevent="onEdit" class="list-group-item" data-bs-toggle="list" href="#"
+										role="tab"><img src="{% static 'img/pen.png' %}" alt="#"></a></li>
+								<li><a class="list-group-item" @click.prevent="onDelete" data-bs-toggle="list" href="#"
+										role="tab"><i class="far fa-trash-alt"
+											style="font-size:20px; color: black;"></i></a></li>
+								<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><img
+											src="{% static 'img/message.png' %}" alt="#"></a></li>
+								<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab6" role="tab"><i
+											class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
+								</li>
+								<!-- <li><a class="list-group-item" data-bs-toggle="list" href="#f-tab6" role="tab" style="display: none;"><i
+											class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
+								</li> -->
+							</ul>
+							<img src="{% static 'img/calander-banner.png' %}">
+							<!-- delete modal start here -->
+	
+						</div>
+						<div class="calendar-wd__form-three-body">
+							<div class="tab-content" id="nav-tabContent">
+								<!-- Property Tab One -->
+								<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
+									<div class="calendar-wd__form-separate-column">
+										<div class="calendar-wd__form-three-one">
+											<div class="calendar-wd__form-three-title">
+												<span :style="{background:event_color}">[[calendar_name]]</span>
+											</div>
+											<p class="mt-0">[[event_title]]</p>
+											<div class="calendar-wd__form-body">
+												<div class="calendar-wd__form-single">
+													<h4 class="calendar-wd__form-heading"><i
+															class="far fa-calendar-alt"></i>
+														[[interval]]</h4>
+												</div>
+												<div class="calendar-wd__form-single">
+													<span><i class="fas fa-map-marker-alt"
+															style="color: #FFCBC3; font-size: 22px;"></i></span>
+													<span class="ms-3"><a href="#">[[event_location]]</a></span>
+	
+													<!-- <h4 class="calendar-wd__form-heading"></h4> -->
+												</div>
+												<div class="calendar-wd__form-single">
+													<p>
+														[[description]]
+	
+													</p>
+												</div>
+											</div>
 										</div>
-										<p class="mt-0">[[event_title]]</p>
-										<div class="calendar-wd__form-body">
-											<div class="calendar-wd__form-single">
-												<h4 class="calendar-wd__form-heading"><i
-														class="far fa-calendar-alt"></i>
-													[[interval]]</h4>
+										<div class="calendar-wd__form-three-two">
+											<ul class="calendar-wd__form-list-img calendar-wd__form-list-two"
+												v-for="attendee in attendees">
+												<li><img src="{% static 'img/icon.png' %}"
+														alt="#">[[attendee.event_attendee]]</li>
+	
+											</ul>
+											<div class="calander-wd__button calander-wd__button-guest">
+												<span class="plus-icon"><a href="#"><i class="fa fa-plus"></i></span>Add
+												guests</a>
 											</div>
-											<div class="calendar-wd__form-single">
-												<span><i class="fas fa-map-marker-alt"
-														style="color: #FFCBC3; font-size: 22px;"></i></span>
-												<span class="ms-3"><a href="#">[[event_location]]</a></span>
-
-												<!-- <h4 class="calendar-wd__form-heading"></h4> -->
-											</div>
-											<div class="calendar-wd__form-single">
-												<p>
-													[[description]]
-
-												</p>
-											</div>
-										</div>
-									</div>
-									<div class="calendar-wd__form-three-two">
-										<ul class="calendar-wd__form-list-img calendar-wd__form-list-two"
-											v-for="attendee in attendees">
-											<li><img src="{% static 'img/icon.png' %}"
-													alt="#">[[attendee.event_attendee]]</li>
-
-										</ul>
-										<div class="calander-wd__button calander-wd__button-guest">
-											<span class="plus-icon"><a href="#"><i class="fa fa-plus"></i></span>Add
-											guests</a>
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="tab-pane fade" id="f-tab4" role="tabpanel">
-								<div class="calendar-wd__form-three--two">
-									<div class="">
-										<form @submit.prevent="oneditEvent(edit.event_id)">
-											<div class="form-group row">
-												<div class="col-2">
-													<label for="eventName" class="mt-2">Event Name :</label>
-												</div>
-												<div class="col-10">
-													<input id="eventName" v-model="edit.event_title" type="text"
-														class="form-control form-control-lg">
-												</div>
-											</div>
-											<div class="form-group row mt-5" v-if="edit.isallDay">
-												<div class="col-2">
-													<label class="mt-2" for="startDate"> Start Date :</label>
-												</div>
-												<div class="col-4">
-													<input id="startDate" v-model="edit.start_date" type="text"
-														class="form-control form-control-lg">
-												</div>
-												<div class="col-2">
-													<label class="mt-2" for="endtDate"> End Date :</label>
-												</div>
-												<div class="col-4">
-													<input id="endDate" v-model="edit.end_date" type="text"
-														class="form-control form-control-lg">
-												</div>
-											</div>
-											<div class="form-group row mt-5" v-else>
-												<div class="col-2">
-													<label class="mt-2" for="startDate"> Start Date :</label>
-												</div>
-												<div class="col-10">
-													<input id="startDate" v-model="edit.start_date" type="text"
-														class="form-control form-control-lg">
-												</div>
-											</div>
-
-											<div class="form-group row mt-5">
-												<div class="col-2">
-													<label class="mt-2" for="startTime"> Start Time :</label>
-												</div>
-												<div class="col-4">
-													<input id="startTime" v-model="edit.start_time" type="text"
-														class="form-control form-control-lg">
-												</div>
-												<div class="col-2">
-													<label class="mt-2" for="endtTime"> End Time :</label>
-												</div>
-												<div class="col-4">
-													<input id="endTime" type="text" v-model="edit.end_time"
-														class="form-control form-control-lg">
-												</div>
-											</div>
-											<div class="form-group row mt-5">
-												<div class="col-2">
-													<label for="eventLocation" class="mt-2">Location :</label>
-												</div>
-												<div class="col-10">
-													<input id="eventLocation" v-model="edit.event_location" type="text"
-														class="form-control form-control-lg">
-												</div>
-											</div>
-											<div class="form-group row mt-5">
-												<div class="col-2">
-													<label for="eventDescription" class="mt-2">Description :</label>
-												</div>
-												<div class="col-10">
-													<input id="eventDescription" v-model="edit.description" type="text"
-														class="form-control form-control-lg">
-												</div>
-											</div>
-											<div class="form-group row mt-5">
-												<div class="col-2">
-													<label for="calendarName" class="mt-2">Calendar Name :</label>
-												</div>
-												<div class="col-10">
-													<v-select :options="options" v-model="selected" label="title">
-														<template v-slot:option="option">
-															<span :class="option.icon"
-																:style="{color:option.color}"></span>
-															[[ option.title ]]
-														</template>
-													</v-select>
-
-													<!-- <select id="editSelect" v-model="edit.calendar_name"
-														@change="selectedCalendar($event)"
-														class="form-select form-select-lg"
-														aria-label=".form-select-lg example">
-														<option v-for="calendar in edit.calendars"
-															:value="calendar.calendar_name"> <i class="fas fa-circle"
-																:style="{color:calendar.calendar_color}"></i>
-															<span>[[calendar.calendar_name]]</span>
-														</option>
-													</select> -->
-
-
-												</div>
-											</div>
-											<div class="form-group row">
-												<div class="col-2"></div>
-												<div class="col-10">
-													<div class="input-group mb-3">
-														<input type="text" class="form-control form-control-lg"
-															aria-label="Attendee" aria-describedby="basic-addon1">
-														<span class="input-group-text" style="font-size:20px"
-															type="button" id="basic-addon1">+</span>
+								<div class="tab-pane fade" id="f-tab4" role="tabpanel">
+									<div class="calendar-wd__form-three--two">
+										<div class="">
+											<form @submit.prevent="oneditEvent(edit.event_id)">
+												<div class="form-group row">
+													<div class="col-2">
+														<label for="eventName" class="mt-2">Event Name :</label>
+													</div>
+													<div class="col-10">
+														<input id="eventName" v-model="edit.event_title" type="text"
+															class="form-control form-control-lg">
 													</div>
 												</div>
-											</div>
-											<div class="form-group row mt-5">
-												<div class="col-2"></div>
-												<div class="col-8">
-													<div class="btn-toolbar text-center">
-														<button type="button" id="btnSubmit"
-															class="btn btn-secondary btn-lg me-3">More Options</button>
-														<button type="submit" id="btnSubmit"
-															class="btn btn-primary btn-lg me-3">Save</button>
-														<button type="button" @click.prevent="backTopopup"
-															id="btnCancel" class="btn btn-danger btn-lg">Cancel</button>
+												<div class="form-group row mt-5" v-if="edit.isallDay">
+													<div class="col-2">
+														<label class="mt-2" for="startDate"> Start Date :</label>
+													</div>
+													<div class="col-4">
+														<input id="startDate" v-model="edit.start_date" type="text"
+															class="form-control form-control-lg">
+													</div>
+													<div class="col-2">
+														<label class="mt-2" for="endtDate"> End Date :</label>
+													</div>
+													<div class="col-4">
+														<input id="endDate" v-model="edit.end_date" type="text"
+															class="form-control form-control-lg">
 													</div>
 												</div>
-												<div class="col-2"></div>
-											</div>
-										</form>
-										{% comment %}
-										<form class="form">
-											<div class="form-group">
-												<div class="input-group">
-													<input id="datepick" v-model="edit.event_title" type="text"
-														placeholder="">
-												</div>
-											</div>
-											<div class="form-group calendar-wd__date-pick">
-												<div class="form-control wide" tabindex="0"><i
-														class="fa fa-calendar"></i><span class="current"><input
-															id="datepick" v-model="edit.interval" type="text"
-															placeholder=""></span></div>
-											</div>
-											<div class="form-group">
-												<div class="list-inner-group">
-													<div class="list-single-group">
-														<select v-model="edit.start_time" class="form-select"
-															aria-label="Default select example">
-															<option selected>[[edit.start_time]]</option>
-															<option>
-																15.30</option>
-															<option value="1">15.30
-															</option>
-															<option value="2">15.30
-															</option>
-															<option value="3">15.30
-															</option>
-														</select>
+												<div class="form-group row mt-5" v-else>
+													<div class="col-2">
+														<label class="mt-2" for="startDate"> Start Date :</label>
 													</div>
-													<div class="list-single-group">
-														<select v-model="edit.end_time" class="form-select"
-															aria-label="Default select example">
-															<option selected>[[edit.end_time]]</option>
-															<option>
-																15.30</option>
-															<option value="1">15.30
-															</option>
-															<option value="2">15.30
-															</option>
-															<option value="3">15.30
-															</option>
-														</select>
-
-													</div>
-													<div class="list-single-group   project-dropdown">
-														<select class="form-select" aria-label="Default select example">
-															<option selected="">Don't repeat</option>
-															<option value="1">Don't repeat</option>
-															<option value="2">Don't repeat</option>
-															<option value="3">Don't repeat</option>
-														</select>
+													<div class="col-10">
+														<input id="startDate" v-model="edit.start_date" type="text"
+															class="form-control form-control-lg">
 													</div>
 												</div>
-											</div>
-											<div class="form-group">
-												<div class="input-group">
-													<span class="input-icon"><i class="fa fa-map-marker"></i></span>
-													<input id="datepick" v-model="edit.event_location" type="text"
-														placeholder="Add location">
-
+	
+												<div class="form-group row mt-5">
+													<div class="col-2">
+														<label class="mt-2" for="startTime"> Start Time :</label>
+													</div>
+													<div class="col-4">
+														<input id="startTime" v-model="edit.start_time" type="text"
+															class="form-control form-control-lg">
+													</div>
+													<div class="col-2">
+														<label class="mt-2" for="endtTime"> End Time :</label>
+													</div>
+													<div class="col-4">
+														<input id="endTime" type="text" v-model="edit.end_time"
+															class="form-control form-control-lg">
+													</div>
 												</div>
-											</div>
-											<div class="form-group">
+												<div class="form-group row mt-5">
+													<div class="col-2">
+														<label for="eventLocation" class="mt-2">Location :</label>
+													</div>
+													<div class="col-10">
+														<input id="eventLocation" v-model="edit.event_location" type="text"
+															class="form-control form-control-lg">
+													</div>
+												</div>
+												<div class="form-group row mt-5">
+													<div class="col-2">
+														<label for="eventDescription" class="mt-2">Description :</label>
+													</div>
+													<div class="col-10">
+														<textarea class="form-control p-3" id="" v-model="edit.description" rows="3"></textarea>
+														
+													</div>
+												</div>
+												<div class="form-group row mt-5">
+													<div class="col-2">
+														<label for="calendarName" class="mt-2">Calendar Name :</label>
+													</div>
+													<div class="col-10">
+														<v-select :options="options" v-model="selected" label="title">
+															<template v-slot:option="option">
+																<span :class="option.icon"
+																	:style="{color:option.color}"></span>
+																[[ option.title ]]
+															</template>
+														</v-select>
+	
+														<!-- <select id="editSelect" v-model="edit.calendar_name"
+															@change="selectedCalendar($event)"
+															class="form-select form-select-lg"
+															aria-label=".form-select-lg example">
+															<option v-for="calendar in edit.calendars"
+																:value="calendar.calendar_name"> <i class="fas fa-circle"
+																	:style="{color:calendar.calendar_color}"></i>
+																<span>[[calendar.calendar_name]]</span>
+															</option>
+														</select> -->
+	
+	
+													</div>
+												</div>
+												<div class="form-group row">
+													<div class="col-2"></div>
+													<div class="col-10">
+														<div class="input-group mb-3">
+															<input type="text" class="form-control form-control-lg"
+																aria-label="Attendee" aria-describedby="basic-addon1">
+															<span class="input-group-text" style="font-size:20px"
+																type="button" id="basic-addon1">+</span>
+														</div>
+													</div>
+												</div>
+												<div class="form-group row mt-5">
+													<div class="col-2"></div>
+													<div class="col-8">
+														<div class="btn-toolbar text-center">
+															<button type="button" id="btnSubmit"
+																class="btn btn-secondary btn-lg me-3">More Options</button>
+															<button type="submit" id="btnSubmit"
+																class="btn btn-primary btn-lg me-3">Save</button>
+															<button type="button" @click.prevent="backTopopup"
+																id="btnCancel" class="btn btn-danger btn-lg">Cancel</button>
+														</div>
+													</div>
+													<div class="col-2"></div>
+												</div>
+											</form>
+											{% comment %}
+											<form class="form">
 												<div class="form-group">
-													<select v-model="edit.calendar_name" :style="{color:event_color}"
-														@change="selectedCalendar($event)" class="form-select"
-														aria-label="Default select example">
-														<option v-for="calendar in edit.calendars"
-															:value="calendar.calendar_name"> <span
-																class="me-2">&#9679;</span> <span
-																style="color: black;">[[calendar.calendar_name]]</span>
-														</option>
-													</select>
+													<div class="input-group">
+														<input id="datepick" v-model="edit.event_title" type="text"
+															placeholder="">
+													</div>
 												</div>
-											</div>
-											<div class="form-group">
-												<div class="input-group">
-													<textarea class="p-3" name="" id="" cols="70" rows="5"
-														v-model="edit.description"></textarea>
+												<div class="form-group calendar-wd__date-pick">
+													<div class="form-control wide" tabindex="0"><i
+															class="fa fa-calendar"></i><span class="current"><input
+																id="datepick" v-model="edit.interval" type="text"
+																placeholder=""></span></div>
 												</div>
-											</div>
-											<div class="form-group select-man mt-3">
-												<ul class="select-list-img" style="list-style-type:none"
-													v-for="attendee in edit.attendees">
-													<li><a href="#"><img src="{% static 'img/icon.png' %}"
-																alt="#">[[attendee.event_attendee]]</a>
-													</li>
-												</ul>
-												<ul style="list-style-type:none">
-													<li> <span><i class="fa fa-plus"></i></span> <span>Add People</span>
-													</li>
-												</ul>
-											</div>
-											<div class="form-group">
-												<ul class="calendar-wd__clist">
-													<li><img src="{% static 'img/calender.png' %}">Email Participants
-													</li>
-													<li><img src="{% static 'img/memo.png' %}">Add Notes</li>
-													<li><img src="{% static 'img/bell.png' %}">Set Reminder</li>
-												</ul>
-											</div>
-											<div class="form-group button">
-												<button type="submit" class="theme-btn theme-sec">More options</button>
-												<b class="theme-btn theme-primary calendar-wd__submit">Save</b>
-												<b class="btn btn-danger btn-sm" @click.prevent="backTopopup">cancel</b>
-
-											</div>
-										</form>
-										{% endcomment %}
+												<div class="form-group">
+													<div class="list-inner-group">
+														<div class="list-single-group">
+															<select v-model="edit.start_time" class="form-select"
+																aria-label="Default select example">
+																<option selected>[[edit.start_time]]</option>
+																<option>
+																	15.30</option>
+																<option value="1">15.30
+																</option>
+																<option value="2">15.30
+																</option>
+																<option value="3">15.30
+																</option>
+															</select>
+														</div>
+														<div class="list-single-group">
+															<select v-model="edit.end_time" class="form-select"
+																aria-label="Default select example">
+																<option selected>[[edit.end_time]]</option>
+																<option>
+																	15.30</option>
+																<option value="1">15.30
+																</option>
+																<option value="2">15.30
+																</option>
+																<option value="3">15.30
+																</option>
+															</select>
+	
+														</div>
+														<div class="list-single-group   project-dropdown">
+															<select class="form-select" aria-label="Default select example">
+																<option selected="">Don't repeat</option>
+																<option value="1">Don't repeat</option>
+																<option value="2">Don't repeat</option>
+																<option value="3">Don't repeat</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="input-group">
+														<span class="input-icon"><i class="fa fa-map-marker"></i></span>
+														<input id="datepick" v-model="edit.event_location" type="text"
+															placeholder="Add location">
+	
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="form-group">
+														<select v-model="edit.calendar_name" :style="{color:event_color}"
+															@change="selectedCalendar($event)" class="form-select"
+															aria-label="Default select example">
+															<option v-for="calendar in edit.calendars"
+																:value="calendar.calendar_name"> <span
+																	class="me-2">&#9679;</span> <span
+																	style="color: black;">[[calendar.calendar_name]]</span>
+															</option>
+														</select>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="input-group">
+														<textarea class="p-3" name="" id="" cols="70" rows="5"
+															v-model="edit.description"></textarea>
+													</div>
+												</div>
+												<div class="form-group select-man mt-3">
+													<ul class="select-list-img" style="list-style-type:none"
+														v-for="attendee in edit.attendees">
+														<li><a href="#"><img src="{% static 'img/icon.png' %}"
+																	alt="#">[[attendee.event_attendee]]</a>
+														</li>
+													</ul>
+													<ul style="list-style-type:none">
+														<li> <span><i class="fa fa-plus"></i></span> <span>Add People</span>
+														</li>
+													</ul>
+												</div>
+												<div class="form-group">
+													<ul class="calendar-wd__clist">
+														<li><img src="{% static 'img/calender.png' %}">Email Participants
+														</li>
+														<li><img src="{% static 'img/memo.png' %}">Add Notes</li>
+														<li><img src="{% static 'img/bell.png' %}">Set Reminder</li>
+													</ul>
+												</div>
+												<div class="form-group button">
+													<button type="submit" class="theme-btn theme-sec">More options</button>
+													<b class="theme-btn theme-primary calendar-wd__submit">Save</b>
+													<b class="btn btn-danger btn-sm" @click.prevent="backTopopup">cancel</b>
+	
+												</div>
+											</form>
+											{% endcomment %}
+										</div>
 									</div>
 								</div>
-							</div>
-
-							<div class="tab-pane fade" id="f-tab_delete" role="tabpanel">
-								<div class="calendar-wd__form-three--two">
-									<div class="calendar-wd__form-1">
-										<form class="form" @submit.prevent="onDeleteEvent(event_id)">
-											<h1 class="text-center mb-3">Are you sure want to delete Event?</h1>
-											<div class="form-group button">
-												<button class="btn btn-danger btn-sm"
-													@click.prevent="backTopopup">cancel</button>
-												<button type="submit" class="btn btn-primary btn-sm ms-3">Yes</button>
-											</div>
-										</form>
+	
+								<div class="tab-pane fade" id="f-tab_delete" role="tabpanel">
+									<div class="calendar-wd__form-three--two">
+										<div class="calendar-wd__form-1">
+											<form class="form" @submit.prevent="onDeleteEvent(event_id)">
+												<h1 class="text-center mb-3">Are you sure want to delete Event?</h1>
+												<div class="form-group button">
+													<button class="btn btn-danger btn-sm"
+														@click.prevent="backTopopup">cancel</button>
+													<button type="submit" class="btn btn-primary btn-sm ms-3">Yes</button>
+												</div>
+											</form>
+										</div>
 									</div>
 								</div>
+	
 							</div>
-
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="calendar-wd__form calendar-wd__form-three_drag">
-				<div class="close-icon close-three" @click="onCloseDrag"><img src="{% static 'img/close.png' %}" alt="">
-				</div>
-
-				<div class="calendar-wd__form-three-body">
-					<div class="calendar-wd__form-three--two">
-						<div class="calendar-wd__form-1">
-							<form action="" @submit.prevent="saveEvent">
-								<div class="form-group row">
-									<div class="col-2">
-										<label for="eventName" class="mt-2">Event Name :</label>
-									</div>
-									<div class="col-10">
-										<input id="eventName" v-model="drag.drag_event_name" type="text"
-											class="form-control form-control-lg">
-									</div>
-								</div>
-								<div class="form-group row mt-5" v-if="drag.isallDay">
-									<div class="col-2">
-										<label class="mt-2" for="startDate"> Start Date :</label>
-									</div>
-									<div class="col-4">
-										<input id="startDate" v-model="drag.start_date" type="text"
-											class="form-control form-control-lg">
-									</div>
-									<div class="col-2">
-										<label class="mt-2" for="endtDate"> End Date :</label>
-									</div>
-									<div class="col-4">
-										<input id="endDate" v-model="drag.end_date" type="text"
-											class="form-control form-control-lg">
-									</div>
-								</div>
-								<div class="form-group row mt-5" v-else>
-									<div class="col-2">
-										<label class="mt-2" for="startDate"> Start Date :</label>
-									</div>
-									<div class="col-10">
-										<input id="startDate" v-model="drag.start_date" type="text"
-											class="form-control form-control-lg">
-									</div>
-								</div>
-
-								<div class="form-group row mt-5">
-									<div class="col-2">
-										<label class="mt-2" for="startTime"> Start Time :</label>
-									</div>
-									<div class="col-4">
-										<input id="startTime" v-model="drag.start_time" type="text"
-											class="form-control form-control-lg">
-									</div>
-									<div class="col-2">
-										<label class="mt-2" for="endtTime"> End Time :</label>
-									</div>
-									<div class="col-4">
-										<input id="endTime" type="text" v-model="drag.end_time"
-											class="form-control form-control-lg">
-									</div>
-								</div>
-								<div class="form-group row mt-5">
-									<div class="col-2">
-										<label for="eventLocation" class="mt-2">Location :</label>
-									</div>
-									<div class="col-10">
-										<input id="eventLocation" v-model="drag.location" type="text"
-											class="form-control form-control-lg">
-									</div>
-								</div>
-								<div class="form-group row mt-5">
-									<div class="col-2">
-										<label for="eventDescription" class="mt-2">Description :</label>
-									</div>
-									<div class="col-10">
-										<input id="eventDescription" v-model="drag.description" type="text"
-											class="form-control form-control-lg">
-									</div>
-								</div>
-								<div class="form-group row mt-5">
-									<div class="col-2">
-										<label for="calendarName" class="mt-2">Calendar Name :</label>
-									</div>
-									<div class="col-10">
-										<v-select :options="options" v-model="selected" label="title">
-											<template v-slot:option="option">
-												<span :class="option.icon" :style="{color:option.color}"></span>
-												[[ option.title ]]
-											</template>
-										</v-select>
-
-										<!-- <select v-model="cal_name" @change="selectedCalendar($event)"
-											class="form-select" aria-label="Default select example">
-											<option v-for="calendar in calendars" :value="calendar.calendar_name">
-												[[calendar.calendar_name]]</option>
-										</select> -->
-									</div>
-								</div>
-								<div class="form-group row">
-									<div class="col-2"></div>
-									<div class="col-10">
-										<div class="input-group mb-3">
-											<input type="text" class="form-control form-control-lg"
-												aria-label="Attendee" aria-describedby="basic-addon1">
-											<span class="input-group-text" style="font-size:20px" type="button"
-												id="basic-addon1">+</span>
+				<div class="calendar-wd__form calendar-wd__form-three_drag">
+					<div class="close-icon close-three" @click="onCloseDrag"><img src="{% static 'img/close.png' %}" alt="">
+					</div>
+	
+					<div class="calendar-wd__form-three-body">
+						<div class="calendar-wd__form-three--two">
+							<div class="calendar-wd__form-1">
+								<form action="" @submit.prevent="saveEvent">
+									<div class="form-group row">
+										<div class="col-2">
+											<label for="eventName" class="mt-2">Event Name :</label>
+										</div>
+										<div class="col-10">
+											<input id="eventName" v-model="drag.drag_event_name" type="text"
+												class="form-control form-control-lg">
 										</div>
 									</div>
-								</div>
-								<div class="form-group row mt-5">
-									<div class="col-2"></div>
-									<div class="col-8">
-										<div class="btn-toolbar text-center">
-											<button type="button" id="btnSubmit"
-												class="btn btn-secondary btn-lg me-3">More Options</button>
-											<button type="submit" id="btnSubmit"
-												class="btn btn-primary btn-lg me-3">Save</button>
-											<button type="button" @click.prevent="backTopopup" id="btnCancel"
-												class="btn btn-danger btn-lg">Cancel</button>
+									<div class="form-group row mt-5" v-if="drag.isallDay">
+										<div class="col-2">
+											<label class="mt-2" for="startDate"> Start Date :</label>
+										</div>
+										<div class="col-4">
+											<input id="startDate" v-model="drag.start_date" type="text"
+												class="form-control form-control-lg">
+										</div>
+										<div class="col-2">
+											<label class="mt-2" for="endtDate"> End Date :</label>
+										</div>
+										<div class="col-4">
+											<input id="endDate" v-model="drag.end_date" type="text"
+												class="form-control form-control-lg">
 										</div>
 									</div>
-									<div class="col-2"></div>
-								</div>
-							</form>
-
+									<div class="form-group row mt-5" v-else>
+										<div class="col-2">
+											<label class="mt-2" for="startDate"> Start Date :</label>
+										</div>
+										<div class="col-10">
+											<input id="startDate" v-model="drag.start_date" type="text"
+												class="form-control form-control-lg">
+										</div>
+									</div>
+	
+									<div class="form-group row mt-5">
+										<div class="col-2">
+											<label class="mt-2" for="startTime"> Start Time :</label>
+										</div>
+										<div class="col-4">
+											<input id="startTime" v-model="drag.start_time" type="text"
+												class="form-control form-control-lg">
+										</div>
+										<div class="col-2">
+											<label class="mt-2" for="endtTime"> End Time :</label>
+										</div>
+										<div class="col-4">
+											<input id="endTime" type="text" v-model="drag.end_time"
+												class="form-control form-control-lg">
+										</div>
+									</div>
+									<div class="form-group row mt-5">
+										<div class="col-2">
+											<label for="eventLocation" class="mt-2">Location :</label>
+										</div>
+										<div class="col-10">
+											<input id="eventLocation" v-model="drag.location" type="text"
+												class="form-control form-control-lg">
+										</div>
+									</div>
+									<div class="form-group row mt-5">
+										<div class="col-2">
+											<label for="eventDescription" class="mt-2">Description :</label>
+										</div>
+										<div class="col-10">
+											<input id="eventDescription" v-model="drag.description" type="text"
+												class="form-control form-control-lg">
+										</div>
+									</div>
+									<div class="form-group row mt-5">
+										<div class="col-2">
+											<label for="calendarName" class="mt-2">Calendar Name :</label>
+										</div>
+										<div class="col-10">
+											<v-select :options="options" v-model="selected" label="title">
+												<template v-slot:option="option">
+													<span :class="option.icon" :style="{color:option.color}"></span>
+													[[ option.title ]]
+												</template>
+											</v-select>
+	
+											<!-- <select v-model="cal_name" @change="selectedCalendar($event)"
+												class="form-select" aria-label="Default select example">
+												<option v-for="calendar in calendars" :value="calendar.calendar_name">
+													[[calendar.calendar_name]]</option>
+											</select> -->
+										</div>
+									</div>
+									<div class="form-group row">
+										<div class="col-2"></div>
+										<div class="col-10">
+											<div class="input-group mb-3">
+												<input type="text" class="form-control form-control-lg"
+													aria-label="Attendee" aria-describedby="basic-addon1">
+												<span class="input-group-text" style="font-size:20px" type="button"
+													id="basic-addon1">+</span>
+											</div>
+										</div>
+									</div>
+									<div class="form-group row mt-5">
+										<div class="col-2"></div>
+										<div class="col-8">
+											<div class="btn-toolbar text-center">
+												<button type="button" id="btnSubmit"
+													class="btn btn-secondary btn-lg me-3">More Options</button>
+												<button type="submit" id="btnSubmit"
+													class="btn btn-primary btn-lg me-3">Save</button>
+												<button type="button" @click.prevent="backTopopup" id="btnCancel"
+													class="btn btn-danger btn-lg">Cancel</button>
+											</div>
+										</div>
+										<div class="col-2"></div>
+									</div>
+								</form>
+	
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+
+	<br>
+	<br>
+
+
+	
 
 	<script src="{% static 'js/jquery.min.js' %}"></script>
 	<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
@@ -720,6 +733,7 @@
 			},
 			computed: {
 				selectedName: function () {
+					console.log(this.selected.title);
 					return this.selected.title
 				}
 			},
@@ -745,22 +759,33 @@
 					console.log(this.event_color);
 					if (this.allDayEvent == true) {
 						this.edit.isallDay = true;
+
 						this.edit.start_date = this.all_day_start_date;
 						this.edit.end_date = this.all_day_end_date;
 					}
 					else {
-						this.edit.isallDay = false;
-						this.edit.start_date = this.single_day_start_date;
-						this.edit.end_date = this.single_day_end_date;
+						console.log(this.single_day_start_date);
+						console.log(this.single_day_end_date);
+						var single_st_date = new Date(this.single_day_start_date);
+						var single_ed_date = new Date(this.single_day_end_date);
+						single_st_date = single_st_date.getDate();
+						single_end_date = single_ed_date.getDate();
+
+					    if(single_st_date == single_end_date){
+							this.edit.isallDay = false;
+							this.edit.start_date = this.single_day_start_date;
+						    this.edit.end_date = this.single_day_start_date;
+
+						}
+						else{
+							this.edit.isallDay = true;
+							this.edit.start_date = this.single_day_start_date;
+						    this.edit.end_date = this.single_day_end_date;
+						}
+						
 
 					}
-					console.log(this.selectedName)
-					if (!this.selectedName) {
-						this.edit.calendar_name = this.selected;
-					}
-					else {
-						this.edit.calendar_name = this.selectedName;
-					}
+					
 					console.log(this.selected)
 					this.edit.event_title = this.event_title;
 					this.edit.attendees = this.attendees;
@@ -821,6 +846,14 @@
 					})
 				},
 				oneditEvent: function (event_id) {
+					console.log(this.selectedName)
+					if (!this.selectedName) {
+						this.edit.calendar_name = this.selected;
+					}
+					else {
+						this.edit.calendar_name = this.selectedName;
+					}
+					console.log(this.edit.calendar_name);
 					let formData = {}
 					console.log(this.edit.calendar_name, 'calendar_name');
 					console.log(this.edit.start_date);
@@ -839,15 +872,32 @@
 
 					var new_start_date = '2022' + '-' + st_month + '-' + st_date + "T" + this.edit.start_time + ":00";
 					console.log(new_start_date, 'new start date')
-					if (!this.allDayEvent) {
-						var new_end_date = '2022' + '-' + st_month + '-' + st_date + "T" + this.edit.end_time + ":00";
-						console.log(new_end_date, 'if secrion new end date');
+
+					if (this.allDayEvent) {
+						ed_date = ed_date - 1;
+						if (ed_date == 0) {
+							ed_date = st_date;
+							ed_month = st_month;
+							ed_year = st_year;
+						}
+						var new_end_date = '2022' + '-' + ed_month + '-' + ed_date + "T" + this.edit.end_time + ":00";
 
 					}
-					else {
-						var new_end_date = '2022' + '-' + ed_month + '-' + ed_date + "T" + this.edit.end_time + ":00";
-						console.log(new_end_date, 'else new end date');
+					else{
+						var new_end_date = '2022' + '-' + st_month + '-' + st_date + "T" + this.edit.end_time + ":00";
 					}
+					
+
+
+					// if (!this.allDayEvent) {
+					// 	var new_end_date = '2022' + '-' + st_month + '-' + st_date + "T" + this.edit.end_time + ":00";
+					// 	console.log(new_end_date, 'if secrion new end date');
+
+					// }
+					// else {
+					// 	var new_end_date = '2022' + '-' + ed_month + '-' + ed_date + "T" + this.edit.end_time + ":00";
+					// 	console.log(new_end_date, 'else new end date');
+					// }
 					console.log(this.edit.event_location);
 
 					formData.event_name = this.edit.event_title;
@@ -1117,6 +1167,9 @@
 						weekNumbers: true,
 
 						editable: true,
+						// contentHeight:'auto',
+						heigth:650,
+						contentHeight:700,
 						// defaultView: 'week',
 						selectable: true,
 						dayMaxEvents: true,
@@ -1125,22 +1178,41 @@
 						eventDrop: function (info) {
 							console.log(info);
 							formData = {}
-							if(info.event.allDay){
+							
+							var st_year = (info.event.start).getFullYear();
+							var ed_year = (info.event.end).getFullYear();
+
+							var st_month = ("0" + (new Date(info.event.start).getMonth() + 1)).slice(-2);
+							var st_date = ("0" + (new Date(info.event.start).getDate())).slice(-2);
+
+							var ed_month = ("0" + (new Date(info.event.end).getMonth() + 1)).slice(-2);
+							console.log(ed_month);
+							var ed_date = ("0" + (new Date(info.event.end).getDate())).slice(-2);
+
+
+							
+							console.log(new_start_date, new_end_date)
+
+							if (info.event.allDay) {
 								formData.all_day_flg = 1;
+								ed_date = ed_date - 1;
+								if (ed_date == 0) {
+									ed_date = st_date;
+									ed_month = st_month;
+									ed_year = st_year;
+								}
+								var new_start_date = st_year + '-' + st_month + '-' + st_date + "T" + "00:00:00";
+								var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + "00:00:00";
+								console.log(new_start_date,new_end_date);
 							}
 							else{
 								formData.all_day_flg = 0;
+								new_start_date = info.event.start;
+								new_end_date = info.event.end;
 							}
-							console.log(info.event.startStr);
-							var index_st = info.event.startStr.indexOf('+')
-							var index_ed = info.event.startStr.indexOf('+')
-
-							var start_dt = info.event.startStr.slice(0, index_st);
-							var end_dt = info.event.endStr.slice(0, index_ed);
-							console.log(start_dt);
-							console.log(end_dt);
-							formData.event_start_dt = start_dt;
-							formData.event_end_dt = end_dt;
+							
+							formData.event_start_dt = new_start_date;
+							formData.event_end_dt = new_end_date;
 							formData.calendar_info_id = info.event._def.extendedProps.calendar_name;
 							var event_id = info.event._def.extendedProps.event_id;
 							$.ajax({

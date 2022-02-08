@@ -149,3 +149,37 @@
 							// 	("0" + de.getSeconds()).slice(-2);
 							// console.log(startdateString);
 							// console.log(enddateString);
+
+
+
+
+
+
+
+							var st_year = (info.event.start).getFullYear();
+							var ed_year = (info.event.end).getFullYear();
+
+							var st_month = ("0" + (new Date(info.event.start).getMonth() + 1)).slice(-2);
+							var st_date = ("0" + (new Date(info.event.start).getDate())).slice(-2);
+
+							var ed_month = ("0" + (new Date(info.event.end).getMonth() + 1)).slice(-2);
+							console.log(ed_month);
+							var ed_date = ("0" + (new Date(info.event.end).getDate())).slice(-2);
+
+
+							var new_start_date = info.event.start;
+							var new_end_date = info.event.end;
+							console.log(new_start_date, new_end_date)
+
+							if (this.allDayEvent) {
+								ed_date = ed_date - 1;
+								if (ed_date == 0) {
+									ed_date = st_date;
+									ed_month = st_month;
+									ed_year = st_year;
+								}
+								new_start_date = st_year + '-' + st_month + '-' + st_date + "T" + "00:00:00";
+								new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + "00:00:00";
+								console.log(new_start_date,new_end_date);
+							}
+							
