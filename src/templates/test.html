@@ -183,3 +183,115 @@
 								console.log(new_start_date,new_end_date);
 							}
 							
+
+
+							{% comment %}
+											<form class="form">
+												<div class="form-group">
+													<div class="input-group">
+														<input id="datepick" v-model="edit.event_title" type="text"
+															placeholder="">
+													</div>
+												</div>
+												<div class="form-group calendar-wd__date-pick">
+													<div class="form-control wide" tabindex="0"><i
+															class="fa fa-calendar"></i><span class="current"><input
+																id="datepick" v-model="edit.interval" type="text"
+																placeholder=""></span></div>
+												</div>
+												<div class="form-group">
+													<div class="list-inner-group">
+														<div class="list-single-group">
+															<select v-model="edit.start_time" class="form-select"
+																aria-label="Default select example">
+																<option selected>[[edit.start_time]]</option>
+																<option>
+																	15.30</option>
+																<option value="1">15.30
+																</option>
+																<option value="2">15.30
+																</option>
+																<option value="3">15.30
+																</option>
+															</select>
+														</div>
+														<div class="list-single-group">
+															<select v-model="edit.end_time" class="form-select"
+																aria-label="Default select example">
+																<option selected>[[edit.end_time]]</option>
+																<option>
+																	15.30</option>
+																<option value="1">15.30
+																</option>
+																<option value="2">15.30
+																</option>
+																<option value="3">15.30
+																</option>
+															</select>
+	
+														</div>
+														<div class="list-single-group   project-dropdown">
+															<select class="form-select" aria-label="Default select example">
+																<option selected="">Don't repeat</option>
+																<option value="1">Don't repeat</option>
+																<option value="2">Don't repeat</option>
+																<option value="3">Don't repeat</option>
+															</select>
+														</div>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="input-group">
+														<span class="input-icon"><i class="fa fa-map-marker"></i></span>
+														<input id="datepick" v-model="edit.event_location" type="text"
+															placeholder="Add location">
+	
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="form-group">
+														<select v-model="edit.calendar_name" :style="{color:event_color}"
+															@change="selectedCalendar($event)" class="form-select"
+															aria-label="Default select example">
+															<option v-for="calendar in edit.calendars"
+																:value="calendar.calendar_name"> <span
+																	class="me-2">&#9679;</span> <span
+																	style="color: black;">[[calendar.calendar_name]]</span>
+															</option>
+														</select>
+													</div>
+												</div>
+												<div class="form-group">
+													<div class="input-group">
+														<textarea class="p-3" name="" id="" cols="70" rows="5"
+															v-model="edit.description"></textarea>
+													</div>
+												</div>
+												<div class="form-group select-man mt-3">
+													<ul class="select-list-img" style="list-style-type:none"
+														v-for="attendee in edit.attendees">
+														<li><a href="#"><img src="{% static 'img/icon.png' %}"
+																	alt="#">[[attendee.event_attendee]]</a>
+														</li>
+													</ul>
+													<ul style="list-style-type:none">
+														<li> <span><i class="fa fa-plus"></i></span> <span>Add People</span>
+														</li>
+													</ul>
+												</div>
+												<div class="form-group">
+													<ul class="calendar-wd__clist">
+														<li><img src="{% static 'img/calender.png' %}">Email Participants
+														</li>
+														<li><img src="{% static 'img/memo.png' %}">Add Notes</li>
+														<li><img src="{% static 'img/bell.png' %}">Set Reminder</li>
+													</ul>
+												</div>
+												<div class="form-group button">
+													<button type="submit" class="theme-btn theme-sec">More options</button>
+													<b class="theme-btn theme-primary calendar-wd__submit">Save</b>
+													<b class="btn btn-danger btn-sm" @click.prevent="backTopopup">cancel</b>
+	
+												</div>
+											</form>
+											{% endcomment %}
