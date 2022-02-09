@@ -1168,19 +1168,81 @@
 
 						editable: true,
 						// contentHeight:'auto',
-						heigth:650,
-						contentHeight:700,
+						// heigth:600,
+						contentHeight:640,
 						// defaultView: 'week',
 						selectable: true,
 						dayMaxEvents: true,
 						allDayMaintainDuration: true,
 						events: that.weekly_events,
+						eventResize:function(info){
+							console.log(info);
+							formData = {}
+							
+							var st_year = (info.event.start).getFullYear();
+							var ed_year = (info.event.start).getFullYear();
+
+							var st_month = ("0" + (new Date(info.event.start).getMonth() + 1)).slice(-2);
+							var st_date = ("0" + (new Date(info.event.start).getDate())).slice(-2);
+
+							var ed_month = ("0" + (new Date(info.event.end).getMonth() + 1)).slice(-2);
+							console.log(ed_month);
+							var ed_date = ("0" + (new Date(info.event.end).getDate())).slice(-2);
+
+							console.log(new_start_date, new_end_date)
+
+							if (info.event.allDay) {
+								formData.all_day_flg = 1;
+								ed_date = ed_date - 1;
+								if (ed_date == 0) {
+									ed_date = st_date;
+									ed_month = st_month;
+									ed_year = st_year;
+								}
+								var new_start_date = st_year + '-' + st_month + '-' + st_date + "T" + "00:00:00";
+								var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + "00:00:00";
+								console.log(new_start_date,new_end_date);
+							}
+							else{
+								formData.all_day_flg = 0;
+								st = info.event.startStr
+								ed = info.event.endStr
+								console.log(st);
+								console.log(ed);
+								index_of_st = st.indexOf('+');
+								index_of_ed = ed.indexOf('+');
+							    var st_date = info.event.startStr.slice(0, index_of_st);
+								var ed_date = info.event.endStr.slice(0, index_of_ed);
+								console.log(st_date);
+								console.log(ed_date);
+								new_start_date = st_date;
+								new_end_date = ed_date;
+							}
+							
+							formData.event_start_dt = new_start_date;
+							formData.event_end_dt = new_end_date;
+							formData.calendar_info_id = info.event._def.extendedProps.calendar_name;
+							var event_id = info.event._def.extendedProps.event_id;
+							$.ajax({
+								method: 'PUT',
+								url: 'api/edit-event/' + event_id,
+								data: JSON.stringify(formData),
+								contentType: 'application/json'
+							}).then(response => {
+								alert('success');
+								that.showEvents();
+							}).fail(errors => {
+								alert('fail');
+								console.log(errors);
+							});
+							
+						},
 						eventDrop: function (info) {
 							console.log(info);
 							formData = {}
 							
 							var st_year = (info.event.start).getFullYear();
-							var ed_year = (info.event.end).getFullYear();
+							var ed_year = (info.event.start).getFullYear();
 
 							var st_month = ("0" + (new Date(info.event.start).getMonth() + 1)).slice(-2);
 							var st_date = ("0" + (new Date(info.event.start).getDate())).slice(-2);
@@ -1207,8 +1269,18 @@
 							}
 							else{
 								formData.all_day_flg = 0;
-								new_start_date = info.event.start;
-								new_end_date = info.event.end;
+								st = info.event.startStr
+								ed = info.event.endStr
+								console.log(st);
+								console.log(ed);
+								index_of_st = st.indexOf('+');
+								index_of_ed = ed.indexOf('+');
+							    var st_date = info.event.startStr.slice(0, index_of_st);
+								var ed_date = info.event.endStr.slice(0, index_of_ed);
+								console.log(st_date);
+								console.log(ed_date);
+								new_start_date = st_date;
+								new_end_date = ed_date;
 							}
 							
 							formData.event_start_dt = new_start_date;
