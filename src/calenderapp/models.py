@@ -63,8 +63,8 @@ class CalendarAttendees(models.Model):
 
    
 
-    def __str__(self):
-        return self.event_info_id.event_name
+    # def __str__(self):
+    #     return self.event_attendee_email
 
 
 

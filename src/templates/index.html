@@ -138,7 +138,7 @@
 			text-align: center;
 		}
 		body{
-			/* overflow-y: hidden; */
+			overflow-y: hidden;
 			/* background: #FFCBC3; */
 			background-image: url('{% static "img/bg-image.png" %}');
 			
@@ -146,6 +146,19 @@
 		#calendar{
 			min-height: 360px;
 			max-height: 650px;
+		}
+		.v-select .dropdown-toggle .clear {
+			display: none;
+		}
+		#calendar_wd{
+			overflow-y: scroll;
+			min-height: 350px;
+			max-height:400px;
+		}
+		.calendar-wd__form-three_drag{
+			overflow: scroll;
+			min-height: 350px;
+			max-height: 600px;
 		}
 		
 	</style>
@@ -186,7 +199,7 @@
 							<!-- delete modal start here -->
 	
 						</div>
-						<div class="calendar-wd__form-three-body">
+						<div class="calendar-wd__form-three-body" id="calendar_wd">
 							<div class="tab-content" id="nav-tabContent">
 								<!-- Property Tab One -->
 								<div class="tab-pane fade show active" id="f-tab3" role="tabpanel">
@@ -219,9 +232,9 @@
 										</div>
 										<div class="calendar-wd__form-three-two">
 											<ul class="calendar-wd__form-list-img calendar-wd__form-list-two"
-												v-for="attendee in attendees">
+												v-for="attendee in calendar_attendees">
 												<li><img src="{% static 'img/icon.png' %}"
-														alt="#">[[attendee.event_attendee]]</li>
+														alt="#">[[attendee.event_attendee_email]]</li>
 	
 											</ul>
 											<div class="calander-wd__button calander-wd__button-guest">
@@ -309,7 +322,7 @@
 														<label for="calendarName" class="mt-2">Calendar Name :</label>
 													</div>
 													<div class="col-10">
-														<v-select :options="options" v-model="selected" label="title">
+														<v-select :options="options"  class="select" v-model="selected" :clearable="false" label="title">
 															<template v-slot:option="option">
 																<span :class="option.icon"
 																	:style="{color:option.color}"></span>
@@ -374,7 +387,7 @@
 					</div>
 				</div>
 				<div class="calendar-wd__form calendar-wd__form-three_drag">
-					<div class="close-icon close-three" @click="onCloseDrag"><img src="{% static 'img/close.png' %}" alt="">
+					<div class="close-icon close-three me-3 mt-2" @click="onCloseDrag"><img src="{% static 'img/close.png' %}" alt="">
 					</div>
 	
 					<div class="calendar-wd__form-three-body">
@@ -561,6 +574,7 @@
 				allDayEvent: false,
 				single_day_start_date: '',
 				single_day_end_date: '',
+				calendar_attendees:[],
 
 				all_day_start_date: '',
 				all_day_end_date: '',
@@ -637,8 +651,14 @@
 				},
 				addParticipants:function(){
 					console.log(this.participant);
-					this.participants.push(this.participant);
-					this.participant = ' ';
+					if (!this.participants.includes(this.participant)){
+						this.participants.push(this.participant)
+					}
+					else{
+						alert('this attendee is already added');
+					}
+					this.participant = '';
+					
 				},
 
 				onEdit: function () {
@@ -796,12 +816,14 @@
 					formData.event_description = this.edit.description;
 					formData.event_location = this.edit.event_location;
 					formData.calendar_info_id = this.edit.calendar_name;
+					formData.attendees = this.participants;
 					$.ajax({
 						method: 'PUT',
 						url: 'api/edit-event/' + event_id,
 						data: JSON.stringify(formData),
 						contentType: 'application/json'
 					}).then(response => {
+						console.log(response);
 						this.showEvents();
 						$(".calendar-wd__form-three").toggleClass('active-event');
 						// $('#f-tab4').removeClass('show active');
@@ -1218,6 +1240,7 @@
 							that.description = event.event._def.extendedProps.event_description.slice(0, 400);
 							that.event_color = event.event.backgroundColor;
 							console.log(that.event_color);
+							that.calendar_attendees = event.event._def.extendedProps.calendar_attendee
 							that.allDayEvent = event.event.allDay;
 
 							// that.start_time = new Date(event.event.start).toLocaleTimeString();
