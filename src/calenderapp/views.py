@@ -263,42 +263,21 @@ class AddParticipants(APIView):
     permission_class = (permissions.AllowAny, )
     
     def post(self, request):
-        attendee = request.data['attendee']
+        new_attendee = request.data['attendee']
         event = request.data['event']
         is_attendee = False
         try:
             event_info_id = CalendarEvents.objects.get(id=event).user_event_key
             print(event_info_id)
-            has_attendee = CalendarAttendees.objects.get(event_info_id=event_info_id, event_attendee_email=attendee)
-            
+            has_attendees = CalendarAttendees.objects.filter(event_info_id=event_info_id).values('event_attendee_email')
+            print(list(has_attendees))
+            attendee_emails = list(has_attendees)
+            for email in attendee_emails:
+                if email['event_attendee_email'] == new_attendee:
+                    is_attendee = True
         except:
-            # print('except')
-            # attendee_data = {}
-            # print(calendar)
-            # # calendar_info_id = CalendarList.objects.get(calendar_name=calendar).id
-            # # print(calendar_info_id)
-            # print(event)
-            # event_info_id = CalendarEvents.objects.get(id=event)
-            # print(event_info_id.id, 'evnfk')
-            # # attendee_data['calendar_info_id'] = calendar_info_id
-            # attendee_data['event_info_id'] = event_info_id.user_event_key
-            # attendee_data['event_attendee_email'] = attendee
-
-            # print(attendee_data)
-            is_attendee = True
-
-            # try:
-
-            #     serializer = CalendarAttendeesSerializer(data=attendee_data)
-            #     print(serializer)
-            #     if serializer.is_valid(raise_exception=True):
-            #         serializer.save()
-            #         is_attendee = True
-            #         print('save')
-            #     else:
-            #         print(serializer.errors, 'error')
-            # except:
-            #     pass
+            pass
+          
 
         return Response(is_attendee)                        
                         

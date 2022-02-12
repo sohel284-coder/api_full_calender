@@ -14,6 +14,7 @@ urlpatterns = [
     path('api/edit-event/<int:event_id>', EventEdit.as_view(), ),
     path('api/cal-color/<str:calendar_name>', CalendarColor.as_view(), ),
     path('api/drag-event-save/', DragEventSave.as_view(), ),
+    path('api/add-participant/', AddParticipants.as_view(), )
 
 ]
 

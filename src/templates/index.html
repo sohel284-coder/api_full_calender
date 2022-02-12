@@ -50,7 +50,7 @@
 			margin: auto;
 
 		}
-		
+
 		.fc .fc-timegrid-slot {
 			height: 1px;
 			border-bottom: 0 !important;
@@ -137,30 +137,31 @@
 			border: solid 1px #eee;
 			text-align: center;
 		}
-		body{
+
+		body {
 			overflow-y: hidden;
 			/* background: #FFCBC3; */
 			background-image: url('{% static "img/bg-image.png" %}');
-			
+
 		}
-		#calendar{
-			min-height: 360px;
-			max-height: 650px;
-		}
+
+
+
 		.v-select .dropdown-toggle .clear {
 			display: none;
 		}
-		#calendar_wd{
+
+		#calendar_wd {
 			overflow-y: scroll;
 			min-height: 350px;
-			max-height:400px;
+			max-height: 400px;
 		}
-		.calendar-wd__form-three_drag{
+
+		.calendar-wd__form-three_drag {
 			overflow: scroll;
 			min-height: 350px;
 			max-height: 600px;
 		}
-		
 	</style>
 
 
@@ -168,7 +169,7 @@
 
 <body>
 	<div class="container mt-4">
-		<div class="calendar-wd__section"  id="app">
+		<div class="calendar-wd__section" id="app">
 
 			<div class="calendar-wd">
 				<div id='calendar'></div>
@@ -189,7 +190,8 @@
 								<li><a class="list-group-item" data-bs-toggle="list" href="#" role="tab"><img
 											src="{% static 'img/message.png' %}" alt="#"></a></li>
 								<li><a class="list-group-item" data-bs-toggle="list" href="#f-tab6" role="tab"><i
-											class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
+											class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}"
+											alt="#"></a>
 								</li>
 								<!-- <li><a class="list-group-item" data-bs-toggle="list" href="#f-tab6" role="tab" style="display: none;"><i
 											class="icofont-bread"></i><img src="{% static 'img/bell-2.png' %}" alt="#"></a>
@@ -197,7 +199,7 @@
 							</ul>
 							<img src="{% static 'img/calander-banner.png' %}">
 							<!-- delete modal start here -->
-	
+
 						</div>
 						<div class="calendar-wd__form-three-body" id="calendar_wd">
 							<div class="tab-content" id="nav-tabContent">
@@ -219,13 +221,13 @@
 													<span><i class="fas fa-map-marker-alt"
 															style="color: #FFCBC3; font-size: 22px;"></i></span>
 													<span class="ms-3"><a href="#">[[event_location]]</a></span>
-	
+
 													<!-- <h4 class="calendar-wd__form-heading"></h4> -->
 												</div>
 												<div class="calendar-wd__form-single">
 													<p>
 														[[description]]
-	
+
 													</p>
 												</div>
 											</div>
@@ -235,7 +237,7 @@
 												v-for="attendee in calendar_attendees">
 												<li><img src="{% static 'img/icon.png' %}"
 														alt="#">[[attendee.event_attendee_email]]</li>
-	
+
 											</ul>
 											<div class="calander-wd__button calander-wd__button-guest">
 												<span class="plus-icon"><a href="#"><i class="fa fa-plus"></i></span>Add
@@ -282,7 +284,7 @@
 															class="form-control form-control-lg">
 													</div>
 												</div>
-	
+
 												<div class="form-group row mt-5">
 													<div class="col-2">
 														<label class="mt-2" for="startTime"> Start Time :</label>
@@ -304,8 +306,8 @@
 														<label for="eventLocation" class="mt-2">Location :</label>
 													</div>
 													<div class="col-10">
-														<input id="eventLocation" v-model="edit.event_location" type="text"
-															class="form-control form-control-lg">
+														<input id="eventLocation" v-model="edit.event_location"
+															type="text" class="form-control form-control-lg">
 													</div>
 												</div>
 												<div class="form-group row mt-5">
@@ -313,8 +315,9 @@
 														<label for="eventDescription" class="mt-2">Description :</label>
 													</div>
 													<div class="col-10">
-														<textarea class="form-control p-3" id="" v-model="edit.description" rows="3"></textarea>
-														
+														<textarea class="form-control p-3" id=""
+															v-model="edit.description" rows="3"></textarea>
+
 													</div>
 												</div>
 												<div class="form-group row mt-5">
@@ -322,7 +325,8 @@
 														<label for="calendarName" class="mt-2">Calendar Name :</label>
 													</div>
 													<div class="col-10">
-														<v-select :options="options"  class="select" v-model="selected" :clearable="false" label="title">
+														<v-select :options="options" class="select" v-model="selected"
+															:clearable="false" label="title">
 															<template v-slot:option="option">
 																<span :class="option.icon"
 																	:style="{color:option.color}"></span>
@@ -337,12 +341,15 @@
 													</div>
 													<div class="col-10">
 														<div class="input-group mb-3">
-															<input type="text" v-model="participant" class="form-control form-control-lg"
+															<input type="text" v-model="participant"
+																class="form-control form-control-lg"
 																aria-label="Attendee" aria-describedby="basic-addon1">
-															<span class="input-group-text" @click="addParticipants" style="font-size:20px"
-																type="button" id="basic-addon1">+</span>
+															<span class="input-group-text" @click="addParticipants"
+																style="font-size:20px" type="button"
+																id="basic-addon1">+</span>
 														</div>
-														<div class="list-group item text-center" v-for="p in participants">
+														<div class="list-group item text-center"
+															v-for="p in participants">
 															<h6 class="text-dark">[[p]]</h6>
 														</div>
 													</div>
@@ -352,21 +359,23 @@
 													<div class="col-8">
 														<div class="btn-toolbar text-center">
 															<button type="button" id="btnSubmit"
-																class="btn btn-secondary btn-lg me-3">More Options</button>
+																class="btn btn-secondary btn-lg me-3">More
+																Options</button>
 															<button type="submit" id="btnSubmit"
 																class="btn btn-primary btn-lg me-3">Save</button>
 															<button type="button" @click.prevent="backTopopup"
-																id="btnCancel" class="btn btn-danger btn-lg">Cancel</button>
+																id="btnCancel"
+																class="btn btn-danger btn-lg">Cancel</button>
 														</div>
 													</div>
 													<div class="col-2"></div>
 												</div>
 											</form>
-											
+
 										</div>
 									</div>
 								</div>
-	
+
 								<div class="tab-pane fade" id="f-tab_delete" role="tabpanel">
 									<div class="calendar-wd__form-three--two">
 										<div class="calendar-wd__form-1">
@@ -375,21 +384,23 @@
 												<div class="form-group button">
 													<button class="btn btn-danger btn-sm"
 														@click.prevent="backTopopup">cancel</button>
-													<button type="submit" class="btn btn-primary btn-sm ms-3">Yes</button>
+													<button type="submit"
+														class="btn btn-primary btn-sm ms-3">Yes</button>
 												</div>
 											</form>
 										</div>
 									</div>
 								</div>
-	
+
 							</div>
 						</div>
 					</div>
 				</div>
 				<div class="calendar-wd__form calendar-wd__form-three_drag">
-					<div class="close-icon close-three me-3 mt-2" @click="onCloseDrag"><img src="{% static 'img/close.png' %}" alt="">
+					<div class="close-icon close-three me-3 mt-2" @click="onCloseDrag"><img
+							src="{% static 'img/close.png' %}" alt="">
 					</div>
-	
+
 					<div class="calendar-wd__form-three-body">
 						<div class="calendar-wd__form-three--two">
 							<div class="calendar-wd__form-1">
@@ -428,7 +439,7 @@
 												class="form-control form-control-lg">
 										</div>
 									</div>
-	
+
 									<div class="form-group row mt-5">
 										<div class="col-2">
 											<label class="mt-2" for="startTime"> Start Time :</label>
@@ -474,7 +485,7 @@
 													[[ option.title ]]
 												</template>
 											</v-select>
-	
+
 											<!-- <select v-model="cal_name" @change="selectedCalendar($event)"
 												class="form-select" aria-label="Default select example">
 												<option v-for="calendar in calendars" :value="calendar.calendar_name">
@@ -508,7 +519,7 @@
 										<div class="col-2"></div>
 									</div>
 								</form>
-	
+
 							</div>
 						</div>
 					</div>
@@ -521,7 +532,7 @@
 	<br>
 
 
-	
+
 
 	<script src="{% static 'js/jquery.min.js' %}"></script>
 	<script src="https://code.jquery.com/ui/1.13.0/jquery-ui.js"></script>
@@ -550,9 +561,10 @@
 				options: [
 
 				],
+				calHeight: null,
 				selected: '',
-				participant:'',
-				participants:[],
+				participant: '',
+				participants: [],
 				weekly_events: [],
 				popup: false,
 				event_title: '',
@@ -574,7 +586,7 @@
 				allDayEvent: false,
 				single_day_start_date: '',
 				single_day_end_date: '',
-				calendar_attendees:[],
+				calendar_attendees: [],
 
 				all_day_start_date: '',
 				all_day_end_date: '',
@@ -649,16 +661,34 @@
 					$(".calendar-wd__form-three_drag").toggleClass('active-event');
 
 				},
-				addParticipants:function(){
+				addParticipants: function () {
 					console.log(this.participant);
-					if (!this.participants.includes(this.participant)){
-						this.participants.push(this.participant)
-					}
-					else{
-						alert('this attendee is already added');
-					}
-					this.participant = '';
-					
+					var formData = {}
+					formData.event = this.event_id;
+					formData.attendee = this.participant
+					$.ajax({
+						method: 'POST',
+						url: 'api/add-participant/',
+						data: JSON.stringify(formData),
+						contentType: 'application/json',
+					}).then(response => {
+						if (!response) {
+							if (!this.participants.includes(this.participant)) {
+								this.participants.push(this.participant)
+							}
+							else {
+								alert('this attendee is already added');
+							}
+						}
+						else {
+							alert('this attendee is already added');
+						}
+						this.participant = '';
+					}).fail(errors => {
+						console.log(errors)
+					})
+
+
 				},
 
 				onEdit: function () {
@@ -681,21 +711,21 @@
 						single_st_date = single_st_date.getDate();
 						single_end_date = single_ed_date.getDate();
 
-					    if(single_st_date == single_end_date){
+						if (single_st_date == single_end_date) {
 							this.edit.isallDay = false;
 							this.edit.start_date = this.single_day_start_date;
-						    this.edit.end_date = this.single_day_start_date;
+							this.edit.end_date = this.single_day_start_date;
 
 						}
-						else{
+						else {
 							this.edit.isallDay = true;
 							this.edit.start_date = this.single_day_start_date;
-						    this.edit.end_date = this.single_day_end_date;
+							this.edit.end_date = this.single_day_end_date;
 						}
-						
+
 
 					}
-					
+
 					console.log(this.selected)
 					this.edit.event_title = this.event_title;
 					this.edit.attendees = this.attendees;
@@ -793,10 +823,10 @@
 						var new_end_date = '2022' + '-' + ed_month + '-' + ed_date + "T" + this.edit.end_time + ":00";
 
 					}
-					else{
+					else {
 						var new_end_date = '2022' + '-' + st_month + '-' + st_date + "T" + this.edit.end_time + ":00";
 					}
-					
+
 
 
 					// if (!this.allDayEvent) {
@@ -829,6 +859,7 @@
 						// $('#f-tab4').removeClass('show active');
 
 						// $('#f-tab3').addClass('show active');
+						this.participants = [];
 
 					}).fail(errors => {
 						console.log(errors);
@@ -963,10 +994,8 @@
 				weeklyCalendar: function () {
 					var that = this;
 					var calendarEl = document.getElementById('calendar');
-					// calendarEl.addEventListener("click", function () {
-					// 	alert("Hello World!");
-					// });
-
+				
+					
 					var calendar = new FullCalendar.Calendar(calendarEl, {
 
 						select: function (selectionInfo) {
@@ -1079,18 +1108,30 @@
 						weekNumbers: true,
 
 						editable: true,
+						handleWindowResize: true,
+						height: $(window).height() * 0.90,
 						// contentHeight:'auto',
 						// heigth:600,
-						contentHeight:640,
+						// contentHeight: 640,
 						// defaultView: 'week',
 						selectable: true,
 						dayMaxEvents: true,
 						allDayMaintainDuration: true,
 						events: that.weekly_events,
-						eventResize:function(info){
+						// windowResize: function (arg) {
+						// 	console.log(arg.view);
+						// 	var calHeight = $(window).height() * 0.83;
+						// 	console.log(calHeight);
+						// 	arg.setHeight(calHeight);
+
+
+						// 	// $('#calendar').fullCalendar('option', 'height', calHeight);
+						// 	// alert('The calendar has adjusted to a window resize. Current view: ' + arg.view.type);
+						// },
+						eventResize: function (info) {
 							console.log(info);
 							formData = {}
-							
+
 							var st_year = (info.event.start).getFullYear();
 							var ed_year = (info.event.start).getFullYear();
 
@@ -1113,9 +1154,9 @@
 								}
 								var new_start_date = st_year + '-' + st_month + '-' + st_date + "T" + "00:00:00";
 								var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + "00:00:00";
-								console.log(new_start_date,new_end_date);
+								console.log(new_start_date, new_end_date);
 							}
-							else{
+							else {
 								formData.all_day_flg = 0;
 								st = info.event.startStr
 								ed = info.event.endStr
@@ -1123,14 +1164,14 @@
 								console.log(ed);
 								index_of_st = st.indexOf('+');
 								index_of_ed = ed.indexOf('+');
-							    var st_date = info.event.startStr.slice(0, index_of_st);
+								var st_date = info.event.startStr.slice(0, index_of_st);
 								var ed_date = info.event.endStr.slice(0, index_of_ed);
 								console.log(st_date);
 								console.log(ed_date);
 								new_start_date = st_date;
 								new_end_date = ed_date;
 							}
-							
+
 							formData.event_start_dt = new_start_date;
 							formData.event_end_dt = new_end_date;
 							formData.calendar_info_id = info.event._def.extendedProps.calendar_name;
@@ -1147,12 +1188,12 @@
 								alert('fail');
 								console.log(errors);
 							});
-							
+
 						},
 						eventDrop: function (info) {
 							console.log(info);
 							formData = {}
-							
+
 							var st_year = (info.event.start).getFullYear();
 							var ed_year = (info.event.start).getFullYear();
 
@@ -1164,7 +1205,7 @@
 							var ed_date = ("0" + (new Date(info.event.end).getDate())).slice(-2);
 
 
-							
+
 							console.log(new_start_date, new_end_date)
 
 							if (info.event.allDay) {
@@ -1177,9 +1218,9 @@
 								}
 								var new_start_date = st_year + '-' + st_month + '-' + st_date + "T" + "00:00:00";
 								var new_end_date = ed_year + '-' + ed_month + '-' + ed_date + "T" + "00:00:00";
-								console.log(new_start_date,new_end_date);
+								console.log(new_start_date, new_end_date);
 							}
-							else{
+							else {
 								formData.all_day_flg = 0;
 								st = info.event.startStr
 								ed = info.event.endStr
@@ -1187,14 +1228,14 @@
 								console.log(ed);
 								index_of_st = st.indexOf('+');
 								index_of_ed = ed.indexOf('+');
-							    var st_date = info.event.startStr.slice(0, index_of_st);
+								var st_date = info.event.startStr.slice(0, index_of_st);
 								var ed_date = info.event.endStr.slice(0, index_of_ed);
 								console.log(st_date);
 								console.log(ed_date);
 								new_start_date = st_date;
 								new_end_date = ed_date;
 							}
-							
+
 							formData.event_start_dt = new_start_date;
 							formData.event_end_dt = new_end_date;
 							formData.calendar_info_id = info.event._def.extendedProps.calendar_name;
