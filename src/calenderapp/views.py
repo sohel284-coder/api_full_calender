@@ -175,12 +175,15 @@ class EventEdit(APIView):
         success_attendees = []
         for attendee in attendees:
             try:
-                print('try')
                 get_event = CalendarEvents.objects.get(id=event).user_event_key
                 print(get_event)
-                get_attendee = CalendarAttendees.objects.get(event_info_id=event, event_attendee_email=attendee)
-                pass
-            except:
+                get_attendee = CalendarAttendees.objects.get(event_info_id=get_event, event_attendee_email=attendee)
+            
+                print('try')
+                print(get_attendee)
+                print(get_event)
+            except Exception as e:
+                print(e)
                 print('except')
                 attendee_data = {}
                 print(event)

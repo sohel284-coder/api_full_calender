@@ -277,7 +277,7 @@
 														alt="#">[[attendee.event_attendee_email]]</li>
 
 											</ul>
-											
+
 										</div>
 									</div>
 								</div>
@@ -798,10 +798,7 @@
 					this.edit.event_location = this.event_location
 					this.edit.description = this.description;
 					this.edit.event_id = this.event_id;
-					for(var item of this.calendar_attendees){
-						this.participants.push(item.event_attendee_email); 
-					}
-					console.log(this.participants);
+
 
 					// $(".dot").css('backgroundColor', this.event_color);
 					// $(".dot").css('border-radius', '50%');
@@ -1448,6 +1445,11 @@
 								}
 
 							}
+
+							for (var item of that.calendar_attendees) {
+								that.participants.push(item.event_attendee_email);
+							}
+							console.log(that.participants);
 
 
 							that.calendar_name = event.event._def.extendedProps.calendar_name
