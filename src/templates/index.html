@@ -108,6 +108,28 @@
 			left: -100px;
 		}
 
+		.calendar-wd__form-three_success.active-event {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0px);
+		}
+
+		.calendar-wd__form-three_success {
+			background: #fff;
+			width: 800px;
+			margin: 0 auto;
+			right: 0;
+			position: absolute;
+			z-index: 999999;
+			box-shadow: 0px 0px 5px #00000054;
+			top: 25px;
+			padding: 0;
+			border: none;
+			visibility: hidden;
+			z-index: 333333333333;
+			left: -100px;
+		}
+
 		.form-group.project-dropdown:before {
 			content: "";
 			position: absolute;
@@ -161,6 +183,22 @@
 			overflow: scroll;
 			min-height: 350px;
 			max-height: 600px;
+		}
+
+		.ms-n5 {
+			margin-left: -40px;
+		}
+
+		input:focus {
+			outline: none !important;
+			border-color: #FFCBC3;
+			box-shadow: 0 0 5px #FFCBC3;
+		}
+
+		.form-control:focus {
+			outline: none !important;
+			border-color: #FFCBC3;
+			box-shadow: 0 0 5px #FFCBC3;
 		}
 	</style>
 
@@ -239,10 +277,7 @@
 														alt="#">[[attendee.event_attendee_email]]</li>
 
 											</ul>
-											<div class="calander-wd__button calander-wd__button-guest">
-												<span class="plus-icon"><a href="#"><i class="fa fa-plus"></i></span>Add
-												guests</a>
-											</div>
+											
 										</div>
 									</div>
 								</div>
@@ -341,12 +376,16 @@
 													</div>
 													<div class="col-10">
 														<div class="input-group mb-3">
-															<input type="text" v-model="participant"
-																class="form-control form-control-lg"
-																aria-label="Attendee" aria-describedby="basic-addon1">
-															<span class="input-group-text" @click="addParticipants"
-																style="font-size:20px" type="button"
-																id="basic-addon1">+</span>
+															<input class="card w-100 text-center" type="text"
+																v-model="participant" aria-label="Attendee"
+																aria-describedby="basic-addon1">
+															<span class="input-group-append">
+																<button @click="addParticipants"
+																	class="card bg-white ms-n5 my-2 text-dark py-2 px-2"
+																	type="button" id="basic-addon1">
+																	<i class="fas fa-plus"></i>
+																</button>
+															</span>
 														</div>
 														<div class="list-group item text-center"
 															v-for="p in participants">
@@ -494,13 +533,23 @@
 										</div>
 									</div>
 									<div class="form-group row">
-										<div class="col-2"></div>
+										<div class="col-2">
+											<label for="">Add Participant</label>
+										</div>
 										<div class="col-10">
 											<div class="input-group mb-3">
-												<input type="text" class="form-control form-control-lg"
+												<input class="card w-100 text-center" type="text" v-model="participant"
 													aria-label="Attendee" aria-describedby="basic-addon1">
-												<span class="input-group-text" style="font-size:20px" type="button"
-													id="basic-addon1">+</span>
+												<span class="input-group-append">
+													<button @click="addParticipants"
+														class="card bg-white ms-n5 my-2 text-dark py-2 px-2"
+														type="button" id="basic-addon1">
+														<i class="fas fa-plus"></i>
+													</button>
+												</span>
+											</div>
+											<div class="list-group item text-center" v-for="p in participants">
+												<h6 class="text-dark">[[p]]</h6>
 											</div>
 										</div>
 									</div>
@@ -512,7 +561,7 @@
 													class="btn btn-secondary btn-lg me-3">More Options</button>
 												<button type="submit" id="btnSubmit"
 													class="btn btn-primary btn-lg me-3">Save</button>
-												<button type="button" @click.prevent="backTopopup" id="btnCancel"
+												<button type="button" @click.prevent="onCloseDrag" id="btnCancel"
 													class="btn btn-danger btn-lg">Cancel</button>
 											</div>
 										</div>
@@ -522,6 +571,15 @@
 
 							</div>
 						</div>
+					</div>
+				</div>
+				<div class="calendar-wd__form calendar-wd__form-three_success">
+					<div class="close-icon close-three me-3 mt-2" @click="onCloseSuccess"><img
+							src="{% static 'img/close.png' %}" alt="">
+					</div>
+
+					<div class="calendar-wd__form-three-body">
+						<p>success</p>
 					</div>
 				</div>
 			</div>
@@ -553,6 +611,7 @@
 	<script src="https://unpkg.com/vue-select@2.4.0/dist/vue-select.js"></script>
 
 	<script>
+
 		Vue.component("v-select", VueSelect.VueSelect);
 		var app = new Vue({
 			el: '#app',
@@ -661,6 +720,10 @@
 					$(".calendar-wd__form-three_drag").toggleClass('active-event');
 
 				},
+				onCloseSuccess: function () {
+					$(".calendar-wd__form-three_success").toggleClass('active-event');
+
+				},
 				addParticipants: function () {
 					console.log(this.participant);
 					var formData = {}
@@ -735,7 +798,10 @@
 					this.edit.event_location = this.event_location
 					this.edit.description = this.description;
 					this.edit.event_id = this.event_id;
-
+					for(var item of this.calendar_attendees){
+						this.participants.push(item.event_attendee_email); 
+					}
+					console.log(this.participants);
 
 					// $(".dot").css('backgroundColor', this.event_color);
 					// $(".dot").css('border-radius', '50%');
@@ -967,6 +1033,7 @@
 					formData.event_location = this.drag.location;
 					formData.calendar_info_id = this.drag.cal_name;
 					formData.all_day_flg = this.drag.selectionInfo.allDay;
+					formData.attendees = this.participants;
 
 					$.ajax({
 						method: 'POST',
@@ -975,12 +1042,13 @@
 						contentType: 'application/json'
 					}).then(response => {
 						// location.href = '/';
-						alert('sucessfully');
+						$('.calendar-wd__form-three_success').addClass('active-event');
 						this.drag.drag_event_name = ' ';
 						this.drag.description = ' ';
 						this.drag.location = ' ';
 						this.drag.cal_name = ' ';
 						this.selectedName = ' ';
+						this.participants = [];
 						this.showEvents();
 
 					}).fail(errors => {
@@ -994,8 +1062,14 @@
 				weeklyCalendar: function () {
 					var that = this;
 					var calendarEl = document.getElementById('calendar');
-				
-					
+					that.calHeight = $(window).height() * .90;
+					$(window).resize(function () {
+						var winHeight = $(this).height();
+						that.calHeight = winHeight * .90;
+						// location.href = '/';
+						window.location.reload();
+					});
+
 					var calendar = new FullCalendar.Calendar(calendarEl, {
 
 						select: function (selectionInfo) {
@@ -1109,7 +1183,7 @@
 
 						editable: true,
 						handleWindowResize: true,
-						height: $(window).height() * 0.90,
+						height: that.calHeight,
 						// contentHeight:'auto',
 						// heigth:600,
 						// contentHeight: 640,
@@ -1118,16 +1192,7 @@
 						dayMaxEvents: true,
 						allDayMaintainDuration: true,
 						events: that.weekly_events,
-						// windowResize: function (arg) {
-						// 	console.log(arg.view);
-						// 	var calHeight = $(window).height() * 0.83;
-						// 	console.log(calHeight);
-						// 	arg.setHeight(calHeight);
 
-
-						// 	// $('#calendar').fullCalendar('option', 'height', calHeight);
-						// 	// alert('The calendar has adjusted to a window resize. Current view: ' + arg.view.type);
-						// },
 						eventResize: function (info) {
 							console.log(info);
 							formData = {}
@@ -1283,6 +1348,7 @@
 							console.log(that.event_color);
 							that.calendar_attendees = event.event._def.extendedProps.calendar_attendee
 							that.allDayEvent = event.event.allDay;
+							// that.participants = event.event._def.extendedProps.calendar_attendee;
 
 							// that.start_time = new Date(event.event.start).toLocaleTimeString();
 							// that.end_time = new Date(event.event.end).toLocaleTimeString();
@@ -1424,10 +1490,8 @@
 				$('.calendar-wd__form-three').removeClass('active-event');
 				$(".calendar-wd__form-three_drag").removeClass('active-event');
 			}
-
-
-
 		});
+
 	</script>
 
 

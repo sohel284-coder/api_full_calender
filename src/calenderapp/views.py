@@ -1,3 +1,4 @@
+import atexit
 from calendar import calendar
 from functools import partial
 from itertools import count
@@ -183,10 +184,10 @@ class EventEdit(APIView):
                 print('except')
                 attendee_data = {}
                 print(event)
-                event = CalendarEvents.objects.get(id=event).user_event_key
-                print(event)
+                get_event = CalendarEvents.objects.get(id=event).user_event_key
+                print(get_event)
                 attendee_data['calendar_info_id'] = calendar_info_id
-                attendee_data['event_info_id'] = event
+                attendee_data['event_info_id'] = get_event
                 attendee_data['event_attendee_email'] = attendee
                 print(attendee_data)
                 serializer = CalendarAttendeesSerializer(data=attendee_data, partial=True)
@@ -242,7 +243,21 @@ class CalendarColor(CalendarEventListView):
 
 class DragEventSave(APIView):
     def post(self, request, format=None):
-        print(request.data)
+        event_name = request.data['event_name']
+        event_name = event_name.replace(' ', '_')
+        last_event_id = CalendarEvents.objects.last().id
+        request.data['user_event_key'] = event_name + '_' + str(last_event_id + 1)
+        print(request.data['user_event_key'])
+
+        try:
+            print('try')
+            attendess = request.data['attendees']
+            print(attendess)
+            has_attendee = True
+            
+        except:
+            print('except')
+            has_attendee = False
 
         calendar_info_id = CalendarList.objects.get(calendar_name=request.data['calendar_info_id']).id
         request.data['calendar_info_id'] = calendar_info_id
@@ -255,6 +270,31 @@ class DragEventSave(APIView):
 
         if serializer.is_valid(raise_exception=True):
             serializer.save()
+            try:
+                print('try')
+                print(has_attendee)
+                if (has_attendee):
+                    for attendee in attendess:
+                        print(attendee)
+                        attendee_data = {}
+                        
+                        print(request.data['user_event_key'])
+                        print(calendar_info_id)
+                        attendee_data['calendar_info_id'] = calendar_info_id
+                        print(attendee_data['calendar_info_id'])
+                        attendee_data['event_info_id'] = request.data['user_event_key']
+                        print(attendee_data['event_info_id'])
+                        attendee_data['event_attendee_email'] = attendee
+                        print(attendee_data['event_attendee_email'])
+                        print(attendee_data)
+                        serializer = CalendarAttendeesSerializer(data=attendee_data)
+                        if serializer.is_valid(raise_exception=True):
+                            serializer.save()
+                            print('save')
+                        else:
+                            print(serializer.errors)    
+            except Exception as e:
+                print(e)
             return Response('Successfully eventb save', status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)    
 
