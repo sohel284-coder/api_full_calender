@@ -360,14 +360,20 @@
 														<label for="calendarName" class="mt-2">Calendar Name :</label>
 													</div>
 													<div class="col-10">
-														<v-select :options="options" class="select" v-model="selected"
-															:clearable="false" label="title">
+														<v-select :options="edit.options" class="select"
+															v-model="edit.selected" :clearable="false" label="title">
 															<template v-slot:option="option">
-																<span :class="option.icon"
-																	:style="{color:option.color}"></span>
-																[[ option.title ]]
+																<i :class="option.icon"
+																	:style="{color:option.color}"></i> [[ option.title
+																]]
 															</template>
+															<!-- <template slot="selected-option" slot-scope="option">
+																<i :class="editselectedName.icon"
+																	:style="{color:editselectedName.color}"></i> [[ editselectedName.title
+																]]
+															</template> -->
 														</v-select>
+														
 													</div>
 												</div>
 												<div class="form-group row">
@@ -377,10 +383,10 @@
 													<div class="col-10">
 														<div class="input-group mb-3">
 															<input class="card w-100 text-center" type="text"
-																v-model="participant" aria-label="Attendee"
+																v-model="edit.participant" aria-label="Attendee"
 																aria-describedby="basic-addon1">
 															<span class="input-group-append">
-																<button @click="addParticipants"
+																<button @click="editParticipants"
 																	class="card bg-white ms-n5 my-2 text-dark py-2 px-2"
 																	type="button" id="basic-addon1">
 																	<i class="fas fa-plus"></i>
@@ -388,7 +394,7 @@
 															</span>
 														</div>
 														<div class="list-group item text-center"
-															v-for="p in participants">
+															v-for="p in edit.participants">
 															<h6 class="text-dark">[[p]]</h6>
 														</div>
 													</div>
@@ -520,16 +526,15 @@
 										<div class="col-10">
 											<v-select :options="options" v-model="selected" label="title">
 												<template v-slot:option="option">
-													<span :class="option.icon" :style="{color:option.color}"></span>
-													[[ option.title ]]
+													<i :class="option.icon" :style="{color:option.color}"></i> [[
+													option.title ]]
 												</template>
+												<!-- <template slot="selected-option" slot-scope="option">
+													<i :class="selectedName.icon" :style="{color:selectedName.color}"></i> [[
+													selectedName.title ]]
+												</template> -->
 											</v-select>
 
-											<!-- <select v-model="cal_name" @change="selectedCalendar($event)"
-												class="form-select" aria-label="Default select example">
-												<option v-for="calendar in calendars" :value="calendar.calendar_name">
-													[[calendar.calendar_name]]</option>
-											</select> -->
 										</div>
 									</div>
 									<div class="form-group row">
@@ -551,6 +556,7 @@
 											<div class="list-group item text-center" v-for="p in participants">
 												<h6 class="text-dark">[[p]]</h6>
 											</div>
+
 										</div>
 									</div>
 									<div class="form-group row mt-5">
@@ -622,6 +628,7 @@
 				],
 				calHeight: null,
 				selected: '',
+				activeColor:'',
 				participant: '',
 				participants: [],
 				weekly_events: [],
@@ -659,12 +666,16 @@
 					event_title: '',
 					attendees: [],
 					calendars: [],
+					options:[],
 					calendar_name: '',
 					event_location: '',
 					description: '',
 					start_date: '',
 					end_date: '',
 					event_id: null,
+					selected: '',
+					participant: '',
+					participants: [],
 
 					start_time: '',
 					end_time: '',
@@ -703,8 +714,11 @@
 			},
 			computed: {
 				selectedName: function () {
-					console.log(this.selected.title);
-					return this.selected.title
+					this.activeColor = this.selected.color;
+					return this.selected;
+				},
+				editselectedName: function () {
+					return this.edit.selected;
 				}
 			},
 			methods: {
@@ -713,10 +727,12 @@
 				},
 				onClose: function () {
 					console.log('test');
+					this.edit.participants = [];
 					$(".calendar-wd__form-three").toggleClass('active-event');
 				},
 				onCloseDrag: function () {
 					$("#eventpick").val('');
+					this.participants = [];
 					$(".calendar-wd__form-three_drag").toggleClass('active-event');
 
 				},
@@ -724,11 +740,11 @@
 					$(".calendar-wd__form-three_success").toggleClass('active-event');
 
 				},
-				addParticipants: function () {
+				editParticipants: function () {
 					console.log(this.participant);
 					var formData = {}
 					formData.event = this.event_id;
-					formData.attendee = this.participant
+					formData.attendee = this.edit.participant;
 					$.ajax({
 						method: 'POST',
 						url: 'api/add-participant/',
@@ -736,8 +752,8 @@
 						contentType: 'application/json',
 					}).then(response => {
 						if (!response) {
-							if (!this.participants.includes(this.participant)) {
-								this.participants.push(this.participant)
+							if (!this.edit.participants.includes(this.edit.participant)) {
+								this.edit.participants.push(this.edit.participant)
 							}
 							else {
 								alert('this attendee is already added');
@@ -746,11 +762,21 @@
 						else {
 							alert('this attendee is already added');
 						}
-						this.participant = '';
+						this.edit.participant = '';
 					}).fail(errors => {
 						console.log(errors)
 					})
 
+
+				},
+				addParticipants: function () {
+					if (!this.participants.includes(this.participant)) {
+						this.participants.push(this.participant)
+					}
+					else {
+						alert('this attendee is already added');
+					}
+					this.participant = '';
 
 				},
 
@@ -789,7 +815,6 @@
 
 					}
 
-					console.log(this.selected)
 					this.edit.event_title = this.event_title;
 					this.edit.attendees = this.attendees;
 					this.edit.calendars = this.calendars;
@@ -849,13 +874,8 @@
 					})
 				},
 				oneditEvent: function (event_id) {
-					console.log(this.selectedName)
-					if (!this.selectedName) {
-						this.edit.calendar_name = this.selected;
-					}
-					else {
-						this.edit.calendar_name = this.selectedName;
-					}
+					this.edit.calendar_name = this.edit.selected.title;
+					
 					console.log(this.edit.calendar_name);
 					let formData = {}
 					console.log(this.edit.calendar_name, 'calendar_name');
@@ -909,7 +929,7 @@
 					formData.event_description = this.edit.description;
 					formData.event_location = this.edit.event_location;
 					formData.calendar_info_id = this.edit.calendar_name;
-					formData.attendees = this.participants;
+					formData.attendees = this.edit.participants;
 					$.ajax({
 						method: 'PUT',
 						url: 'api/edit-event/' + event_id,
@@ -917,12 +937,12 @@
 						contentType: 'application/json'
 					}).then(response => {
 						console.log(response);
+						this.edit.participants = [];
 						this.showEvents();
 						$(".calendar-wd__form-three").toggleClass('active-event');
 						// $('#f-tab4').removeClass('show active');
 
 						// $('#f-tab3').addClass('show active');
-						this.participants = [];
 
 					}).fail(errors => {
 						console.log(errors);
@@ -952,12 +972,12 @@
 							singleObj['icon'] = 'fas fa-circle';
 							singleObj['color'] = that.calendars[i].calendar_color;
 							that.options.push(singleObj);
+							that.edit.options.push(singleObj);
 						}
 						console.log(that.options);
 						console.log(that.calendars);
 						that.cal_name = response[0].calendar_name;
-						that.selected = response[0].calendar_name;
-						console.log(that.cal_name);
+						that.selected = that.options[0];
 					})
 				},
 
@@ -966,12 +986,7 @@
 					calendar = this.drag.calendar;
 					console.log(this.selected);
 					console.log(this.selectedName)
-					if (!this.selectedName) {
-						this.drag.cal_name = this.selected;
-					}
-					else {
-						this.drag.cal_name = this.selectedName;
-					}
+					this.drag.cal_name = this.selected.title;
 					console.log(this.drag.cal_name)
 
 					console.log(this.drag.selectionInfo.allDay);
@@ -1064,7 +1079,7 @@
 						var winHeight = $(this).height();
 						that.calHeight = winHeight * .90;
 						// location.href = '/';
-						window.location.reload();
+						// window.location.reload();
 					});
 
 					var calendar = new FullCalendar.Calendar(calendarEl, {
@@ -1447,13 +1462,23 @@
 							}
 
 							for (var item of that.calendar_attendees) {
-								that.participants.push(item.event_attendee_email);
+								that.edit.participants.push(item.event_attendee_email);
 							}
 							console.log(that.participants);
 
 
 							that.calendar_name = event.event._def.extendedProps.calendar_name
-							that.selected = event.event._def.extendedProps.calendar_name
+							for (var i = 0; i < that.options.length; i++) {
+								if (that.options[i].title == event.event._def.extendedProps.calendar_name) {
+									that.options[i].title = event.event._def.extendedProps.calendar_name;
+									that.options[i].icon = 'fas fa-circle';
+									that.options[i].color = that.event_color;
+									that.edit.selected = that.options[i];
+
+								}
+							}
+							console.log(that.edit.selected);
+
 
 							that.attendees = event.event._def.extendedProps.calendar_attendee
 
