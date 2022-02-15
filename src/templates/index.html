@@ -116,7 +116,8 @@
 
 		.calendar-wd__form-three_success {
 			background: #fff;
-			width: 800px;
+			width: 400px;
+			height: 500px;
 			margin: 0 auto;
 			right: 0;
 			position: absolute;
@@ -200,15 +201,27 @@
 			border-color: #FFCBC3;
 			box-shadow: 0 0 5px #FFCBC3;
 		}
+		.cal-name{	
+			width: fit-content;		
+			background-color: #FFCBC3;
+			border: solid 1px #FFCBC3;
+			margin-bottom: 0px;
+			border-radius: 18px;
+		}
+		.thanks-card{
+			border: solid 2px rgb(92, 206, 221);
+			box-shadow: 0px 1px 4px rgb(92, 206, 221);
+		}
 	</style>
 
 
 </head>
 
 <body>
+    
+
 	<div class="container mt-4">
 		<div class="calendar-wd__section" id="app">
-
 			<div class="calendar-wd">
 				<div id='calendar'></div>
 				<br>
@@ -373,7 +386,7 @@
 																]]
 															</template> -->
 														</v-select>
-														
+
 													</div>
 												</div>
 												<div class="form-group row">
@@ -585,7 +598,29 @@
 					</div>
 
 					<div class="calendar-wd__form-three-body">
-						<p>success</p>
+						<div class="row">
+							<div class="col-12">
+								<div class="card thanks-card">
+									<img src="{% static 'img/thanks.png' %}" class="d-block w-100" alt="">
+								</div>
+							</div>
+						</div>
+						<div class="row mt-5">
+							<div class="col-12">
+								<center>
+									<div class="cal-name card px-2">
+										<h6 class="mb-0">[[success_cal_name]]</h6>
+									</div>
+									<h4 class="event-name mt-3">[[success_event_name]]</h4>
+									<h4 class="date-pick mt-3"><i
+										class="far fa-calendar-alt me-3"></i>[[success_date]] 
+								    </h4>
+									<h3 class="mt-3" style="color: #F37764;">Saved!</h3>
+								</center>
+								
+							</div>
+					
+						</div>
 					</div>
 				</div>
 			</div>
@@ -628,7 +663,7 @@
 				],
 				calHeight: null,
 				selected: '',
-				activeColor:'',
+				activeColor: '',
 				participant: '',
 				participants: [],
 				weekly_events: [],
@@ -653,6 +688,9 @@
 				single_day_start_date: '',
 				single_day_end_date: '',
 				calendar_attendees: [],
+				success_event_name:'',
+				success_cal_name:'',
+				success_date:'',
 
 				all_day_start_date: '',
 				all_day_end_date: '',
@@ -666,7 +704,7 @@
 					event_title: '',
 					attendees: [],
 					calendars: [],
-					options:[],
+					options: [],
 					calendar_name: '',
 					event_location: '',
 					description: '',
@@ -725,14 +763,20 @@
 				getColor: function () {
 					return 'bg-primary me-2'
 				},
+				
 				onClose: function () {
 					console.log('test');
+					this.edit.participant = ' ';
 					this.edit.participants = [];
 					$(".calendar-wd__form-three").toggleClass('active-event');
 				},
 				onCloseDrag: function () {
 					$("#eventpick").val('');
 					this.participants = [];
+					this.drag.drag_event_name = ' ';
+					this.drag.location = ' ';
+					this.drag.description = ' ';
+					this.participant = ' ';
 					$(".calendar-wd__form-three_drag").toggleClass('active-event');
 
 				},
@@ -848,6 +892,8 @@
 					this.edit.end_time = '';
 					this.edit.description = '';
 					this.edit.interval = '';
+					this.edit.participant = ' ';
+					this.edit.participants = [];
 					$('#f-tab4').removeClass('show active');
 					$('#f-tab3').addClass('show active');
 					$("#f-tab_delete").removeClass('show active');
@@ -875,7 +921,7 @@
 				},
 				oneditEvent: function (event_id) {
 					this.edit.calendar_name = this.edit.selected.title;
-					
+
 					console.log(this.edit.calendar_name);
 					let formData = {}
 					console.log(this.edit.calendar_name, 'calendar_name');
@@ -937,6 +983,7 @@
 						contentType: 'application/json'
 					}).then(response => {
 						console.log(response);
+						this.edit.participant = '';
 						this.edit.participants = [];
 						this.showEvents();
 						$(".calendar-wd__form-three").toggleClass('active-event');
@@ -1054,7 +1101,19 @@
 						contentType: 'application/json'
 					}).then(response => {
 						// location.href = '/';
+						console.log(response);
+						var st = new Date(this.drag.start_date);
+						var st_date = st.getDate();
+						var st_year = st.getFullYear();
+						var st_month = st.toLocaleString('en-us', { month: 'long' });
+						var st_day = st.toLocaleString('en-us', { weekday: 'short' });
+
+						this.success_event_name = this.drag.drag_event_name;
+						this.success_cal_name = this.drag.cal_name;
+						this.success_date = st_day + ',' + ' ' + st_date + ' ' + st_month ;
 						$('.calendar-wd__form-three_success').addClass('active-event');
+
+
 						this.drag.drag_event_name = ' ';
 						this.drag.description = ' ';
 						this.drag.location = ' ';
@@ -1074,10 +1133,10 @@
 				weeklyCalendar: function () {
 					var that = this;
 					var calendarEl = document.getElementById('calendar');
-					that.calHeight = $(window).height() * .90;
+					that.calHeight = $(window).height() * .96;
 					$(window).resize(function () {
 						var winHeight = $(this).height();
-						that.calHeight = winHeight * .90;
+						that.calHeight = winHeight * .96;
 						// location.href = '/';
 						// window.location.reload();
 					});
@@ -1494,6 +1553,8 @@
 									if (!(dtg || ttg)) {
 										console.log('close');
 										$('.calendar-wd__form-three').removeClass('active-event');
+										that.edit.participant = ' ';
+										that.edit.participants = [];
 										// $('.calendar-wd__form-three_drag').removeClass('active-event');
 
 									}
