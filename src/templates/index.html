@@ -616,7 +616,8 @@
 						<div class="row mt-5">
 							<div class="col-12">
 								<center>
-									<div class="cal-name card px-2" :style="{backgroundColor:this.selected.color, border:this.selected.color}" >
+									<div class="cal-name card px-2"
+										:style="{backgroundColor:this.selected.color, border:this.selected.color}">
 										<h6 class="mb-0 text-white">[[success_cal_name]]</h6>
 									</div>
 									<h6 class="event-name mt-3">[[success_event_name]]</h6>
@@ -803,12 +804,28 @@
 						contentType: 'application/json',
 					}).then(response => {
 						if (!response) {
-							if (!this.edit.participants.includes(this.edit.participant)) {
-								this.edit.participants.push(this.edit.participant)
+							var participants = this.edit.participant.split(',')
+							if (participants.length > 1) {
+								console.log(participants);
+
+								// this.edit.participants = this.edit.participants.concat(participants);
+								for (var i = 0; i < participants.length; i++) {
+									a = participants[i].toLowerCase().replace(/\s+/g,"");
+									if(!this.edit.participants.includes(a)){
+										this.edit.participants.push(participants[i])
+									}
+								}
+								console.log(this.edit.participants);
 							}
 							else {
-								alert('this attendee is already added');
+								if (!this.edit.participants.includes(this.edit.participant)) {
+									this.edit.participants.push(this.edit.participant)
+								}
+								else {
+									alert('this attendee is already added');
+								}
 							}
+
 						}
 						else {
 							alert('this attendee is already added');
@@ -826,7 +843,7 @@
 					if (participants.length > 1) {
 						console.log(participants);
 						this.participants = participants;
-						
+
 					}
 					else {
 						if (!this.participants.includes(this.participant)) {
@@ -897,6 +914,11 @@
 					$("#f-tab_delete").addClass('show active');
 					$('#f-tab3').removeClass('show active');
 					$('#f-tab4').removeClass('show active');
+
+				},
+				oneventList:function(){
+					console.log('hello');
+					alert('hello');
 
 				},
 				backTopopup: function () {
@@ -1119,6 +1141,9 @@
 						contentType: 'application/json'
 					}).then(response => {
 						// location.href = '/';
+						function clock(){
+							$('.calendar-wd__form-three_success').removeClass('active-event');
+						}
 						console.log(response);
 						console.log(new_start_date);
 						console.log(new_end_date);
@@ -1169,6 +1194,8 @@
 						this.drag.cal_name = ' ';
 						this.selectedName = ' ';
 						this.participants = [];
+
+						setInterval(clock, 2000);
 						this.showEvents();
 
 					}).fail(errors => {
@@ -1611,21 +1638,21 @@
 							calender_id = event.event._def.extendedProps.calender_id;
 
 							var flag = 1;
-							if ($('.calendar-wd__form-three').hasClass('active-event')) {
-								$("#calendar").click(function (e) {
-									var dtg = $(e.target).parents(".fc-daygrid-event").get(0);
-									var ttg = $(e.target).parents(".fc-timegrid-event").get(0);
+							// if ($('.calendar-wd__form-three').hasClass('active-event')) {
+							// 	$("#calendar").click(function (e) {
+							// 		var dtg = $(e.target).parents(".fc-daygrid-event").get(0);
+							// 		var ttg = $(e.target).parents(".fc-timegrid-event").get(0);
 
-									if (!(dtg || ttg)) {
-										console.log('close');
-										$('.calendar-wd__form-three').removeClass('active-event');
-										that.edit.participant = ' ';
-										that.edit.participants = [];
-										// $('.calendar-wd__form-three_drag').removeClass('active-event');
+							// 		if (!(dtg || ttg)) {
+							// 			console.log('close');
+							// 			$('.calendar-wd__form-three').removeClass('active-event');
+							// 			that.edit.participant = ' ';
+							// 			that.edit.participants = [];
+							// 			// $('.calendar-wd__form-three_drag').removeClass('active-event');
 
-									}
-								});
-							}
+							// 		}
+							// 	});
+							// }
 
 
 						},
