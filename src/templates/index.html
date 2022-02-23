@@ -757,6 +757,7 @@
 			mounted: function () {
 				this.showEvents();
 				this.getCalendars();
+				this.eventCloseByEsc();
 			},
 			computed: {
 				selectedName: function () {
@@ -770,6 +771,20 @@
 			methods: {
 				getColor: function () {
 					return 'bg-primary me-2'
+				},
+				eventCloseByEsc: function () {
+					var that = this;
+					$(document).keyup(function (e) {
+						if (e.key === "Escape") {
+							$('.calendar-wd__form-three').removeClass('active-event');
+							$(".calendar-wd__form-three_drag").removeClass('active-event');
+							that.edit.participants = [];
+							that.participants = [];
+							that.participant = ' ';
+							that.edit.participant = ' ';
+						}
+
+					});
 				},
 
 				onClose: function () {
@@ -810,8 +825,8 @@
 
 								// this.edit.participants = this.edit.participants.concat(participants);
 								for (var i = 0; i < participants.length; i++) {
-									a = participants[i].toLowerCase().replace(/\s+/g,"");
-									if(!this.edit.participants.includes(a)){
+									a = participants[i].toLowerCase().replace(/\s+/g, "");
+									if (!this.edit.participants.includes(a)) {
 										this.edit.participants.push(participants[i])
 									}
 								}
@@ -831,6 +846,7 @@
 							alert('this attendee is already added');
 						}
 						this.edit.participant = '';
+						
 					}).fail(errors => {
 						console.log(errors)
 					})
@@ -916,7 +932,7 @@
 					$('#f-tab4').removeClass('show active');
 
 				},
-				oneventList:function(){
+				oneventList: function () {
 					console.log('hello');
 					alert('hello');
 
@@ -1141,7 +1157,7 @@
 						contentType: 'application/json'
 					}).then(response => {
 						// location.href = '/';
-						function clock(){
+						function clock() {
 							$('.calendar-wd__form-three_success').removeClass('active-event');
 						}
 						console.log(response);
@@ -1498,8 +1514,9 @@
 						},
 						eventClick: function (event) {
 							console.log(event);
-
+							
 							$('.calendar-wd__form-three').addClass('active-event');
+
 							$('#f-tab4').removeClass('show active');
 							$('#f-tab3').addClass('show active');
 							that.event_id = event.event._def.extendedProps.event_id;
@@ -1638,21 +1655,25 @@
 							calender_id = event.event._def.extendedProps.calender_id;
 
 							var flag = 1;
-							// if ($('.calendar-wd__form-three').hasClass('active-event')) {
-							// 	$("#calendar").click(function (e) {
-							// 		var dtg = $(e.target).parents(".fc-daygrid-event").get(0);
-							// 		var ttg = $(e.target).parents(".fc-timegrid-event").get(0);
+							if ($('.calendar-wd__form-three').hasClass('active-event')) {
+								$("#calendar").click(function (e) {
+									var dtg = $(e.target).parents(".fc-daygrid").get(0);
+									var ttg = $(e.target).parents(".fc-timegrid").get(0);
+									var ltg = $(e.target).parents(".fc-list").get(0);
 
-							// 		if (!(dtg || ttg)) {
-							// 			console.log('close');
-							// 			$('.calendar-wd__form-three').removeClass('active-event');
-							// 			that.edit.participant = ' ';
-							// 			that.edit.participants = [];
-							// 			// $('.calendar-wd__form-three_drag').removeClass('active-event');
+									if (!(dtg || ttg || ltg)) {
+										console.log('close');
+										$('.calendar-wd__form-three').removeClass('active-event');
+										that.edit.participant = ' ';
+										that.edit.participants = [];
+										// $('.calendar-wd__form-three_drag').removeClass('active-event');
 
-							// 		}
-							// 	});
-							// }
+									}
+									
+									
+									
+								});
+							}
 
 
 						},
@@ -1666,13 +1687,7 @@
 			},
 		})
 
-		$(document).keyup(function (e) {
-			if (e.key === "Escape") {
-				$('.calendar-wd__form-three').removeClass('active-event');
-				$(".calendar-wd__form-three_drag").removeClass('active-event');
-			}
 
-		});
 
 
 	</script>
