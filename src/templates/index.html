@@ -219,6 +219,11 @@
 			width: auto;
 			/* background-color: #FFCBC3; */
 		}
+		#circle{
+			height: 16px;
+			width: 16px;
+			border-radius: 50%;
+		}
 	</style>
 
 
@@ -380,20 +385,19 @@
 														<label for="calendarName" class="mt-2">Calendar Name :</label>
 													</div>
 													<div class="col-10">
-														<v-select :options="edit.options" class="select"
+														<v-select :options="edit.options"  class="select"
 															v-model="edit.selected" :clearable="false" label="title">
 															<template v-slot:option="option">
 																<i :class="option.icon"
 																	:style="{color:option.color}"></i> [[ option.title
 																]]
 															</template>
-															<!-- <template slot="selected-option" slot-scope="option">
-																<i :class="editselectedName.icon"
-																	:style="{color:editselectedName.color}"></i> [[ editselectedName.title
-																]]
-															</template> -->
-														</v-select>
+															<template slot="selected-option" slot-scope="option">
+																<div :style="{background:edit.selected.color}" class="float-start me-2 mb-0 mt-1" id="circle"></div><div class="float-end">[[edit.selected.title]]</div>
+															</template>
 
+														</v-select>
+														
 													</div>
 												</div>
 												<div class="form-group row">
@@ -545,15 +549,14 @@
 											<label for="calendarName" class="mt-2">Calendar Name :</label>
 										</div>
 										<div class="col-10">
-											<v-select :options="options" v-model="selected" label="title">
+											<v-select :options="options" v-model="selected"  label="title">
 												<template v-slot:option="option">
 													<i :class="option.icon" :style="{color:option.color}"></i> [[
 													option.title ]]
 												</template>
-												<!-- <template slot="selected-option" slot-scope="option">
-													<i :class="selectedName.icon" :style="{color:selectedName.color}"></i> [[
-													selectedName.title ]]
-												</template> -->
+												<template slot="selected-option" slot-scope="option">
+													<div :style="{background:selected.color}" class="float-start me-2 mb-0 mt-1" id="circle"></div><div class="float-end">[[selected.title]]</div>
+												</template>
 											</v-select>
 
 										</div>
@@ -702,10 +705,7 @@
 
 				all_day_start_date: '',
 				all_day_end_date: '',
-				styleObject: {
-					color: 'red',
-					fontSize: '28px',
-				},
+				
 
 
 				edit: {
@@ -766,7 +766,8 @@
 				},
 				editselectedName: function () {
 					return this.edit.selected;
-				}
+				},
+				
 			},
 			methods: {
 				getColor: function () {
