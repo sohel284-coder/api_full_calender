@@ -219,7 +219,8 @@
 			width: auto;
 			/* background-color: #FFCBC3; */
 		}
-		#circle{
+
+		#circle {
 			height: 16px;
 			width: 16px;
 			border-radius: 50%;
@@ -375,8 +376,8 @@
 														<label for="eventDescription" class="mt-2">Description :</label>
 													</div>
 													<div class="col-10">
-														<textarea class="form-control py-3" id=""
-															v-model="edit.description" rows="3"></textarea>
+														<textarea class="form-control py-3" @keyup.enter="eventSave"
+															id="" v-model="edit.description" rows="3"></textarea>
 
 													</div>
 												</div>
@@ -385,7 +386,7 @@
 														<label for="calendarName" class="mt-2">Calendar Name :</label>
 													</div>
 													<div class="col-10">
-														<v-select :options="edit.options"  class="select"
+														<v-select :options="edit.options" class="select"
 															v-model="edit.selected" :clearable="false" label="title">
 															<template v-slot:option="option">
 																<i :class="option.icon"
@@ -393,11 +394,14 @@
 																]]
 															</template>
 															<template slot="selected-option" slot-scope="option">
-																<div :style="{background:edit.selected.color}" class="float-start me-2 mb-0 mt-1" id="circle"></div><div class="float-end">[[edit.selected.title]]</div>
+																<div :style="{background:edit.selected.color}"
+																	class="float-start me-2 mb-0 mt-1" id="circle">
+																</div>
+																<div class="float-end">[[edit.selected.title]]</div>
 															</template>
 
 														</v-select>
-														
+
 													</div>
 												</div>
 												<div class="form-group row">
@@ -406,7 +410,7 @@
 													</div>
 													<div class="col-10">
 														<div class="input-group mb-3">
-															<input class="card w-100 text-center" type="text"
+															<input class="card w-100 text-center" v-on:keydown.enter.prevent="editAttendee" type="text"
 																v-model="edit.participant" aria-label="Attendee"
 																aria-describedby="basic-addon1">
 															<span class="input-group-append">
@@ -427,7 +431,7 @@
 													<div class="col-2"></div>
 													<div class="col-8">
 														<div class="btn-toolbar text-center">
-															<button type="button" id="btnSubmit"
+															<button type="button" 
 																class="btn btn-secondary btn-lg me-3">More
 																Options</button>
 															<button type="submit" id="btnSubmit"
@@ -539,7 +543,7 @@
 											<label for="eventDescription" class="mt-2">Description :</label>
 										</div>
 										<div class="col-10">
-											<textarea id="eventDescription" v-model="drag.description"
+											<textarea id="eventDescription" @keyup.enter="drageventSave" v-model="drag.description"
 												class="form-control form-control-lg" rows="3"></textarea>
 
 										</div>
@@ -549,13 +553,15 @@
 											<label for="calendarName" class="mt-2">Calendar Name :</label>
 										</div>
 										<div class="col-10">
-											<v-select :options="options" v-model="selected"  label="title">
+											<v-select :options="options" v-model="selected" label="title">
 												<template v-slot:option="option">
 													<i :class="option.icon" :style="{color:option.color}"></i> [[
 													option.title ]]
 												</template>
 												<template slot="selected-option" slot-scope="option">
-													<div :style="{background:selected.color}" class="float-start me-2 mb-0 mt-1" id="circle"></div><div class="float-end">[[selected.title]]</div>
+													<div :style="{background:selected.color}"
+														class="float-start me-2 mb-0 mt-1" id="circle"></div>
+													<div class="float-end">[[selected.title]]</div>
 												</template>
 											</v-select>
 
@@ -567,7 +573,7 @@
 										</div>
 										<div class="col-10">
 											<div class="input-group mb-3">
-												<input class="card w-100 text-center" type="text" v-model="participant"
+												<input class="card w-100 text-center" v-on:keydown.enter.prevent="addAttendee" type="text" v-model="participant"
 													aria-label="Attendee" aria-describedby="basic-addon1">
 												<span class="input-group-append">
 													<button @click="addParticipants"
@@ -589,7 +595,7 @@
 											<div class="btn-toolbar text-center">
 												<button type="button" id="" class="btn btn-secondary btn-lg me-3">More
 													Options</button>
-												<button type="submit" id="btnSubmit"
+												<button type="submit" id="dragbtnSubmit"
 													class="btn btn-primary btn-lg me-3">Save</button>
 												<button type="button" @click.prevent="onCloseDrag" id="btnCancel"
 													class="btn btn-danger btn-lg">Cancel</button>
@@ -705,7 +711,7 @@
 
 				all_day_start_date: '',
 				all_day_end_date: '',
-				
+
 
 
 				edit: {
@@ -758,6 +764,14 @@
 				this.showEvents();
 				this.getCalendars();
 				this.eventCloseByEsc();
+
+				// $("textarea").keydown(function (e) {
+				// 	// Enter was pressed without shift key
+				// 	if (e.key == 'Enter' && !e.shiftKey) {
+				// 		// prevent default behavior
+				// 		e.preventDefault();
+				// 	}
+				// });
 			},
 			computed: {
 				selectedName: function () {
@@ -767,11 +781,43 @@
 				editselectedName: function () {
 					return this.edit.selected;
 				},
-				
+
 			},
 			methods: {
 				getColor: function () {
 					return 'bg-primary me-2'
+				},
+				eventSave: function (event) {
+					if (event.shiftKey === true && event.key === "Enter") {
+						console.log("New line added, message not sended")
+						return
+					}
+					else if(event.key == 'Enter' && !event.shiftKey){
+						event.preventDefault();
+						$("#btnSubmit").click();
+
+					}
+				},
+				drageventSave: function (event) {
+					if (event.shiftKey === true && event.key === "Enter") {
+						console.log("New line added, message not sended")
+						return
+					}
+					else if(event.key == 'Enter' && !event.shiftKey){
+						event.preventDefault();
+						$("#dragbtnSubmit").click();
+
+					}
+				},
+				addAttendee:function(event){
+					console.log(this.participant);
+					// $("#basic-addon1").click();
+					this.addParticipants();
+				},
+				editAttendee:function(event){
+					console.log(this.participant);
+					// $("#basic-addon1").click();
+					this.editParticipants();
 				},
 				eventCloseByEsc: function () {
 					var that = this;
@@ -847,7 +893,7 @@
 							alert('this attendee is already added');
 						}
 						this.edit.participant = '';
-						
+
 					}).fail(errors => {
 						console.log(errors)
 					})
@@ -1150,6 +1196,7 @@
 					formData.calendar_info_id = this.drag.cal_name;
 					formData.all_day_flg = this.drag.selectionInfo.allDay;
 					formData.attendees = this.participants;
+
 
 					$.ajax({
 						method: 'POST',
@@ -1515,7 +1562,7 @@
 						},
 						eventClick: function (event) {
 							console.log(event);
-							
+
 							$('.calendar-wd__form-three').addClass('active-event');
 
 							$('#f-tab4').removeClass('show active');
@@ -1670,9 +1717,9 @@
 										// $('.calendar-wd__form-three_drag').removeClass('active-event');
 
 									}
-									
-									
-									
+
+
+
 								});
 							}
 
