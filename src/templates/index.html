@@ -810,14 +810,25 @@
 					}
 				},
 				addAttendee:function(event){
-					console.log(this.participant);
-					// $("#basic-addon1").click();
-					this.addParticipants();
+					var member = this.participant;
+					
+					if(member != ' '){
+						console.log(member);
+						this.addParticipants();
+					}
+					else{
+						$("#dragbtnSubmit").click();
+					}
 				},
 				editAttendee:function(event){
 					console.log(this.participant);
 					// $("#basic-addon1").click();
-					this.editParticipants();
+					if(this.edit.participant){
+						this.editParticipants();
+					}
+					else{
+						$("#btnSubmit").click();
+					}
 				},
 				eventCloseByEsc: function () {
 					var that = this;
@@ -1538,17 +1549,22 @@
 							}
 
 							if (info.view.type == 'listWeek') {
-								console.log(info);
 								var tHead = $('.fc-list-day th')
 								console.log(tHead);
-								tHead.attr('colspan', 4);
+								tHead.attr('colspan', 5);
 								var numberOfColumnsItem = $('tr.fc-list-event');
 								console.log(numberOfColumnsItem);
 								var arrayLength = numberOfColumnsItem.length;
 								console.log(arrayLength);
+
 								var columnElement = document.createElement('td');
+
 								columnElement.textContent = info.event._def.extendedProps.event_location;
 								info.el.append(columnElement);
+
+								var columnElement_edit_icon = document.createElement('td');
+								columnElement_edit_icon.innerHTML = "<div class='float-end icon-set' ><span class=''><a href='#' @click.prevent='onEdit' ><i class='fas fa-pen' style='font-size:20px; color: black;'></i></a></span><span class='ms-4'><i class='fas fa-envelope' style='font-size:20px; color: black;'></i></a></span><span class='ms-4'><i class='fas fa-bell' style='font-size:20px; color: black;'></i></a></span><span class='ms-4'><a href='#' @click.prevent='onDelete' ><i class='far fa-trash-alt' style='font-size:20px; color: black;'></i></a></span></div>";
+								info.el.append(columnElement_edit_icon);
 							}
 						},
 
@@ -1562,7 +1578,6 @@
 						},
 						eventClick: function (event) {
 							console.log(event);
-
 							$('.calendar-wd__form-three').addClass('active-event');
 
 							$('#f-tab4').removeClass('show active');
@@ -1725,9 +1740,6 @@
 
 
 						},
-
-
-
 					});
 					calendar.render();
 
